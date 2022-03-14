@@ -150,7 +150,7 @@ void main() {
   print(ae);
 
   ad = 10;
-  ae = ad ?? "ad has null value";
+  ae = ad ?? "ad has not null value";
   print(ae);
 
   //                                    Cascade Notaion Operator
