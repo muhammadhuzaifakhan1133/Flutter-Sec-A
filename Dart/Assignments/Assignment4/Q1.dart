@@ -1,5 +1,5 @@
 void main() {
-  final List<dynamic> _nameList = [
+  List<dynamic> _nameList = [
     "Bilal",
     "Bilal",
     "Bilal",
