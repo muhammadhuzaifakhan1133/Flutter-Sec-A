@@ -25,7 +25,6 @@ void main() {
   int isl = 85;
   int total = phy + math + comp + eng + isl;
   double per = total / 500 * 100;
-  num.parse(per.toStringAsFixed(2));
   var grade = get_grade(per);
   print("Name : $name");
   print("Date of Birth : $dob");
@@ -38,6 +37,6 @@ void main() {
   print("English           100              $eng   ");
   print("Islamiat          100              $isl   \n");
   print("                    Total  ===>>   $total");
-  print("                  Percentage =>>   $per  ");
+  print("                  Percentage =>>   ${per.toStringAsFixed(2)}  ");
   print("                    Grade  ===>>   $grade");
 }
