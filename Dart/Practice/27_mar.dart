@@ -1,19 +1,13 @@
 void main() {
-  print("main function");
-  bool ifPrime = checkPrime(27);
-  if (ifPrime) {
-    print("Yes it is a prime number");
-  } else {
-    print("No it is not a prime number");
-  }
+  getPercentage("Huzaifa", 85, 80, 90, 98, 91);
+  getPercentage("Anas", 80, 80, 83, 90, 81);
+  getPercentage("Rafay", 85, 75, 89, 86, 94);
+  getPercentage("Wasay", 85, 81, 88, 92, 87);
 }
 
-bool checkPrime(num number) {
-  bool prime = true;
-  for (int i = 2; i < number; i++) {
-    if (number % i == 0) {
-      prime = false;
-    }
-  }
-  return prime;
+getPercentage(String name, num eng, num urdu, num maths, num comp, num phy) {
+  int total = 500;
+  num obtain = eng + urdu + maths + comp + phy;
+  num percent = (obtain * 100) / total;
+  print("$name : ${percent.toStringAsFixed(2)}");
 }
