@@ -24,4 +24,7 @@ void main() {
   print(data);
   print(data.containsKey(("II")));
   print(data.containsValue(6));
+  data.forEach((key, value) {
+    print("$key , $value");
+  });
 }

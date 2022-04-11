@@ -19,4 +19,6 @@ void main() {
   print(number);
   number.insertAll(2, [1, 2, 3]);
   print(number);
+  number.retainWhere((element) => element < 5);
+  print(number);
 }
