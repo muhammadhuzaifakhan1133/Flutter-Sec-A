@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hello/screens/home.dart';
+import 'package:scrolllayout/screens/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,8 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home:Home(),
-    debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      home: Home(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
