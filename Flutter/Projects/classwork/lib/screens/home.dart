@@ -16,7 +16,7 @@ class Home extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [GeneralProduct(), FavouriteProduct(), PopularProduct()],
+          children: [FavouriteProduct(), GeneralProduct(), PopularProduct()],
         ),
       ),
     );

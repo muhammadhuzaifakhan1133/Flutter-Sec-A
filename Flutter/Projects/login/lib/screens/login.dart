@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:login/Style/TextStyleWidget.dart';
+import 'package:login/components/Gapbox.dart';
+import 'package:login/components/TextWidget.dart';
+import 'package:login/functions/entry_Sign_in.dart';
 import 'package:sign_button/sign_button.dart';
 
 class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+  Login({Key? key}) : super(key: key);
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: TextWidget("Sign in"),
         actions: [Icon(Icons.login)],
       ),
       body: Container(
@@ -20,34 +25,32 @@ class Login extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  child: Image(
+                  child: const Image(
                     image: AssetImage('assets/images/LOGO.jpg'),
-                    width: 100,
-                    height: 100,
+                    width: 200,
+                    height: 150,
                   ),
                 ),
-                Text(
-                  "Login",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                TextWidget(
+                  "Sign in",
+                  style: TextStyleWidget(fontSize: 30.0),
                 ),
-                SizedBox(
-                  height: 25,
-                ),
+                GapBox(height: 25.0),
                 Padding(
                   padding: EdgeInsets.only(left: 30, right: 30),
                   child: TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                         hintText: "Email",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30))),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                GapBox(),
                 Padding(
                   padding: EdgeInsets.only(left: 30, right: 30),
                   child: TextField(
+                    controller: passController,
                     obscureText: true,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -56,76 +59,56 @@ class Login extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                GapBox(height: 50.0),
                 Container(
                   height: 40,
                   width: 200,
                   child: ElevatedButton(
                     onPressed: () {
-                      print("Access");
+                      Entry_Sign_in(emailController, passController);
                     },
-                    child: Text("Login"),
+                    child: TextWidget("Sign in"),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 80),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          print("Forgot Password");
-                        },
-                        child: Text(
-                          "Forgot Password",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    ],
+                GapBox(height: 10.0),
+                GestureDetector(
+                  onTap: () {
+                    print("Forgot Password");
+                  },
+                  child: TextWidget(
+                    "Forgot Password",
+                    style: TextStyleWidget(fontSize: 15.0),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                GapBox(),
                 SignInButton(
                   buttonType: ButtonType.google,
                   onPressed: () {
-                    print("Sigin with Google");
+                    print("Sig in with Google");
                   },
                 ),
-                SizedBox(
-                  height: 5,
-                ),
+                GapBox(height: 5.0),
                 SignInButton(
                     buttonType: ButtonType.facebook,
                     onPressed: () {
-                      print("Signin with Facebook");
+                      print("Sign in with Facebook");
                     }),
-                SizedBox(
-                  height: 5,
-                ),
+                GapBox(height: 5.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    TextWidget(
                       "Don't have an account?",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyleWidget(fontSize: 15.0),
                     ),
-                    Text(
+                    TextWidget(
                       "Sign Up",
-                      style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyleWidget(color: Colors.blue, fontSize: 15.0),
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 20,
-                )
+                GapBox(),
               ],
             ),
           ),
