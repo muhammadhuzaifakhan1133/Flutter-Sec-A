@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:login/Style/TextStyleWidget.dart';
 import 'package:login/components/Gapbox.dart';
 import 'package:login/components/TextWidget.dart';
 import 'package:login/functions/entry_Sign_in.dart';
-=======
->>>>>>> 5e48f4b2ba613a818cd6bf63747186b3e49986e8
 import 'package:sign_button/sign_button.dart';
 
 class Login extends StatelessWidget {
