@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:login/Style/TextStyleWidget.dart';
-import 'package:login/components/Gapbox.dart';
-import 'package:login/components/TextWidget.dart';
-import 'package:login/functions/entry_Sign_in.dart';
+import 'package:login/components/gap_box.dart';
+import 'package:login/components/text_widget.dart';
+import 'package:login/functions/entry_sign_in.dart';
 import 'package:sign_button/sign_button.dart';
 
 class Login extends StatelessWidget {
@@ -14,16 +14,14 @@ class Login extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextWidget("Sign in"),
-        actions: [Icon(Icons.login)],
-      ),
+      // appBar: AppBar(backgroundColor: Colors.white),
       body: Container(
         //margin: EdgeInsets.only(top: 20),
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               children: [
+                GapBox(height: 70.0),
                 Container(
                   child: const Image(
                     image: AssetImage('assets/images/LOGO.jpg'),
