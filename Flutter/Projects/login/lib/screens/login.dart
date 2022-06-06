@@ -99,11 +99,15 @@ class Login extends StatelessWidget {
                       "Don't have an account?",
                       style: TextStyleWidget(fontSize: 15.0),
                     ),
-                    TextWidget(
-                      "Sign Up",
-                      style:
-                          TextStyleWidget(color: Colors.blue, fontSize: 15.0),
-                    )
+                    GestureDetector(
+                        onTap: () {
+                          print("New user");
+                        },
+                        child: TextWidget(
+                          "Sign Up",
+                          style: TextStyleWidget(
+                              color: Colors.blue, fontSize: 15.0),
+                        ))
                   ],
                 ),
                 GapBox(),

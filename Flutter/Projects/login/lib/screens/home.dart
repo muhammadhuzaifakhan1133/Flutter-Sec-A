@@ -47,24 +47,24 @@ class _HomeState extends State<Home> {
                   subtitle: "See you tomorrow",
                   time: "11:45 AM"),
               getTile(
-                  title: "Bilal",
+                  title: "Rafay",
                   subtitle: "come class tomorrow on time",
                   time: "09:00 PM"),
               getTile(
-                  title: "Huzaifa",
-                  subtitle: "See you tomorrow",
+                  title: "Shazaib",
+                  subtitle: "kaam send kardo yar",
                   time: "11:45 AM"),
               getTile(
-                  title: "Bilal",
-                  subtitle: "come class tomorrow on time",
+                  title: "Ahsan",
+                  subtitle: "Project ka kuch howa?",
                   time: "09:00 PM"),
               getTile(
-                  title: "Huzaifa",
-                  subtitle: "See you tomorrow",
+                  title: "Ayan",
+                  subtitle: "yar tum apny watch hamary ghar bhool gaye",
                   time: "11:45 AM"),
               getTile(
-                  title: "Bilal",
-                  subtitle: "come class tomorrow on time",
+                  title: "hammad",
+                  subtitle: "academy kab phonchogy",
                   time: "09:00 PM"),
               getTile(
                   title: "Huzaifa",
