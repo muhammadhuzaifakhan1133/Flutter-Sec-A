@@ -24,7 +24,7 @@ class Login extends StatelessWidget {
                 GapBox(height: 70.0),
                 Container(
                   child: const Image(
-                    image: AssetImage('assets/images/LOGO.jpg'),
+                    image: AssetImage('assets/LOGO.jpg'),
                     width: 200,
                     height: 150,
                   ),

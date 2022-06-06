@@ -25,12 +25,16 @@ class _HomeState extends State<Home> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  Container(color: Colors.blue, width: 200),
+                  Container(
+                      color: Colors.blue,
+                      width: MediaQuery.of(context).size.width * 0.40),
                   Container(
                     color: Colors.yellow,
-                    width: 200,
+                    width: MediaQuery.of(context).size.width * 0.40,
                   ),
-                  Container(color: Colors.green, width: 200)
+                  Container(
+                      color: Colors.green,
+                      width: MediaQuery.of(context).size.width * 0.40)
                 ],
               )),
         ),

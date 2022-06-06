@@ -23,7 +23,7 @@ getTile(
           trailing: Column(
             children: [
               Text(time),
-              GapBox(height: 10.0),
+              GapBox(height: 8.0),
               Icon(
                 Icons.done_all,
                 color: Colors.blue,
