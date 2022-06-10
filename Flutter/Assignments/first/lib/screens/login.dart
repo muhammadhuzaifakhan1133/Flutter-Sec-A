@@ -9,10 +9,12 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.all(0),
-        padding: EdgeInsets.all(0),
-        child: Image(image: AssetImage("assets/images/login_bg_purple.png")),
-      ),
+          height: 550,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  alignment: Alignment.topCenter,
+                  image: AssetImage("assets/images/login_bg_purple.png"),
+                  fit: BoxFit.fill))),
     );
   }
 }

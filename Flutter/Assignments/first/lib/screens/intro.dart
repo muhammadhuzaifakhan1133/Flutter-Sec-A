@@ -14,33 +14,18 @@ class Intro extends StatefulWidget {
 
 class _IntroState extends State<Intro> {
   var constants = UserConstants();
-  List<Slide> slides = [];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    for (var i = 0; i < constants.no_of_slides; i++) {
-      slides.add(Slide(
-          title: constants.intro_title[i],
-          description: constants.intro_description[i],
-          pathImage: constants.intro_img[i]));
-    }
-  }
 
   renderListCustomTabs() {
     List<Widget> tabs = [];
-    for (var i = 0; i < slides.length; i++) {
-      Slide currentSlide = slides[i];
+    for (var i = 0; i < constants.no_of_slides; i++) {
       tabs.add(Container(
         width: double.infinity,
         height: double.infinity,
         color: constants.theme,
         child: introMaterial(
-            img: currentSlide.pathImage,
-            title: currentSlide.title,
-            description: currentSlide.description,
+            img: constants.intro_img[i],
+            title: constants.intro_title[i],
+            description: constants.intro_description[i],
             slide_num: i,
             context: context),
       ));
