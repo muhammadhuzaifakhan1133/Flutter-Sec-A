@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class UserConstants {
-  var theme = Color.fromARGB(255, 16, 30, 43);
+  var theme = Color.fromARGB(24, 26, 32, 1);
+  var txt_color = Colors.white;
+  var privacy_txt_color = Color(0xff7C82BA);
   var logo = "assets/images/logo.png";
-  var button_color = Color.fromARGB(255, 60, 74, 204);
+  var button_color = Color(0xff4D5DFA);
   int no_of_slides = 3;
   var intro_title = ["Availability", "Secure", ""];
   var intro_description = [

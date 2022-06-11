@@ -21,7 +21,7 @@ introMaterial({img, title, description, slide_num, context}) {
     ),
   );
   if (slide_num == constants.no_of_slides - 1) {
-    children.add(lastPageMaterial(context, constants.button_color));
+    children.add(lastPageMaterial(context));
   }
   return widget;
 }
