@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 introMaterial({img, title, description, slide_num, context}) {
   var constants = UserConstants();
   List<Widget> children = [
-    introImg(bgcolor: constants.theme, img: img),
+    introImg(bgcolor: constants.theme, img: img, context: context),
     introTitle(title: title),
     introDescription(description_text: description)
   ];

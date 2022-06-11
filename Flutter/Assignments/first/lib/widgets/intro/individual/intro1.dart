@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-introImg({bgcolor, img}) {
+introImg({bgcolor, img, context}) {
+  var width = MediaQuery.of(context).size.width;
   return Container(
     padding: EdgeInsets.all(20),
     child: CircleAvatar(

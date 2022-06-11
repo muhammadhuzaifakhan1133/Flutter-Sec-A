@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var userConstants = UserConstants();
     return MaterialApp(
-      home: Intro(),
+      home: Login(),
       theme: ThemeData(scaffoldBackgroundColor: userConstants.theme),
       debugShowCheckedModeBanner: false,
     );
