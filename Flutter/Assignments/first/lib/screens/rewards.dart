@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class Rewards extends StatefulWidget {
+  const Rewards({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Rewards> createState() => _RewardsState();
 }
 
-class _HomeState extends State<Home> {
+class _RewardsState extends State<Rewards> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("Home Page")),
+      body: Center(child: Text("Rewards")),
     );
   }
 }

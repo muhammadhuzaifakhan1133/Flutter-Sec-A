@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:first/constants/user_constants.dart';
-import 'package:first/screens/home.dart';
+import 'package:first/screens/tabs.dart';
 import 'package:first/widgets/buttons/button.dart';
 import 'package:first/widgets/login/design.dart';
 import 'package:first/widgets/login/input_phone_number.dart';
@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
                 width: 350.0,
                 height: 40.0,
                 text: "Verify",
-                go_to: Home()),
+                go_to: TabsBar()),
             policyDescription()
           ],
         ),
