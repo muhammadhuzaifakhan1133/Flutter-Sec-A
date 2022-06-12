@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -12,8 +10,12 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("Profile Page")),
+    return const Scaffold(
+      body: Center(
+          child: Text(
+        "Profile Page",
+        style: TextStyle(color: Colors.white),
+      )),
     );
   }
 }

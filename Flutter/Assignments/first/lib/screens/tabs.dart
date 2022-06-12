@@ -1,40 +1,55 @@
 import 'package:first/constants/user_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-class TabsBar extends StatefulWidget {
-  const TabsBar({Key? key}) : super(key: key);
+import 'package:first/widgets/tabbar/notfication_logo.dart';
+import 'package:first/widgets/tabbar/profile_logo.dart';
+import 'package:first/widgets/tabbar/search_bar.dart';
+import 'package:first/widgets/tabbar/tab_content.dart';
+import 'package:first/widgets/tabbar/tabs_names.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+
+class TabBarController extends StatefulWidget {
+  const TabBarController({Key? key}) : super(key: key);
 
   @override
-  State<TabBar> createState() => _TabBarState();
+  State<TabBarController> createState() => _TabBarControllerState();
 }
 
-class _TabBarState extends State<TabBar> {
+/// AnimationControllers can be created with `vsync: this` because of TickerProviderStateMixin.
+class _TabBarControllerState extends State<TabBarController>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
+  var constants = UserConstants();
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: "Home"),
-              Tab(text: "Balance"),
-              Tab(text: "Offers"),
-              Tab(text: "Rewards"),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 90,
+        backgroundColor: constants.appbar_bgcolor,
+        leading: profileLogo(context),
+        title: searchBarWidget(),
+        actions: [notificationLogo(context)],
+        bottom: PreferredSize(
+          preferredSize: Size(double.infinity, 60),
+          child: TabBar(
+            indicatorWeight: 5,
+            indicatorColor: Colors.white,
+            controller: _tabController,
+            tabs: tabNames(),
           ),
-          title: const Text('Tabs Demo'),
         ),
-        body: const TabBarView(
-          children: [
-            Icon(Icons.directions_car),
-            Icon(Icons.directions_transit),
-            Icon(Icons.directions_bike),
-            Icon(Icons.directions_bike),
-          ],
-        ),
+      ),
+      body: TabBarView(
+        physics: BouncingScrollPhysics(),
+        controller: _tabController,
+        children: tabContent(),
       ),
     );
   }

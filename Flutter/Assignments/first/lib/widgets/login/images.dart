@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 loginImages() {
   return Container(
-    margin: EdgeInsets.only(right: 10),
+    margin: const EdgeInsets.only(right: 10),
     height: 250,
     child: Stack(
       children: [
-        Positioned(
+        const Positioned(
           top: 0,
           left: 0,
           child: Image(
@@ -18,7 +18,7 @@ loginImages() {
           bottom: 0,
           left: 0,
           child: Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage("assets/images/login_women.png"),
                 height: 150,

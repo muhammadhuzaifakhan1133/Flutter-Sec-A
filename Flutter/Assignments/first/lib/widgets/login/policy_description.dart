@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 policyDescription() {
   var constants = UserConstants();
   return Container(
-    margin: EdgeInsets.only(top: 20),
+    margin: const EdgeInsets.only(top: 20),
     child: Column(
       children: [
         Text(
           "Your personal details are safe with us",
           style: TextStyle(color: constants.privacy_txt_color, fontSize: 14),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Text(

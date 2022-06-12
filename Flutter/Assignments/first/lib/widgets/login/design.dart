@@ -6,9 +6,13 @@ loginDesign() {
   var constants = UserConstants();
   return Container(
       height: 500,
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/login_bg_purple.png"),
+              fit: BoxFit.fill)),
       child: Container(
         alignment: Alignment.topLeft,
-        margin: EdgeInsets.only(top: 100, left: 40, right: 70),
+        margin: const EdgeInsets.only(top: 100, left: 40, right: 70),
         child: Column(
           children: [
             Text(
@@ -23,9 +27,5 @@ loginDesign() {
             loginImages(),
           ],
         ),
-      ),
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/login_bg_purple.png"),
-              fit: BoxFit.fill)));
+      ));
 }

@@ -13,7 +13,7 @@ introMaterial({img, title, description, slide_num, context}) {
     introDescription(description_text: description)
   ];
   var widget = Container(
-    margin: EdgeInsets.only(top: 160, bottom: 100),
+    margin: const EdgeInsets.only(top: 160, bottom: 100),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

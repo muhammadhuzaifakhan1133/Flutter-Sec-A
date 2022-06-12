@@ -1,12 +1,11 @@
 import 'package:first/constants/user_constants.dart';
 import 'package:flutter/material.dart';
 
-import '../../screens/login.dart';
 
-NavigateTo(context, go_to) {
+NavigateTo(context, goTo) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => go_to),
+    MaterialPageRoute(builder: (context) => goTo),
   );
 }
 

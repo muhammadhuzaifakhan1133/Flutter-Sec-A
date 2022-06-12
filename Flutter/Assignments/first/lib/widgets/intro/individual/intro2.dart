@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 introTitle({title}) {
   var constants = UserConstants();
   return Container(
-    margin: EdgeInsets.only(top: 20),
+    margin: const EdgeInsets.only(top: 20),
     child: Text(
-      "${title}",
+      "$title",
       style: TextStyle(color: constants.txt_color, fontSize: 25),
     ),
   );

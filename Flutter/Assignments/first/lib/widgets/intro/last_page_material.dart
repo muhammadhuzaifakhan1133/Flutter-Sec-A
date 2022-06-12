@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 
 lastPageMaterial(context) {
   var constants = UserConstants();
+
   return Container(
     width: double.infinity,
-    margin: EdgeInsets.only(
+    margin: const EdgeInsets.only(
       top: 65,
     ),
-    padding: EdgeInsets.all(10),
+    padding: const EdgeInsets.all(10),
     child: Column(
       children: [
         buttonWidget(context,
@@ -18,7 +19,7 @@ lastPageMaterial(context) {
             width: 50.0,
             height: 40.0,
             text: "INSTANT PAY",
-            go_to: Login()),
+            go_to: const Login()),
         Text(
           "Your perfect payment partner",
           style: TextStyle(
