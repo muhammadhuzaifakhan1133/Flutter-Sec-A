@@ -5,14 +5,17 @@ listViewWidget(chatnames, tileButtons) {
       child: ListView.separated(
     itemCount: chatnames.length,
     itemBuilder: (context, i) {
-      return ListTile(
-          title: Text(chatnames[i]),
-          trailing: Container(
-            width: 100,
-            child: Row(
-              children: tileButtons(i),
-            ),
-          ));
+      return Card(
+        elevation: 15,
+        child: ListTile(
+            title: Text(chatnames[i]),
+            trailing: Container(
+              width: 100,
+              child: Row(
+                children: tileButtons(i),
+              ),
+            )),
+      );
     },
     separatorBuilder: (context, index) {
       return Divider(

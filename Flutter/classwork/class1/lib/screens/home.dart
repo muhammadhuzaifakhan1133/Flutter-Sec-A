@@ -41,6 +41,7 @@ class _HomeState extends State<Home> {
         builder: (_) => AlertDialog(
               title: Text("Update"),
               content: TextField(
+                decoration: InputDecoration(hintText: chatnames[i]),
                 controller: update_controller,
               ),
               actions: [
