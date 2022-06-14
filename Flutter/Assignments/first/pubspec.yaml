@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   intro_slider: ^3.0.5
   intl_phone_number_input: ^0.7.0+2
+  animated_splash_screen: ^1.2.0
 
 dev_dependencies:
   flutter_test:

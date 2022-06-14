@@ -1,5 +1,7 @@
 import 'package:first/constants/user_constants.dart';
+import 'package:first/screens/balance.dart';
 import 'package:first/screens/intro.dart';
+import 'package:first/screens/splash.dart';
 import 'package:first/screens/tabs.dart';
 import 'package:flutter/material.dart';
 
