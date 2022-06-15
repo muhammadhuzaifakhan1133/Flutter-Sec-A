@@ -1,6 +1,9 @@
+import 'package:first/screens/tabs.dart';
 import 'package:first/widgets/button_widget.dart';
 import 'package:first/widgets/mian_card.dart';
+import 'package:first/widgets/receive_money/single_tile_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ReceiveMoney extends StatefulWidget {
   const ReceiveMoney({Key? key}) : super(key: key);
@@ -10,6 +13,8 @@ class ReceiveMoney extends StatefulWidget {
 }
 
 class _ReceiveMoneyState extends State<ReceiveMoney> {
+  String id = "xyz@524899652";
+  IconData copiedIcon = Icons.copy;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -19,6 +24,9 @@ class _ReceiveMoneyState extends State<ReceiveMoney> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 25,
+            ),
             mainCard(
               context,
               enableTitle: true,
@@ -33,34 +41,43 @@ class _ReceiveMoneyState extends State<ReceiveMoney> {
               top_right_img: "assets/images/receive_money_cross.png",
             ),
             SizedBox(
-              height: 5,
+              height: 8,
             ),
             Text(
               "Other Options",
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             SizedBox(
-              height: 5,
+              height: 8,
             ),
-            ListTile(
-              minLeadingWidth: 130,
-              tileColor: Color(0xff343645),
-              leading: Text(
-                "Your Pay ID",
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              title: Text(
-                "xyz@524899652",
-                style: TextStyle(color: Color(0xffB0BEC5), fontSize: 15),
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.copy),
-                onPressed: () {},
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
+            InkWell(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Copied to Clipboard !")));
+                setState(() {
+                  copiedIcon = Icons.check;
+                });
+              },
+              child: singleTileCard(
+                  context: context,
+                  icon: copiedIcon,
+                  startText: "Your Pay ID",
+                  endText: id),
             ),
+            SizedBox(
+              height: 6,
+            ),
+            InkWell(
+              onTap: () {
+                navigateTo(context, TabBarController());
+              },
+              child: singleTileCard(
+                context: context,
+                icon: Icons.arrow_forward_ios,
+                startText: "Show bank account details",
+                endText: "",
+              ),
+            )
           ],
         ),
       )),
