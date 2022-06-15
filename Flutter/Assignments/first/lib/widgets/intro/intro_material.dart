@@ -1,7 +1,7 @@
 import 'package:first/constants/user_constants.dart';
-import 'package:first/widgets/intro/individual/intro1.dart';
-import 'package:first/widgets/intro/individual/intro2.dart';
-import 'package:first/widgets/intro/individual/intro3.dart';
+import 'package:first/widgets/intro/intro_img.dart';
+import 'package:first/widgets/intro/intro_title.dart';
+import 'package:first/widgets/intro/intro_description.dart';
 import 'package:first/widgets/intro/last_page_material.dart';
 import 'package:flutter/material.dart';
 

@@ -1,8 +1,9 @@
 import 'package:first/widgets/home/rectangular_section.dart';
 import 'package:flutter/material.dart';
 
-rechargeAndBillPaymentSection() {
+rechargeAndBillPaymentSection(context) {
   return rectangularSectionWidget(
+      context: context,
       title: "Recharge & Bill Payments",
       icon1: Icons.mobile_friendly,
       right_color1: Color.fromRGBO(50, 101, 42, 1),

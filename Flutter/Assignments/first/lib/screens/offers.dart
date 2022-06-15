@@ -9,51 +9,58 @@ class Offers extends StatefulWidget {
 }
 
 class _OffersState extends State<Offers> {
+  int no_of_widgets = 5;
+  List<String> titles = [
+    "Mobile Recharge Offer",
+    "DTH Recharge Offer",
+    "Flipcart Shopping Offer",
+    "Money Transfer Offer",
+    "Rs 50 Off on Flights"
+  ];
+  List<dynamic> subtitles1 = [
+    "Use Code FIRST20",
+    "Use Code FIRSDTHT20",
+    null,
+    null,
+    null
+  ];
+  List<String> subtitles2 = [
+    "Get 20 % Instant cashback upto Rs 50 on your firs mobile recharge. T&C apply",
+    "Get 20 % Instant cashback upto Rs 50 on your first DTH recharge. T&C apply",
+    "Shop on Flipcart using our payment system to get upto 50% cashback . T&C appply",
+    "Get a scratch card with assuerd casbck and coupons on Money Transfer of Rs 500 or more . T&C apply",
+    "Get instant discount on flat 50 Rs on Flight ticket booking. T&C apply"
+  ];
+  List<Color> colors = [
+    Color.fromRGBO(36, 32, 66, 1),
+    Color.fromRGBO(59, 32, 66, 1),
+    Color.fromRGBO(66, 32, 40, 1),
+    Color.fromRGBO(36, 32, 66, 1),
+    Color.fromRGBO(59, 32, 66, 1)
+  ];
+
+  renderRectangleCard() {
+    List<Widget> rectangle_cards = [];
+    for (var i = 0; i < no_of_widgets; i++) {
+      Widget rectangle_tile = rectangleCardWidget(
+          context: context,
+          image: "assets/images/offers_img${i + 1}.png",
+          title: titles[i],
+          subtitle1: subtitles1[i],
+          subtitle2: subtitles2[i],
+          color: colors[i]);
+      rectangle_cards.add(rectangle_tile);
+    }
+    return rectangle_cards;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          children: [
-            rectangleCardWidget(
-                context: context,
-                image: "assets/images/offers_img1.png",
-                title: "Mobile Recharge Offer",
-                subtitle1: "Use Code FIRST20",
-                subtitle2:
-                    "Get 20 % Instant cashback upto Rs 50 on your firs mobile recharge. T&C apply",
-                color: Color.fromRGBO(36, 32, 66, 1)),
-            rectangleCardWidget(
-                context: context,
-                image: "assets/images/offers_img2.png",
-                title: "DTH Recharge Offer",
-                subtitle1: "Use Code FIRSDTHT20",
-                subtitle2:
-                    "Get 20 % Instant cashback upto Rs 50 on your first DTH recharge. T&C apply",
-                color: Color.fromRGBO(59, 32, 66, 1)),
-            rectangleCardWidget(
-                context: context,
-                image: "assets/images/offers_img3.png",
-                title: "Flipcart Shopping Offer",
-                subtitle2:
-                    "Shop on Flipcart using our payment system to get upto 50% cashback . T&C appply",
-                color: Color.fromRGBO(66, 32, 40, 1)),
-            rectangleCardWidget(
-                context: context,
-                image: "assets/images/offers_img4.png",
-                title: "Money Transfer Offer",
-                subtitle2:
-                    "Get a scratch card with assuerd casbck and coupons on Money Transfer of Rs 500 or more . T&C apply",
-                color: Color.fromRGBO(36, 32, 66, 1)),
-            rectangleCardWidget(
-                context: context,
-                image: "assets/images/offers_img5.png",
-                title: "Rs 50 Off on Flights",
-                subtitle2:
-                    "Get instant discount on flat 50 Rs on Flight ticket booking. T&C apply",
-                color: Color.fromRGBO(59, 32, 66, 1)),
-          ],
+          children: renderRectangleCard(),
         ),
       ),
     );

@@ -1,8 +1,9 @@
 import 'package:first/widgets/home/rectangular_section.dart';
 import 'package:flutter/material.dart';
 
-moneyTransferSection() {
+moneyTransferSection(context) {
   return rectangularSectionWidget(
+      context: context,
       title: "Money Transfer",
       icon1: Icons.qr_code_scanner,
       right_color1: Color.fromRGBO(91, 46, 98, 1),

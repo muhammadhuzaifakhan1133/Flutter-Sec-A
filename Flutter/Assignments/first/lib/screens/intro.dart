@@ -15,13 +15,16 @@ class Intro extends StatefulWidget {
 class _IntroState extends State<Intro> {
   var constants = UserConstants();
 
+  renderSlides() {
+    List<Widget> slides = [];
+    for (var i = 0; i < 3; i++) {
+      slides.add(sliderWidget(context, slider_num: i));
+    }
+    return slides;
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> tabs = [
-      sliderWidget(context: context, slider_num: 0),
-      sliderWidget(context: context, slider_num: 1),
-      sliderWidget(context: context, slider_num: 2),
-    ];
     return IntroSlider(
       backgroundColorAllSlides: constants.theme,
       showNextBtn: true,
@@ -32,7 +35,7 @@ class _IntroState extends State<Intro> {
       sizeDot: 8.0,
       typeDotAnimation: DotSliderAnimation.SIZE_TRANSITION,
       colorDot: constants.txt_color,
-      listCustomTabs: tabs,
+      listCustomTabs: renderSlides(),
       scrollPhysics: const BouncingScrollPhysics(),
       hideStatusBar: false,
     );

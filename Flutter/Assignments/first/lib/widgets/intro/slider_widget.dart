@@ -2,7 +2,7 @@ import 'package:first/constants/user_constants.dart';
 import 'package:first/widgets/intro/intro_material.dart';
 import 'package:flutter/material.dart';
 
-sliderWidget({context, slider_num}) {
+sliderWidget(context, {slider_num}) {
   var constants = UserConstants();
   return Container(
     width: double.infinity,

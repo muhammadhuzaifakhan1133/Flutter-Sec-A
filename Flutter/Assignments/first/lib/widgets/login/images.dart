@@ -6,30 +6,29 @@ loginImages() {
     height: 250,
     child: Stack(
       children: [
-        const Positioned(
+        Positioned(
           top: 0,
-          left: 0,
+          right: 60,
           child: Image(
             image: AssetImage("assets/images/login_clouds.png"),
             height: 150,
           ),
         ),
         Positioned(
+            top: 60,
+            right: 100,
+            child: Image(
+              image: AssetImage("assets/images/login_mobile.png"),
+              height: 150,
+            )),
+        Positioned(
           bottom: 0,
-          left: 0,
-          child: Row(
-            children: const [
-              Image(
-                image: AssetImage("assets/images/login_women.png"),
-                height: 150,
-              ),
-              Image(
-                image: AssetImage("assets/images/login_mobile.png"),
-                height: 150,
-              ),
-            ],
+          right: 130,
+          child: Image(
+            image: AssetImage("assets/images/login_women.png"),
+            height: 150,
           ),
-        ),
+        )
       ],
     ),
   );

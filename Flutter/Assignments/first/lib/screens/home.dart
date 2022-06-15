@@ -21,8 +21,8 @@ class _HomeState extends State<Home> {
         margin: EdgeInsets.only(top: 10, left: 10, right: 10),
         child: Column(
           children: [
-            moneyTransferSection(),
-            rechargeAndBillPaymentSection(),
+            moneyTransferSection(context),
+            rechargeAndBillPaymentSection(context),
             ticketBookingSection(),
             moreServicesSection(),
             recentTransactionSection(context)
