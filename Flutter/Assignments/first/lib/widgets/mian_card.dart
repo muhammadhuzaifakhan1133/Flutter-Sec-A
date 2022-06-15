@@ -1,62 +1,87 @@
+import 'package:first/screens/tabs.dart';
 import 'package:first/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:first/widgets/balance/rounded_card.dart';
 
-mainCard(context,
-    {enableTopCornerImages = true,
-    enableSubCard = true,
-    width = double.infinity,
-    height,
-    alignment: MainAxisAlignment.start,
-    top_left_img,
-    top_right_img,
-    title,
-    amount,
-    subtitle,
-    bank_names,
-    account_no,
-    amounts,
-    colors,
-    img,
-    button_text,
-    button_color = const Color.fromRGBO(52, 54, 69, 1)}) {
+mainCard(
+  context, {
+  double width = double.infinity,
+  double? height,
+  MainAxisAlignment alignment = MainAxisAlignment.start,
+  String? top_left_img,
+  String? top_right_img,
+  String? title,
+  double title_size = 15.0,
+  FontWeight fontWeight = FontWeight.bold,
+  String? amount,
+  String? subtitle,
+  List<String>? bank_names,
+  List<String>? account_no,
+  List<String>? amounts,
+  List<Color>? colors,
+  String? subCardImage,
+  String? buttonText,
+  Color buttonTextColor = Colors.white,
+  double buttonTextSize = 16.0,
+  double buttonWidth = double.infinity,
+  double buttonHeight = 43.0,
+  double buttonRadius = 12.0,
+  goTo = const TabBarController(),
+  Color buttonColor = const Color.fromRGBO(52, 54, 69, 1),
+  String? image,
+  double? imageWidth,
+  double? imageHeight,
+  bool enableTopLeftImage = false,
+  bool enableTitle = false,
+  bool enableTopRightImage = false,
+  bool enableSubCard = false,
+  bool enableBottomButton = false,
+  bool enableAmount = false,
+  bool enableSubTitle = false,
+  bool enableImage = false,
+}) {
+  // This list will contain all widgets of this card
+  List<Widget> all_widgets = [];
+
+  // this list contain  top row widgets consist of topLeftImage, title and topRightImage in sequence
   List<Widget> topRowWidgets = [];
-  Widget title_widget = Text(
-    title,
-    style: TextStyle(
-        color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-  );
-  Widget topRow;
-  if (enableTopCornerImages) {
-    List<String> images = [top_left_img, top_right_img];
-    for (var img in images) {
-      topRowWidgets.add(Image(image: AssetImage(img)));
-    }
-    topRowWidgets.insert(topRowWidgets.length - 1, title_widget);
-    topRow = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: topRowWidgets,
-    );
-  } else {
-    topRow = title_widget;
+
+  // for topLeftImage
+  if (enableTopLeftImage && top_left_img != null) {
+    topRowWidgets.add(Image(image: AssetImage(top_left_img)));
   }
-  List<Widget> textRows = [];
-  List<double> fontSizes = [36.0, 15.0];
-  List<String> amt_and_subtitle = [amount, subtitle];
-  for (var i = 0; i < 2; i++) {
-    textRows.add(Text(
-      amt_and_subtitle[i],
+
+  // for title
+  if (enableTitle && title != null) {
+    topRowWidgets.add(Text(
+      title,
       style: TextStyle(
-          color: Color.fromRGBO(176, 190, 197, 1),
-          fontSize: fontSizes[i],
-          fontWeight: FontWeight.bold),
+          color: Colors.white, fontSize: title_size, fontWeight: fontWeight),
     ));
   }
-  List<Widget> cardRow1 = [];
-  List<Widget> cardRow2 = [];
-  if (enableSubCard) {
-    List<Widget> cards = [];
+
+  // for topRightImage
+  if (enableTopRightImage && top_right_img != null) {
+    topRowWidgets.add(Image(image: AssetImage(top_right_img)));
+  }
+
+  Widget topRow = Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: topRowWidgets,
+  );
+  all_widgets.add(topRow);
+
+  // for subcard
+  List<Widget> cardRow1 = []; // this will contain 2 cards
+  List<Widget> cardRow2 = []; // this will contain 1 card and 1 image
+  if (enableSubCard &&
+      bank_names != null &&
+      account_no != null &&
+      amounts != null &&
+      subCardImage != null &&
+      colors != null) {
+    List<Widget> cards = []; // this will contain cardRow1 + cardRow2
     for (var i = 0; i < 3; i++) {
       cards.add(roundedCardWidget(
           bank_name: bank_names[i],
@@ -68,16 +93,77 @@ mainCard(context,
       width: 70,
     ));
     cards.add(Image(
-      image: AssetImage(img),
+      image: AssetImage(subCardImage),
     ));
     cardRow1 = cards.sublist(0, 2);
     cardRow2 = cards.sublist(2);
   }
 
+  all_widgets.add(Row(children: cardRow1));
+  all_widgets.add(Row(children: cardRow2));
+
+  // for big image like barcode
+  if (enableImage && image != null) {
+    all_widgets.insert(
+        1,
+        Container(
+          margin: EdgeInsets.all(10),
+          child: Image(
+              image: AssetImage(image),
+              width: imageWidth,
+              height: imageHeight,
+              fit: BoxFit.fill),
+        ));
+  }
+
+  // for amount
+  if (enableAmount && amount != null) {
+    all_widgets.insert(
+        1,
+        Text(
+          amount,
+          style: TextStyle(
+              color: Color.fromRGBO(176, 190, 197, 1),
+              fontSize: 36.0,
+              fontWeight: FontWeight.bold),
+        ));
+  }
+
+  // for subTitle
+  if (enableSubTitle && subtitle != null) {
+    all_widgets.insert(
+        2,
+        Text(
+          subtitle,
+          style: TextStyle(
+              color: Color.fromRGBO(176, 190, 197, 1),
+              fontSize: 15.0,
+              fontWeight: FontWeight.bold),
+        ));
+  }
+
+  // for bottom button
+  if (enableBottomButton && buttonText != null) {
+    all_widgets.add(buttonWidget(
+        context: context,
+        text: buttonText,
+        text_color: buttonTextColor,
+        text_size: buttonTextSize,
+        width: buttonWidth,
+        height: buttonHeight,
+        radius: buttonRadius,
+        go_to: goTo,
+        button_color: buttonColor));
+  }
+
+  // this is the shape of the main card
+  RoundedRectangleBorder cardShape = RoundedRectangleBorder(
+    borderRadius: const BorderRadius.all(Radius.circular(12)),
+  );
+
+  // this is our main card
   return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: const BorderRadius.all(Radius.circular(12)),
-    ),
+    shape: cardShape,
     elevation: 15,
     color: Color.fromRGBO(31, 34, 42, 1),
     child: Container(
@@ -86,19 +172,7 @@ mainCard(context,
       padding: const EdgeInsets.all(15.0),
       child: Column(
         mainAxisAlignment: alignment,
-        children: [
-          topRow,
-          textRows[0],
-          textRows[1],
-          Row(
-            children: cardRow1,
-          ),
-          Row(
-            children: cardRow2,
-          ),
-          buttonWidget(
-              context: context, text: button_text, button_color: button_color)
-        ],
+        children: all_widgets,
       ),
     ),
   );

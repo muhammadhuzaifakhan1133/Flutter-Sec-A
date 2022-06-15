@@ -15,6 +15,13 @@ class _BalanceState extends State<Balance> {
       body: Padding(
         padding: EdgeInsets.all(15),
         child: mainCard(context,
+            enableTopLeftImage: true,
+            enableTitle: true,
+            enableTopRightImage: true,
+            enableAmount: true,
+            enableSubTitle: true,
+            enableSubCard: true,
+            enableBottomButton: true,
             height: 400.0,
             top_left_img: "assets/images/balance_icon1.png",
             title: "Portfolio Value",
@@ -29,8 +36,8 @@ class _BalanceState extends State<Balance> {
               Color.fromRGBO(68, 42, 101, 1),
               Color.fromRGBO(42, 101, 80, 1)
             ],
-            img: "assets/images/balance_icon3.png",
-            button_text: "Add / Manage Accounts"),
+            subCardImage: "assets/images/balance_icon3.png",
+            buttonText: "Add / Manage Accounts"),
       ),
     );
   }
