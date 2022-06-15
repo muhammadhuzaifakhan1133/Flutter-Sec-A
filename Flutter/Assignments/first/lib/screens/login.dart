@@ -1,6 +1,6 @@
 import 'package:first/constants/user_constants.dart';
 import 'package:first/screens/tabs.dart';
-import 'package:first/widgets/buttons/button.dart';
+import 'package:first/widgets/button_widget.dart';
 import 'package:first/widgets/login/design.dart';
 import 'package:first/widgets/login/input_phone_number.dart';
 import 'package:first/widgets/login/policy_description.dart';
@@ -28,12 +28,12 @@ class _LoginState extends State<Login> {
             const SizedBox(
               height: 15,
             ),
-            buttonWidget(context,
-                border_radius: 30.0,
+            buttonWidget(
+                context: context,
+                radius: 30.0,
                 width: 350.0,
                 height: 40.0,
-                text: "Verify",
-                go_to: TabBarController()),
+                text: "Verify"),
             policyDescription()
           ],
         ),

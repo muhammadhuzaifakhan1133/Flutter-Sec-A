@@ -1,7 +1,5 @@
-import 'package:first/widgets/offers/rectangle_card.dart';
+import 'package:first/widgets/rectangle_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Offers extends StatefulWidget {
   const Offers({Key? key}) : super(key: key);

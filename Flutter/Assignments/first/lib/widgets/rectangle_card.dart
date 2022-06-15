@@ -1,3 +1,4 @@
+import 'package:first/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 
 textWidget({title, size}) {
@@ -7,7 +8,21 @@ textWidget({title, size}) {
   );
 }
 
-rectangleCardWidget({context, image, title, subtitle1, subtitle2, color}) {
+rectangleCardWidget(
+    {context,
+    image,
+    title,
+    subtitle1,
+    subtitle2,
+    color,
+    width = double.infinity,
+    height = 101.0,
+    enableCollectbtn = false,
+    collectBtnColor = const Color.fromRGBO(250, 77, 250, 1),
+    collectBtnTextColor = Colors.white,
+    collectBtnWidth = 100.0,
+    collectBtnHeight = 28.0,
+    collectBtnText = "Collect Now"}) {
   List<Widget> all_text = [];
   var text_param = [title, subtitle1, subtitle2];
   for (var i = 0; i < text_param.length; i++) {
@@ -34,15 +49,24 @@ rectangleCardWidget({context, image, title, subtitle1, subtitle2, color}) {
           height: 4,
         ));
   }
+  if (enableCollectbtn) {
+    Widget collectBtn = buttonWidget(
+      context: context,
+      text: collectBtnText,
+      width: collectBtnWidth,
+      height: collectBtnHeight,
+      text_color: collectBtnTextColor,
+      text_size: 15.0,
+      button_color: collectBtnColor,
+    );
+    all_text.add(collectBtn);
+  }
   return Container(
     margin: EdgeInsets.only(bottom: 5),
-    width: double.infinity,
-    height: 101,
+    width: width,
+    height: height,
     child: Card(
       shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outline,
-        ),
         borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
       elevation: 15,

@@ -1,5 +1,5 @@
 import 'package:first/screens/profile.dart';
-import 'package:first/widgets/buttons/button.dart';
+import 'package:first/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 
 profileLogo(context) {
@@ -7,7 +7,7 @@ profileLogo(context) {
     padding: const EdgeInsets.only(top: 8.0, left: 4),
     child: InkWell(
       onTap: () {
-        NavigateTo(context, Profile());
+        navigateTo(context, Profile());
       },
       child: Container(
         // margin: EdgeInsets.only(top: 15),

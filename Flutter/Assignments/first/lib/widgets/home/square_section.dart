@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:first/widgets/sqaure_widget.dart';
+
 squareSectionWidget(
     {required String title,
     required List<IconData> icons,
@@ -14,15 +16,7 @@ squareSectionWidget(
       // height: 50,
       child: Column(
         children: [
-          Container(
-              width: 59,
-              height: 60,
-              padding: EdgeInsets.all(3),
-              // color: Colors.purple[900],
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.purple[900]),
-              child: Icon(icons[i])),
+          square(width: 59.0, height: 60.0, child: Icon(icons[i])),
           Text(
             labels[i],
             style: TextStyle(color: Color.fromRGBO(170, 170, 170, 1)),
