@@ -11,9 +11,12 @@ profileLogo(context) {
       },
       child: Container(
         // margin: EdgeInsets.only(top: 15),
-        child: CircleAvatar(
-          backgroundImage: AssetImage("assets/images/profile.jpg"),
-          radius: 25,
+        child: Hero(
+          tag: "profile",
+          child: CircleAvatar(
+            backgroundImage: AssetImage("assets/images/profile.jpg"),
+            radius: 25,
+          ),
         ),
       ),
     ),
