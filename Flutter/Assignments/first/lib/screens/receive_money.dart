@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:first/screens/tabs.dart';
 import 'package:first/widgets/button_widget.dart';
 import 'package:first/widgets/mian_card.dart';
@@ -15,6 +17,15 @@ class ReceiveMoney extends StatefulWidget {
 class _ReceiveMoneyState extends State<ReceiveMoney> {
   String id = "xyz@524899652";
   IconData copiedIcon = Icons.copy;
+
+  copyToClipboard() {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Copied to Clipboard !")));
+    setState(() {
+      copiedIcon = Icons.check;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,11 +63,7 @@ class _ReceiveMoneyState extends State<ReceiveMoney> {
             ),
             InkWell(
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Copied to Clipboard !")));
-                setState(() {
-                  copiedIcon = Icons.check;
-                });
+                copyToClipboard();
               },
               child: singleTileCard(
                   context: context,
