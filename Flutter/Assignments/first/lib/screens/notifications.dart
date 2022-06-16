@@ -1,3 +1,4 @@
+import 'package:first/widgets/notification/notification_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -25,6 +26,7 @@ class _NotificationsState extends State<Notifications> {
             padding: EdgeInsets.only(top: 15, left: 15, right: 7),
             height: 450,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,29 +45,38 @@ class _NotificationsState extends State<Notifications> {
                     ),
                   ],
                 ),
+                notificationTile(
+                    title: "Recharge Completed",
+                    subTitle:
+                        "Your last recharge on 9847229989 of 199 rs has been succesfully completed.",
+                    time: "May 20  - 12:32 Pm"),
+                notificationTile(
+                    title: "Money Recived",
+                    subTitle:
+                        "Your account ***21445 has been recieved an amount of Rs 1000 using upi transaction.",
+                    time: "May 20  - 12:45 Pm"),
+                notificationTile(
+                    title: "Offer Unlocked",
+                    subTitle:
+                        "You have an unlockd offer avilable go to offer section or tap to view the offer.",
+                    time: "May 20  - 2:45 Pm"),
                 SizedBox(
-                  height: 10,
+                  height: 13,
                 ),
-                ListTile(
-                    // dense: false,
-                    contentPadding: EdgeInsets.all(3),
-                    minLeadingWidth: 0,
-                    title: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        "Recharge Completed",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Recent Notifications",
+                        style: TextStyle(color: Colors.white, fontSize: 18)),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 9),
+                      child: Icon(
+                        Icons.arrow_circle_down,
+                        color: Colors.white,
                       ),
-                    ),
-                    subtitle: Text(
-                      "Your last recharge on 9847229989 of 199 rs has been succesfully completed.",
-                      style: TextStyle(color: Color(0xff9A9B9B)),
-                    ),
-                    trailing: IconButton(
-                        iconSize: 45,
-                        color: Color(0xff343645),
-                        onPressed: () {},
-                        icon: Icon(Icons.circle_notifications_rounded)))
+                    )
+                  ],
+                )
               ],
             ),
           ),
