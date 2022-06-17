@@ -68,8 +68,9 @@ class _ReceiveMoneyState extends State<ReceiveMoney> {
               child: singleTileCard(
                   context: context,
                   icon: copiedIcon,
-                  startText: "Your Pay ID",
-                  endText: id),
+                  title: "Your Pay ID",
+                  trailingText: id,
+                  enableTrailingText: true),
             ),
             SizedBox(
               height: 6,
@@ -81,8 +82,7 @@ class _ReceiveMoneyState extends State<ReceiveMoney> {
               child: singleTileCard(
                 context: context,
                 icon: Icons.arrow_forward_ios,
-                startText: "Show bank account details",
-                endText: "",
+                title: "Show bank account details",
               ),
             )
           ],

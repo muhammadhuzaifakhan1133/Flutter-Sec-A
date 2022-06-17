@@ -7,40 +7,43 @@ singleTileCard(
     Color color = const Color(0xff343645),
     double width = double.infinity,
     double height = 60.0,
-    String? startText,
-    String? endText,
-    Color startTextColor = Colors.white,
-    Color endTextColor = const Color(0xffB0BEC5),
-    Color iconColor = const Color(0xffB0BEC5)}) {
-  return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius)),
+    String? title,
+    String? trailingText,
+    double trailingWidth = 200,
+    Color trailingTextColor = const Color(0xffB0BEC5),
+    Color iconColor = const Color(0xffB0BEC5),
+    enableTrailingText = false}) {
+  Widget trailing = Icon(icon, color: iconColor);
+  if (enableTrailingText) {
+    trailing = Container(
+      width: trailingWidth,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(trailingText!,
+              style: TextStyle(color: trailingTextColor, fontSize: 16)),
+          SizedBox(
+            width: 10,
+          ),
+          trailing
+        ],
       ),
+    );
+  }
+  return Container(
+    width: width,
+    height: height,
+    child: Card(
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
       color: color,
-      child: Container(
-        padding: EdgeInsets.only(top: 7, bottom: 7, right: 7, left: 23),
-        height: height,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(startText!,
-                style: TextStyle(color: startTextColor, fontSize: 15)),
-            Row(children: [
-              Text(endText!,
-                  style: TextStyle(color: endTextColor, fontSize: 15)),
-              SizedBox(
-                width: 7,
-              ),
-              Icon(
-                icon,
-                color: iconColor,
-              ),
-              SizedBox(
-                width: 8,
-              )
-            ])
-          ],
+      child: ListTile(
+        title: Text(
+          title!,
+          style: TextStyle(color: Colors.white, fontSize: 16),
         ),
-      ));
+        trailing: trailing,
+      ),
+    ),
+  );
 }
