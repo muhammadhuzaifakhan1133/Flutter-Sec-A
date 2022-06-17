@@ -24,16 +24,23 @@ class _CalculatorState extends State<Calculator> {
       } else {
         inputs.add(number);
       }
+      if (inputs.any(arthimeticOperators.toSet().contains)) {
+        calculateResult();
+      }
     });
   }
 
   arthimeticOperatorPressed(String operator) {
     setState(() {
       if (inputs.length != 0) {
-        if (!(arthimeticOperators.contains(inputs.last))) {
+        if ((inputs.last == "%") ||
+            (!(arthimeticOperators.contains(inputs.last)))) {
           inputs.add(operator);
         } else {
           inputs = inputs.sublist(0, inputs.length - 1) + [operator];
+        }
+        if (operator == "%") {
+          calculateResult();
         }
       }
     });
@@ -51,45 +58,62 @@ class _CalculatorState extends State<Calculator> {
       if (operator == "=") {
         if (arthimeticOperators.contains(inputs.last) && (inputs.last != "%")) {
           inputs = inputs.sublist(0, inputs.length - 1);
+          print(inputs);
         }
-        List<String> nums = [];
-        String num = "";
-        for (var character in inputs) {
-          if (arthimeticOperators.contains(character)) {
-            nums.addAll([num, character]);
-            num = "";
-          } else {
-            num += character;
-          }
-        }
-        nums.add(num);
-        double ans;
-        for (var i = 0; i < arthimeticOperators.length; i++) {
-          operator = arthimeticOperators[i];
-          for (var j = 0; j < nums.length; j++) {
-            if (nums[j] == operator) {
-              if (operator == "%") {
-                ans = double.parse(nums[j - 1]) / 100;
-                nums.replaceRange(j - 1, j + 1, [ans.toString()]);
-              } else if (operator == "÷") {
-                ans = double.parse(nums[j - 1]) / double.parse(nums[j + 1]);
-                nums.replaceRange(j - 1, j + 2, [ans.toString()]);
-              } else if (operator == "x") {
-                ans = double.parse(nums[j - 1]) * double.parse(nums[j + 1]);
-                nums.replaceRange(j - 1, j + 2, [ans.toString()]);
-              } else if (operator == "+") {
-                ans = double.parse(nums[j - 1]) + double.parse(nums[j + 1]);
-                nums.replaceRange(j - 1, j + 2, [ans.toString()]);
-              } else if (operator == "-") {
-                ans = (double.parse(nums[j - 1]) - double.parse(nums[j + 1]))
-                    as double;
-                nums.replaceRange(j - 1, j + 2, [ans.toString()]);
-              }
-            }
-          }
-        }
-        ANS = double.parse(nums[0]);
+        inputs = [ANS.toString()];
+        ANS = 0;
       }
+    });
+  }
+
+  calculateResult() {
+    setState(() {
+      List<String> nums = [];
+      String num = "";
+      for (var i = 0; i < inputs.length; i++) {
+        if (arthimeticOperators.contains(inputs[i])) {
+          if (inputs[i - 1] == "%") {
+            nums.add(inputs[i]);
+          } else {
+            nums.addAll([num, inputs[i]]);
+            num = "";
+          }
+        } else {
+          num += inputs[i];
+        }
+      }
+      nums.add(num);
+      double ans;
+      String operator;
+      for (var i = 0; i < arthimeticOperators.length; i++) {
+        operator = arthimeticOperators[i];
+        int j = 0;
+        while (nums.contains(operator)) {
+          j = nums.indexOf(operator);
+          if (j == -1) {
+            break;
+          }
+          if (operator == "%") {
+            ans = double.parse(nums[j - 1]) / 100;
+            nums.replaceRange(j - 1, j + 1, [ans.toString()]);
+          } else if (operator == "÷") {
+            ans = double.parse(nums[j - 1]) / double.parse(nums[j + 1]);
+            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+          } else if (operator == "x") {
+            ans = double.parse(nums[j - 1]) * double.parse(nums[j + 1]);
+            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+          } else if (operator == "+") {
+            ans = double.parse(nums[j - 1]) + double.parse(nums[j + 1]);
+            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+          } else if (operator == "-") {
+            ans = (double.parse(nums[j - 1]) - double.parse(nums[j + 1]))
+                as double;
+            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+          }
+        }
+      }
+
+      ANS = double.parse(nums[0]);
     });
   }
 
