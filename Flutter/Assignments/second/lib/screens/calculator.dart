@@ -37,7 +37,7 @@ class _CalculatorState extends State<Calculator> {
             (!(arthimeticOperators.contains(inputs.last)))) {
           inputs.add(operator);
         } else {
-          inputs = inputs.sublist(0, inputs.length - 1) + [operator];
+          inputs[inputs.length - 1] = operator;
         }
         if (operator == "%") {
           calculateResult();
@@ -70,9 +70,14 @@ class _CalculatorState extends State<Calculator> {
     setState(() {
       List<String> nums = [];
       String num = "";
+      if (inputs.last != "%" && (arthimeticOperators.contains(inputs.last))) {
+        inputs = inputs.sublist(9, inputs.length - 1);
+      }
       for (var i = 0; i < inputs.length; i++) {
         if (arthimeticOperators.contains(inputs[i])) {
           if (inputs[i - 1] == "%") {
+            nums.add(inputs[i]);
+          } else if (i == 0) {
             nums.add(inputs[i]);
           } else {
             nums.addAll([num, inputs[i]]);
@@ -82,7 +87,23 @@ class _CalculatorState extends State<Calculator> {
           num += inputs[i];
         }
       }
-      nums.add(num);
+      print("Before $nums");
+      for (int i = 0; i < nums.length; i++) {
+        if ((i == 0) && (nums[i] == "-")) {
+          nums.replaceRange(0, 2, ["-" + inputs[i]]);
+        } else if ((inputs[i] == "-") &&
+            (arthimeticOperators.contains(inputs[i - 1]))) {
+          if (i == nums.length - 1) {
+            nums.replaceRange(i, nums.length, [inputs[i]]);
+          } else {
+            nums.replaceRange(i, i + 2, ["-" + inputs[i]]);
+          }
+        }
+      }
+      if (num != "-") {
+        nums.add(num);
+      }
+      print("after $nums");
       double ans;
       String operator;
       for (var i = 0; i < arthimeticOperators.length; i++) {
@@ -93,26 +114,46 @@ class _CalculatorState extends State<Calculator> {
           if (j == -1) {
             break;
           }
+          double sign = 1;
+          if ((j != 1) && (nums[j - 2] == "-")) {
+            sign = -1;
+          }
           if (operator == "%") {
-            ans = double.parse(nums[j - 1]) / 100;
+            ans = sign * double.parse(nums[j - 1]) / 100;
+            if ((ans < 0) && sign == -1) {
+              ans *= -1;
+            }
             nums.replaceRange(j - 1, j + 1, [ans.toString()]);
           } else if (operator == "÷") {
-            ans = double.parse(nums[j - 1]) / double.parse(nums[j + 1]);
+            ans = sign * double.parse(nums[j - 1]) / double.parse(nums[j + 1]);
+            if ((ans < 0) && sign == -1) {
+              ans *= -1;
+            }
             nums.replaceRange(j - 1, j + 2, [ans.toString()]);
           } else if (operator == "x") {
-            ans = double.parse(nums[j - 1]) * double.parse(nums[j + 1]);
+            ans = sign * double.parse(nums[j - 1]) * double.parse(nums[j + 1]);
+            if ((ans < 0) && sign == -1) {
+              ans *= -1;
+            }
             nums.replaceRange(j - 1, j + 2, [ans.toString()]);
           } else if (operator == "+") {
-            ans = double.parse(nums[j - 1]) + double.parse(nums[j + 1]);
+            ans = sign * double.parse(nums[j - 1]) + double.parse(nums[j + 1]);
+            if ((ans < 0) && sign == -1) {
+              ans *= -1;
+            }
             nums.replaceRange(j - 1, j + 2, [ans.toString()]);
           } else if (operator == "-") {
-            ans = (double.parse(nums[j - 1]) - double.parse(nums[j + 1]))
+            ans = sign * (double.parse(nums[j - 1]) - double.parse(nums[j + 1]))
                 as double;
+            if ((ans < 0) && sign == -1) {
+              ans *= -1;
+            }
             nums.replaceRange(j - 1, j + 2, [ans.toString()]);
           }
+          // print(nums);
         }
       }
-
+      print(nums);
       ANS = double.parse(nums[0]);
     });
   }
