@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:function_tree/function_tree.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({Key? key}) : super(key: key);
@@ -8,39 +9,69 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
-  List<String> inputs = [];
+  String expression = "";
+  String screenInput = "";
   // String numsToShow = "";
-  List<String> arthimeticOperators = ["%", "÷", "x", "+", "-"];
+  List<String> arthimeticOperators = ["%", "/", "*", "+", "-"];
   double ANS = 0;
 
   numberPressed(String number) {
     setState(() {
-      if (inputs.length == 0 && number == ".") {
-        inputs.add("0.");
-      } else if ((inputs.length == 1) && (inputs.elementAt(0) == "0")) {
-        inputs[0] = number;
-      } else if ((inputs.length != 0) && (inputs.last == "%")) {
-        inputs.addAll(["x", number]);
+      if (expression.length == 0 && number == ".") {
+        expression += "0.";
+        screenInput += "0.";
+      } else if ((expression.length == 1) && (expression[0] == "0")) {
+        expression = number;
+        screenInput = number;
+      } else if ((expression.length != 0) &&
+          (expression[expression.length - 1] == "%")) {
+        expression += "*" + number;
+        screenInput += "x" + number;
       } else {
-        inputs.add(number);
+        expression += number;
+        screenInput += number;
       }
-      if (inputs.any(arthimeticOperators.toSet().contains)) {
-        calculateResult();
+      if (containOperator(expression, arthimeticOperators)) {
+        ANS = expression.interpret().toDouble();
       }
     });
   }
 
+  bool containOperator(String expression, List<String> arthimeticOperators) {
+    for (var i = 0; i < expression.length; i++) {
+      if (arthimeticOperators.contains(expression[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   arthimeticOperatorPressed(String operator) {
     setState(() {
-      if (inputs.length != 0) {
-        if ((inputs.last == "%") ||
-            (!(arthimeticOperators.contains(inputs.last)))) {
-          inputs.add(operator);
+      if (expression.length != 0) {
+        if (!(arthimeticOperators
+            .contains(expression.substring(expression.length - 1)))) {
+          if (operator == "%") {
+            expression += "*0.01";
+            screenInput += "%";
+          } else if (operator == "*") {
+            expression += "*";
+            screenInput += "x";
+          } else if (operator == "/") {
+            expression += "/";
+            screenInput += "÷";
+          } else {
+            expression += operator;
+            screenInput += operator;
+          }
         } else {
-          inputs[inputs.length - 1] = operator;
+          expression =
+              expression.substring(0, expression.length - 1) + operator;
+          screenInput =
+              screenInput.substring(0, expression.length - 1) + operator;
         }
         if (operator == "%") {
-          calculateResult();
+          ANS = expression.interpret().toDouble();
         }
       }
     });
@@ -48,109 +79,38 @@ class _CalculatorState extends State<Calculator> {
 
   operatorPressed(String operator) {
     setState(() {
-      if ((operator == "D") && (inputs.length != 0)) {
-        inputs = inputs.sublist(0, inputs.length - 1);
+      if ((operator == "D") && (expression.length != 0)) {
+        if (screenInput.substring(screenInput.length - 1) == "%") {
+          expression = expression.substring(0, expression.length - 4);
+        } else {
+          expression = expression.substring(0, expression.length - 1);
+        }
+        screenInput = screenInput.substring(0, screenInput.length - 1);
+        if (expression.length != 0) {
+          if (!(arthimeticOperators
+              .contains(expression.substring(expression.length - 1)))) {
+            ANS = expression.interpret().toDouble();
+          }
+        } else {
+          ANS = 0;
+        }
       }
       if (operator == "C") {
-        inputs = [];
+        expression = "";
+        screenInput = "";
         ANS = 0;
       }
       if (operator == "=") {
-        if (arthimeticOperators.contains(inputs.last) && (inputs.last != "%")) {
-          inputs = inputs.sublist(0, inputs.length - 1);
-          print(inputs);
+        if (arthimeticOperators
+                .contains(expression.substring(expression.length - 1)) &&
+            (expression.substring(expression.length - 1) != "%")) {
+          expression = expression.substring(0, expression.length - 1);
+          screenInput = screenInput.substring(0, screenInput.length - 1);
         }
-        inputs = [ANS.toString()];
+        expression = ANS.toString();
+        screenInput = ANS.toString();
         ANS = 0;
       }
-    });
-  }
-
-  replaceValuesWithSigns(int j, double ans, List<String> nums) {
-    if ((j != 1) && (ans < 0)) {
-      nums.replaceRange(j - 2, j + 2,
-          ["-", ans.toString().substring(1, ans.toString().length - 1)]);
-    } else if ((j != 1) && (ans > 0)) {
-      nums.replaceRange(j - 2, j + 2, ["+", ans.toString()]);
-    } else if (j == 1) {
-      nums.replaceRange(j - 1, j + 2, [ans.toString()]);
-    }
-  }
-
-  calculateResult() {
-    setState(() {
-      List<String> nums = [];
-      String num = "";
-      if (inputs.last != "%" && (arthimeticOperators.contains(inputs.last))) {
-        inputs = inputs.sublist(9, inputs.length - 1);
-      }
-      for (var i = 0; i < inputs.length; i++) {
-        if (arthimeticOperators.contains(inputs[i])) {
-          if (inputs[i - 1] == "%") {
-            nums.add(inputs[i]);
-          } else if (i == 0) {
-            nums.add(inputs[i]);
-          } else {
-            nums.addAll([num, inputs[i]]);
-            num = "";
-          }
-        } else {
-          num += inputs[i];
-        }
-      }
-      print("Before $nums");
-      for (int i = 0; i < nums.length; i++) {
-        if ((i == 0) && (nums[i] == "-")) {
-          nums.replaceRange(0, 2, ["-" + nums[i]]);
-        } else if ((nums[i] == "-") &&
-            (arthimeticOperators.contains(inputs[i - 1]))) {
-          if (i == nums.length - 1) {
-            nums.replaceRange(i, nums.length, [nums[i]]);
-          } else {
-            nums.replaceRange(i, i + 2, ["-" + nums[i]]);
-          }
-        }
-      }
-      if (num != "-") {
-        nums.add(num);
-      }
-      print("after $nums");
-      double ans;
-      String operator;
-      for (var i = 0; i < arthimeticOperators.length; i++) {
-        operator = arthimeticOperators[i];
-        int j = 0;
-        while (nums.contains(operator)) {
-          j = nums.indexOf(operator);
-          if (j == -1) {
-            break;
-          }
-          double sign = 1;
-          if ((j != 1) && (nums[j - 2] == "-")) {
-            sign = -1;
-          }
-          if (operator == "%") {
-            ans = sign * double.parse(nums[j - 1]) / 100;
-            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
-          } else if (operator == "÷") {
-            ans = sign * double.parse(nums[j - 1]) / double.parse(nums[j + 1]);
-            replaceValuesWithSigns(j, ans, nums);
-          } else if (operator == "x") {
-            ans = sign * double.parse(nums[j - 1]) * double.parse(nums[j + 1]);
-            replaceValuesWithSigns(j, ans, nums);
-          } else if (operator == "+") {
-            ans = sign * double.parse(nums[j - 1]) + double.parse(nums[j + 1]);
-            replaceValuesWithSigns(j, ans, nums);
-          } else if (operator == "-") {
-            ans = sign * (double.parse(nums[j - 1]) - double.parse(nums[j + 1]))
-                as double;
-            replaceValuesWithSigns(j, ans, nums);
-          }
-          // print(nums);
-        }
-      }
-      print(nums);
-      ANS = double.parse(nums[0]);
     });
   }
 
@@ -173,7 +133,7 @@ class _CalculatorState extends State<Calculator> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  inputs.join(),
+                  screenInput,
                   style: TextStyle(fontSize: 30),
                 ),
                 SizedBox(
@@ -212,7 +172,7 @@ class _CalculatorState extends State<Calculator> {
                     ),
                     InkWell(
                       onTap: () {
-                        arthimeticOperatorPressed("÷");
+                        arthimeticOperatorPressed("/");
                       },
                       child: Container(
                         height: buttonHeight,
@@ -227,7 +187,7 @@ class _CalculatorState extends State<Calculator> {
                     ),
                     InkWell(
                       onTap: () {
-                        arthimeticOperatorPressed("x");
+                        arthimeticOperatorPressed("*");
                       },
                       child: Container(
                         height: buttonHeight,
