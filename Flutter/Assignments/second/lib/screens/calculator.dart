@@ -10,29 +10,25 @@ class Calculator extends StatefulWidget {
 
 class _CalculatorState extends State<Calculator> {
   String expression = "";
-  String screenInput = "";
+
   // String numsToShow = "";
-  List<String> arthimeticOperators = ["%", "/", "*", "+", "-"];
-  double ANS = 0;
+  List<String> arthimeticOperators = ["/", "*", "-", "+"];
+  String ANS = "";
 
   numberPressed(String number) {
     setState(() {
       if (expression.length == 0 && number == ".") {
         expression += "0.";
-        screenInput += "0.";
       } else if ((expression.length == 1) && (expression[0] == "0")) {
         expression = number;
-        screenInput = number;
       } else if ((expression.length != 0) &&
           (expression[expression.length - 1] == "%")) {
         expression += "*" + number;
-        screenInput += "x" + number;
       } else {
         expression += number;
-        screenInput += number;
       }
       if (containOperator(expression, arthimeticOperators)) {
-        ANS = expression.interpret().toDouble();
+        ANS = expression.interpret().toString();
       }
     });
   }
@@ -51,27 +47,10 @@ class _CalculatorState extends State<Calculator> {
       if (expression.length != 0) {
         if (!(arthimeticOperators
             .contains(expression.substring(expression.length - 1)))) {
-          if (operator == "%") {
-            expression += "*0.01";
-            screenInput += "%";
-          } else if (operator == "*") {
-            expression += "*";
-            screenInput += "x";
-          } else if (operator == "/") {
-            expression += "/";
-            screenInput += "÷";
-          } else {
-            expression += operator;
-            screenInput += operator;
-          }
+          expression += operator;
         } else {
           expression =
               expression.substring(0, expression.length - 1) + operator;
-          screenInput =
-              screenInput.substring(0, expression.length - 1) + operator;
-        }
-        if (operator == "%") {
-          ANS = expression.interpret().toDouble();
         }
       }
     });
@@ -80,36 +59,30 @@ class _CalculatorState extends State<Calculator> {
   operatorPressed(String operator) {
     setState(() {
       if ((operator == "D") && (expression.length != 0)) {
-        if (screenInput.substring(screenInput.length - 1) == "%") {
-          expression = expression.substring(0, expression.length - 4);
-        } else {
-          expression = expression.substring(0, expression.length - 1);
-        }
-        screenInput = screenInput.substring(0, screenInput.length - 1);
-        if (expression.length != 0) {
+        expression = expression.substring(0, expression.length - 1);
+
+        if (containOperator(expression, arthimeticOperators)) {
           if (!(arthimeticOperators
               .contains(expression.substring(expression.length - 1)))) {
-            ANS = expression.interpret().toDouble();
+            ANS = expression.interpret().toString();
           }
         } else {
-          ANS = 0;
+          ANS = "";
         }
       }
       if (operator == "C") {
         expression = "";
-        screenInput = "";
-        ANS = 0;
+
+        ANS = "";
       }
       if (operator == "=") {
         if (arthimeticOperators
                 .contains(expression.substring(expression.length - 1)) &&
             (expression.substring(expression.length - 1) != "%")) {
           expression = expression.substring(0, expression.length - 1);
-          screenInput = screenInput.substring(0, screenInput.length - 1);
         }
         expression = ANS.toString();
-        screenInput = ANS.toString();
-        ANS = 0;
+        ANS = "";
       }
     });
   }
@@ -123,25 +96,38 @@ class _CalculatorState extends State<Calculator> {
     double buttonWidth = buttonAreaWidth / 4;
     double buttonHeight = buttonAreaHeight / 5;
     return Scaffold(
+      appBar: AppBar(elevation: 0, backgroundColor: Colors.white, actions: [
+        IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.history,
+              color: Colors.green,
+              size: 30,
+            )),
+        SizedBox(width: 10)
+      ]),
       body: Column(
         children: [
           Container(
-            height: screenHeight * 0.4,
+            height: screenHeight * 0.29,
             width: screenWidth * 1,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  screenInput,
+                  expression,
                   style: TextStyle(fontSize: 30),
                 ),
                 SizedBox(
                   height: 40,
                 ),
                 Text(
-                  ANS.toString(),
+                  (expression.length == 0) ? "" : ANS.toString(),
                   style: TextStyle(fontSize: 23),
+                ),
+                SizedBox(
+                  height: 30,
                 )
               ],
             ),
@@ -172,7 +158,7 @@ class _CalculatorState extends State<Calculator> {
                     ),
                     InkWell(
                       onTap: () {
-                        arthimeticOperatorPressed("/");
+                        arthimeticOperatorPressed(arthimeticOperators[0]);
                       },
                       child: Container(
                         height: buttonHeight,
@@ -187,7 +173,7 @@ class _CalculatorState extends State<Calculator> {
                     ),
                     InkWell(
                       onTap: () {
-                        arthimeticOperatorPressed("*");
+                        arthimeticOperatorPressed(arthimeticOperators[1]);
                       },
                       child: Container(
                         height: buttonHeight,
@@ -266,7 +252,7 @@ class _CalculatorState extends State<Calculator> {
                     ),
                     InkWell(
                       onTap: () {
-                        arthimeticOperatorPressed("-");
+                        arthimeticOperatorPressed(arthimeticOperators[2]);
                       },
                       child: Container(
                         height: buttonHeight,
@@ -330,7 +316,7 @@ class _CalculatorState extends State<Calculator> {
                     ),
                     InkWell(
                       onTap: () {
-                        arthimeticOperatorPressed("+");
+                        arthimeticOperatorPressed(arthimeticOperators[3]);
                       },
                       child: Container(
                         height: buttonHeight,
@@ -405,14 +391,14 @@ class _CalculatorState extends State<Calculator> {
                           children: [
                             InkWell(
                               onTap: () {
-                                arthimeticOperatorPressed("%");
+                                numberPressed("00");
                               },
                               child: Container(
                                 height: buttonHeight,
                                 width: buttonWidth,
                                 child: Center(
                                   child: Text(
-                                    "%",
+                                    "00",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 23),
                                   ),
