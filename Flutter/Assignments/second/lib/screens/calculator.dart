@@ -66,6 +66,17 @@ class _CalculatorState extends State<Calculator> {
     });
   }
 
+  replaceValuesWithSigns(int j, double ans, List<String> nums) {
+    if ((j != 1) && (ans < 0)) {
+      nums.replaceRange(j - 2, j + 2,
+          ["-", ans.toString().substring(1, ans.toString().length - 1)]);
+    } else if ((j != 1) && (ans > 0)) {
+      nums.replaceRange(j - 2, j + 2, ["+", ans.toString()]);
+    } else if (j == 1) {
+      nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+    }
+  }
+
   calculateResult() {
     setState(() {
       List<String> nums = [];
@@ -90,13 +101,13 @@ class _CalculatorState extends State<Calculator> {
       print("Before $nums");
       for (int i = 0; i < nums.length; i++) {
         if ((i == 0) && (nums[i] == "-")) {
-          nums.replaceRange(0, 2, ["-" + inputs[i]]);
-        } else if ((inputs[i] == "-") &&
+          nums.replaceRange(0, 2, ["-" + nums[i]]);
+        } else if ((nums[i] == "-") &&
             (arthimeticOperators.contains(inputs[i - 1]))) {
           if (i == nums.length - 1) {
-            nums.replaceRange(i, nums.length, [inputs[i]]);
+            nums.replaceRange(i, nums.length, [nums[i]]);
           } else {
-            nums.replaceRange(i, i + 2, ["-" + inputs[i]]);
+            nums.replaceRange(i, i + 2, ["-" + nums[i]]);
           }
         }
       }
@@ -120,35 +131,20 @@ class _CalculatorState extends State<Calculator> {
           }
           if (operator == "%") {
             ans = sign * double.parse(nums[j - 1]) / 100;
-            if ((ans < 0) && sign == -1) {
-              ans *= -1;
-            }
-            nums.replaceRange(j - 1, j + 1, [ans.toString()]);
+            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
           } else if (operator == "÷") {
             ans = sign * double.parse(nums[j - 1]) / double.parse(nums[j + 1]);
-            if ((ans < 0) && sign == -1) {
-              ans *= -1;
-            }
-            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+            replaceValuesWithSigns(j, ans, nums);
           } else if (operator == "x") {
             ans = sign * double.parse(nums[j - 1]) * double.parse(nums[j + 1]);
-            if ((ans < 0) && sign == -1) {
-              ans *= -1;
-            }
-            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+            replaceValuesWithSigns(j, ans, nums);
           } else if (operator == "+") {
             ans = sign * double.parse(nums[j - 1]) + double.parse(nums[j + 1]);
-            if ((ans < 0) && sign == -1) {
-              ans *= -1;
-            }
-            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+            replaceValuesWithSigns(j, ans, nums);
           } else if (operator == "-") {
             ans = sign * (double.parse(nums[j - 1]) - double.parse(nums[j + 1]))
                 as double;
-            if ((ans < 0) && sign == -1) {
-              ans *= -1;
-            }
-            nums.replaceRange(j - 1, j + 2, [ans.toString()]);
+            replaceValuesWithSigns(j, ans, nums);
           }
           // print(nums);
         }
