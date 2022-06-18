@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:function_tree/function_tree.dart';
+import 'package:second/screens/currency_converter.dart';
+import 'package:second/screens/history.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({Key? key}) : super(key: key);
@@ -10,10 +12,10 @@ class Calculator extends StatefulWidget {
 
 class _CalculatorState extends State<Calculator> {
   String expression = "";
-
-  // String numsToShow = "";
   List<String> arthimeticOperators = ["/", "*", "-", "+"];
   String ANS = "";
+  List<String> history_inputs = [];
+  List<String> history_ans = [];
 
   numberPressed(String number) {
     setState(() {
@@ -48,10 +50,16 @@ class _CalculatorState extends State<Calculator> {
         if (!(arthimeticOperators
             .contains(expression.substring(expression.length - 1)))) {
           expression += operator;
-        } else {
+        }
+        // else if (operator == "-") {
+        //   expression += operator;
+        // }
+        else {
           expression =
               expression.substring(0, expression.length - 1) + operator;
         }
+      } else if (operator == "-") {
+        expression += operator;
       }
     });
   }
@@ -61,7 +69,8 @@ class _CalculatorState extends State<Calculator> {
       if ((operator == "D") && (expression.length != 0)) {
         expression = expression.substring(0, expression.length - 1);
 
-        if (containOperator(expression, arthimeticOperators)) {
+        if (containOperator(expression, arthimeticOperators) &&
+            (expression.length > 2)) {
           if (!(arthimeticOperators
               .contains(expression.substring(expression.length - 1)))) {
             ANS = expression.interpret().toString();
@@ -76,13 +85,17 @@ class _CalculatorState extends State<Calculator> {
         ANS = "";
       }
       if (operator == "=") {
-        if (arthimeticOperators
-                .contains(expression.substring(expression.length - 1)) &&
-            (expression.substring(expression.length - 1) != "%")) {
-          expression = expression.substring(0, expression.length - 1);
+        if (ANS != "") {
+          if (arthimeticOperators
+                  .contains(expression.substring(expression.length - 1)) &&
+              (expression.substring(expression.length - 1) != "%")) {
+            expression = expression.substring(0, expression.length - 1);
+          }
+          history_inputs.insert(0, expression);
+          history_ans.insert(0, ANS.toString());
+          expression = ANS.toString();
+          ANS = "";
         }
-        expression = ANS.toString();
-        ANS = "";
       }
     });
   }
@@ -96,9 +109,26 @@ class _CalculatorState extends State<Calculator> {
     double buttonWidth = buttonAreaWidth / 4;
     double buttonHeight = buttonAreaHeight / 5;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(elevation: 0, backgroundColor: Colors.white, actions: [
         IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CurrencyConverter()));
+            },
+            icon: Icon(
+              Icons.currency_exchange,
+              color: Colors.green,
+              size: 30,
+            )),
+        IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          History(history_inputs, history_ans)));
+            },
             icon: Icon(
               Icons.history,
               color: Colors.green,

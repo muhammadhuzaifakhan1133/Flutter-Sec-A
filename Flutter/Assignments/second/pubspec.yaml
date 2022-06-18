@@ -35,6 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   function_tree: ^0.8.12
+  currency_picker: ^2.0.11
+  money_converter: ^2.0.1
+  country_picker: ^2.0.15
 
 dev_dependencies:
   flutter_test:
