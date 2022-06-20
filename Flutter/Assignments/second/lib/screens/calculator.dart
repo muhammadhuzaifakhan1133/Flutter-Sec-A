@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:function_tree/function_tree.dart';
 import 'package:second/screens/currency_converter.dart';
 import 'package:second/screens/history.dart';
+import 'package:second/widgets/button.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({Key? key}) : super(key: key);
@@ -100,6 +101,38 @@ class _CalculatorState extends State<Calculator> {
     });
   }
 
+  List<Widget> buttonRow(List<String> labels, List<String> operators,
+      List<String> types, double buttonWidth, double buttonHeight,
+      {Color? buttonColor, Color? textColor, bool roundborder = false}) {
+    assert(labels.length == operators.length);
+    List<Widget> row = [];
+    for (var i = 0; i < labels.length; i++) {
+      Widget buttonWidget = button(
+        labels[i],
+        buttonWidth,
+        buttonHeight,
+        ((buttonColor == null) ? Colors.white : buttonColor),
+        roundBorder: roundborder,
+        color: (textColor != null)
+            ? textColor
+            : (((types[i] == "o") || (types[i] == "a"))
+                ? Colors.green
+                : Colors.black),
+        onTap: () {
+          if (types[i] == "o") {
+            operatorPressed(operators[i]);
+          } else if (types[i] == "n") {
+            numberPressed(operators[i]);
+          } else {
+            arthimeticOperatorPressed(operators[i]);
+          }
+        },
+      );
+      row.add(buttonWidget);
+    }
+    return row;
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -170,325 +203,62 @@ class _CalculatorState extends State<Calculator> {
             child: Column(
               children: [
                 Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        operatorPressed("C");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "C",
-                            style: TextStyle(color: Colors.green, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        arthimeticOperatorPressed(arthimeticOperators[0]);
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "÷",
-                            style: TextStyle(color: Colors.green, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        arthimeticOperatorPressed(arthimeticOperators[1]);
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "x",
-                            style: TextStyle(color: Colors.green, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        operatorPressed("D");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "DEL",
-                            style: TextStyle(color: Colors.green, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
+                  children: buttonRow([
+                    "C",
+                    "÷",
+                    "x",
+                    "DEL"
+                  ], [
+                    "C",
+                    arthimeticOperators[0],
+                    arthimeticOperators[1],
+                    "D"
+                  ], [
+                    "o",
+                    "a",
+                    "a",
+                    "o"
+                  ], buttonWidth, buttonHeight),
                 ),
                 Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        numberPressed("7");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "7",
-                            style: TextStyle(color: Colors.black, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        numberPressed("8");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "8",
-                            style: TextStyle(color: Colors.black, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        numberPressed("9");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "9",
-                            style: TextStyle(color: Colors.black, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        arthimeticOperatorPressed(arthimeticOperators[2]);
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "-",
-                            style: TextStyle(color: Colors.green, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
+                  children: buttonRow(
+                      ["7", "8", "9", "-"],
+                      ["7", "8", "9", arthimeticOperators[2]],
+                      ["n", "n", "n", "a"],
+                      buttonWidth,
+                      buttonHeight),
                 ),
                 Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        numberPressed("4");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "4",
-                            style: TextStyle(color: Colors.black, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        numberPressed("5");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "5",
-                            style: TextStyle(color: Colors.black, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        numberPressed("6");
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "6",
-                            style: TextStyle(color: Colors.black, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        arthimeticOperatorPressed(arthimeticOperators[3]);
-                      },
-                      child: Container(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "+",
-                            style: TextStyle(color: Colors.green, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
+                  children: buttonRow(
+                      ["4", "5", "6", "+"],
+                      ["4", "5", "6", arthimeticOperators[3]],
+                      ["n", "n", "n", "a"],
+                      buttonWidth,
+                      buttonHeight),
                 ),
                 Row(
                   children: [
                     Column(
                       children: [
                         Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                numberPressed("1");
-                              },
-                              child: Container(
-                                height: buttonHeight,
-                                width: buttonWidth,
-                                child: Center(
-                                  child: Text(
-                                    "1",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 23),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                numberPressed("2");
-                              },
-                              child: Container(
-                                height: buttonHeight,
-                                width: buttonWidth,
-                                child: Center(
-                                  child: Text(
-                                    "2",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 23),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                numberPressed("3");
-                              },
-                              child: Container(
-                                height: buttonHeight,
-                                width: buttonWidth,
-                                child: Center(
-                                  child: Text(
-                                    "3",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 23),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
+                          children: buttonRow(["1", "2", "3"], ["1", "2", "3"],
+                              ["n", "n", "n"], buttonWidth, buttonHeight),
                         ),
                         Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                numberPressed("00");
-                              },
-                              child: Container(
-                                height: buttonHeight,
-                                width: buttonWidth,
-                                child: Center(
-                                  child: Text(
-                                    "00",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 23),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                numberPressed("0");
-                              },
-                              child: Container(
-                                height: buttonHeight,
-                                width: buttonWidth,
-                                child: Center(
-                                  child: Text(
-                                    "0",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 23),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                numberPressed(".");
-                              },
-                              child: Container(
-                                height: buttonHeight,
-                                width: buttonWidth,
-                                child: Center(
-                                  child: Text(
-                                    ".",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 23),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
+                          children: buttonRow(
+                              ["00", "0", "."],
+                              ["00", "0", "."],
+                              ["n", "n", "n"],
+                              buttonWidth,
+                              buttonHeight),
                         )
                       ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        operatorPressed("=");
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(15)),
-                        height: buttonHeight * 2,
-                        width: buttonWidth,
-                        child: Center(
-                          child: Text(
-                            "=",
-                            style: TextStyle(color: Colors.white, fontSize: 23),
-                          ),
-                        ),
-                      ),
-                    )
+                    buttonRow(
+                        ["="], ["="], ["o"], buttonWidth, buttonHeight * 2,
+                        buttonColor: Colors.green,
+                        textColor: Colors.white,
+                        roundborder: true)[0]
                   ],
                 )
               ],

@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:money_converter/Currency.dart';
 import 'package:money_converter/money_converter.dart';
 import 'package:second/services/api_client.dart';
@@ -15,8 +16,8 @@ class CurrencyConverter extends StatefulWidget {
 class _CurrencyConverterState extends State<CurrencyConverter> {
   TextEditingController controller = TextEditingController()..text = "1";
   ApiClient client = ApiClient();
-  String? fromCountry;
-  String? toCountry;
+  String? fromCountry = "USD";
+  String? toCountry = "PKR";
   double? rate;
   List<String>? currencies = [];
   String? answer;
@@ -28,23 +29,18 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
       List<String> list = await client.getCurrencies();
       setState(() {
         currencies = list;
-        print(list);
+        currencies?.sort();
       });
     })();
-// add in initState
-    // getAmounts(fromCountry, toCountry, controller);
+    getResult();
   }
 
-// call function to convert
-  // void getAmounts(String fromCountry, String toCountry,
-  //     TextEditingController controller) async {
-  //   var conversion = await MoneyConverter.convert(
-  //       Currency(Currency.USD, amount: double.parse(controller.text)),
-  //       Currency(toCountry));
-  //   setState(() {
-  //     answer = conversion.toString();
-  //   });
-  // }
+  getResult() async {
+    rate = await client.getRate(fromCountry, toCountry);
+    setState(() {
+      answer = (rate! * double.parse(controller.text)).toStringAsFixed(3);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,80 +56,106 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Container(
-              width: 200,
-              height: 200,
-              child: Column(
-                children: [
-                  Text(
-                    "Exchange Rates",
-                    style: TextStyle(color: Colors.grey, fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Text(
-                    '$answer',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Container(
+                width: 200,
+                height: 200,
+                child: Column(
+                  children: [
+                    Text(
+                      "Exchange Rates",
+                      style: TextStyle(color: Colors.grey, fontSize: 20),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    Text(
+                      '$answer',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            width: 350,
-            child: TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                      borderRadius: BorderRadius.circular(10))),
-            ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    "From",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  customDropDown(currencies!, (val) {}, val: fromCountry)
-                ],
+            Container(
+              width: 350,
+              child: TextField(
+                onSubmitted: (String val) {
+                  setState(() {
+                    getResult();
+                  });
+                },
+                controller: controller,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    hintText: "Enter an amount to convert",
+                    labelText: "Amount",
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(),
+                        borderRadius: BorderRadius.circular(10))),
               ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.swap_horiz)),
-              Column(
-                children: [
-                  Text(
-                    "To",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  customDropDown(currencies!, (val) {
-                    setState(() {});
-                  }, val: toCountry)
-                ],
-              )
-            ],
-          )
-        ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "From",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    customDropDown(currencies!, (val) {
+                      setState(() {
+                        fromCountry = val;
+                        getResult();
+                      });
+                    }, val: fromCountry)
+                  ],
+                ),
+                FloatingActionButton(
+                    onPressed: () {
+                      String? temp = fromCountry;
+                      setState(() {
+                        fromCountry = toCountry;
+                        toCountry = temp;
+                      });
+                      getResult();
+                    },
+                    child: Icon(Icons.swap_horiz)),
+                Column(
+                  children: [
+                    Text(
+                      "To",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    customDropDown(currencies!, (val) {
+                      setState(() {
+                        toCountry = val;
+                        getResult();
+                      });
+                    }, val: toCountry)
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

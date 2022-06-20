@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class History extends StatelessWidget {
+class History extends StatefulWidget {
   History(this.history_inputs, this.history_ans, {Key? key}) : super(key: key);
 
   List<String> history_inputs;
   List<String> history_ans;
 
+  @override
+  State<History> createState() => _HistoryState();
+}
+
+class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +28,7 @@ class History extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: ListView.separated(
-          itemCount: history_inputs.length,
+          itemCount: widget.history_inputs.length,
           itemBuilder: (context, index) {
             return Container(
               // height: MediaQuery.of(context).size.height * 0.15,
@@ -31,14 +37,14 @@ class History extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    history_inputs[index],
+                    widget.history_inputs[index],
                     style: TextStyle(fontSize: 30),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    history_ans[index],
+                    widget.history_ans[index],
                     style: TextStyle(fontSize: 20),
                   )
                 ],
