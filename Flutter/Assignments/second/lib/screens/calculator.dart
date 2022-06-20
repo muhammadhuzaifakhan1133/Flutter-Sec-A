@@ -3,6 +3,7 @@ import 'package:function_tree/function_tree.dart';
 import 'package:second/screens/currency_converter.dart';
 import 'package:second/screens/history.dart';
 import 'package:second/widgets/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({Key? key}) : super(key: key);
@@ -12,11 +13,36 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String expression = "";
   List<String> arthimeticOperators = ["/", "*", "-", "+"];
   String ANS = "";
   List<String> history_inputs = [];
   List<String> history_ans = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getHistory();
+  }
+
+  void getHistory() async {
+    final SharedPreferences prefs = await _prefs;
+    final List<String>? inputs = prefs.getStringList('inputs');
+    final List<String>? answers = prefs.getStringList('answers');
+    if ((inputs != null) && (answers != null)) {
+      setState(() {
+        history_inputs = inputs;
+        history_ans = answers;
+      });
+    }
+  }
+
+  void saveHistory(List<String> inputs, List<String> answers) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setStringList('inputs', inputs);
+    await prefs.setStringList('answers', answers);
+  }
 
   numberPressed(String number) {
     setState(() {
@@ -94,6 +120,7 @@ class _CalculatorState extends State<Calculator> {
           }
           history_inputs.insert(0, expression);
           history_ans.insert(0, ANS.toString());
+          saveHistory(history_inputs, history_ans);
           expression = ANS.toString();
           ANS = "";
         }

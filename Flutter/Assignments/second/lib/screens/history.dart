@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class History extends StatefulWidget {
   History(this.history_inputs, this.history_ans, {Key? key}) : super(key: key);
@@ -12,6 +11,11 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
