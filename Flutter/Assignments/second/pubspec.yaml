@@ -38,6 +38,7 @@ dependencies:
   currency_picker: ^2.0.11
   money_converter: ^2.0.1
   country_picker: ^2.0.15
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

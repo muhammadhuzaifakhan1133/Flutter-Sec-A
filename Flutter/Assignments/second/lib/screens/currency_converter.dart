@@ -4,6 +4,8 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:money_converter/Currency.dart';
 import 'package:money_converter/money_converter.dart';
+import 'package:second/services/api_client.dart';
+import 'package:second/widgets/drop_down.dart';
 
 class CurrencyConverter extends StatefulWidget {
   @override
@@ -12,27 +14,37 @@ class CurrencyConverter extends StatefulWidget {
 
 class _CurrencyConverterState extends State<CurrencyConverter> {
   TextEditingController controller = TextEditingController()..text = "1";
-  String fromCountry = "PK";
-  String toCountry = "US";
+  ApiClient client = ApiClient();
+  String? fromCountry;
+  String? toCountry;
+  double? rate;
+  List<String>? currencies = [];
   String? answer;
 
   @override
   void initState() {
     super.initState();
+    (() async {
+      List<String> list = await client.getCurrencies();
+      setState(() {
+        currencies = list;
+        print(list);
+      });
+    })();
 // add in initState
-    getAmounts(fromCountry, toCountry, controller);
+    // getAmounts(fromCountry, toCountry, controller);
   }
 
 // call function to convert
-  void getAmounts(String fromCountry, String toCountry,
-      TextEditingController controller) async {
-    var conversion = await MoneyConverter.convert(
-        Currency(Currency.USD, amount: double.parse(controller.text)),
-        Currency(toCountry));
-    setState(() {
-      answer = conversion.toString();
-    });
-  }
+  // void getAmounts(String fromCountry, String toCountry,
+  //     TextEditingController controller) async {
+  //   var conversion = await MoneyConverter.convert(
+  //       Currency(Currency.USD, amount: double.parse(controller.text)),
+  //       Currency(toCountry));
+  //   setState(() {
+  //     answer = conversion.toString();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,40 +113,10 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                   SizedBox(
                     height: 10,
                   ),
-                  InkWell(
-                    onTap: () {
-                      showCountryPicker(
-                        context: context,
-                        exclude: [toCountry],
-                        onSelect: (Country country) {
-                          setState(() {
-                            fromCountry = country.countryCode;
-                          });
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 100,
-                      height: 50,
-                      decoration: BoxDecoration(border: Border.all()),
-                      child: Center(
-                          child: Text(
-                        fromCountry,
-                        style: TextStyle(color: Colors.black, fontSize: 23),
-                      )),
-                    ),
-                  ),
+                  customDropDown(currencies!, (val) {}, val: fromCountry)
                 ],
               ),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      String temp = fromCountry;
-                      fromCountry = toCountry;
-                      toCountry = temp;
-                    });
-                  },
-                  icon: Icon(Icons.swap_horiz)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.swap_horiz)),
               Column(
                 children: [
                   Text(
@@ -144,25 +126,11 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                   SizedBox(
                     height: 10,
                   ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        toCountry = "";
-                      });
-                    },
-                    child: Container(
-                      width: 100,
-                      height: 50,
-                      decoration: BoxDecoration(border: Border.all()),
-                      child: Center(
-                          child: Text(
-                        toCountry,
-                        style: TextStyle(color: Colors.black, fontSize: 23),
-                      )),
-                    ),
-                  ),
+                  customDropDown(currencies!, (val) {
+                    setState(() {});
+                  }, val: toCountry)
                 ],
-              ),
+              )
             ],
           )
         ],

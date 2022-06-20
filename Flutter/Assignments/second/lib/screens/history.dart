@@ -25,7 +25,7 @@ class History extends StatelessWidget {
           itemCount: history_inputs.length,
           itemBuilder: (context, index) {
             return Container(
-              height: 100,
+              // height: MediaQuery.of(context).size.height * 0.15,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
