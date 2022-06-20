@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:class1/widgets/listview.dart';
 import 'package:class1/widgets/txtfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,14 +14,44 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<String> chatnames = [];
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController controller = TextEditingController();
   TextEditingController update_controller = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    getOldChat();
+  }
+
+  Future<void> getOldChat() async {
+    final SharedPreferences prefs = await _prefs;
+    final List<String>? chats = prefs.getStringList('chats');
+    if (chats != null) {
+      setState(() {
+        chatnames = chats;
+      });
+    }
+  }
+
+  Future<void> saveChat() async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setStringList('chats', chatnames);
+  }
+
   addChat() {
-    setState(() {
-      chatnames.add(controller.text);
-      controller.clear();
-    });
+    if (controller.text != "") {
+      setState(() {
+        chatnames.add(controller.text);
+        controller.clear();
+        saveChat();
+      });
+    } else {
+      const snackBar = SnackBar(
+        content: Text('Please enter some text'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   removeChat(i) {
@@ -83,7 +115,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Learning"),
+          title: Text("To Do List"),
           actions: [
             ElevatedButton(
                 onPressed: () {
