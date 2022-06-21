@@ -1,10 +1,4 @@
-import 'dart:ffi';
-
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:money_converter/Currency.dart';
-import 'package:money_converter/money_converter.dart';
 import 'package:second/services/api_client.dart';
 import 'package:second/widgets/drop_down.dart';
 

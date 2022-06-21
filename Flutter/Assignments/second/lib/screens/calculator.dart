@@ -17,31 +17,29 @@ class _CalculatorState extends State<Calculator> {
   String expression = "";
   List<String> arthimeticOperators = ["/", "*", "-", "+"];
   String ANS = "";
-  List<String> history_inputs = [];
-  List<String> history_ans = [];
 
   @override
   void initState() {
     super.initState();
-    getHistory();
   }
 
-  void getHistory() async {
+  void saveHistory(String input, String answer) async {
     final SharedPreferences prefs = await _prefs;
     final List<String>? inputs = prefs.getStringList('inputs');
     final List<String>? answers = prefs.getStringList('answers');
-    if ((inputs != null) && (answers != null)) {
-      setState(() {
-        history_inputs = inputs;
-        history_ans = answers;
-      });
+    if ((inputs != null) || (answers != null)) {
+      inputs!.insert(0, input);
+      answers!.insert(0, answer);
+      await prefs.setStringList('inputs', inputs);
+      await prefs.setStringList('answers', answers);
+    } else {
+      await prefs.setStringList('inputs', [
+        input,
+      ]);
+      await prefs.setStringList('answers', [
+        answer,
+      ]);
     }
-  }
-
-  void saveHistory(List<String> inputs, List<String> answers) async {
-    final SharedPreferences prefs = await _prefs;
-    await prefs.setStringList('inputs', inputs);
-    await prefs.setStringList('answers', answers);
   }
 
   numberPressed(String number) {
@@ -114,13 +112,10 @@ class _CalculatorState extends State<Calculator> {
       if (operator == "=") {
         if (ANS != "") {
           if (arthimeticOperators
-                  .contains(expression.substring(expression.length - 1)) &&
-              (expression.substring(expression.length - 1) != "%")) {
+              .contains(expression.substring(expression.length - 1))) {
             expression = expression.substring(0, expression.length - 1);
           }
-          history_inputs.insert(0, expression);
-          history_ans.insert(0, ANS.toString());
-          saveHistory(history_inputs, history_ans);
+          saveHistory(expression, ANS);
           expression = ANS.toString();
           ANS = "";
         }
@@ -184,10 +179,11 @@ class _CalculatorState extends State<Calculator> {
         IconButton(
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          History(history_inputs, history_ans)));
+                  context, MaterialPageRoute(builder: (context) => History()));
+              // setState(() {
+              //   history_inputs = [];
+              //   history_ans = [];
+              // });
             },
             icon: Icon(
               Icons.history,
@@ -199,7 +195,7 @@ class _CalculatorState extends State<Calculator> {
       body: Column(
         children: [
           Container(
-            height: screenHeight * 0.29,
+            height: screenHeight * 0.27,
             width: screenWidth * 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
