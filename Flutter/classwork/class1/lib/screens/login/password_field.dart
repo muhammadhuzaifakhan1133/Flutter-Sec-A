@@ -1,3 +1,4 @@
+import 'package:class1/widgets/login_signup_textfield.dart';
 import 'package:flutter/material.dart';
 
 class PasswordField extends StatefulWidget {
@@ -33,12 +34,12 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Form(
       key: widget._passwordKey,
-      child: Container(
-        width: 350,
-        child: TextFormField(
-          obscureText: _obscuretext,
+      child: loginSignUpTextField(
+          width: size.width * 0.85,
+          obscuretext: _obscuretext,
           validator: (password) {
             if ((password == null) || (password.isEmpty)) {
               return "Enter password";
@@ -48,31 +49,16 @@ class _PasswordFieldState extends State<PasswordField> {
               return null;
             }
           },
-          keyboardType: TextInputType.emailAddress,
+          keyboardtype: TextInputType.text,
           textInputAction: TextInputAction.done,
-          cursorColor: Colors.black,
-          // onSaved: (email) {},
-          decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black)),
-              hintText: "Your password",
-              prefixIcon: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Icon(
-                  Icons.lock,
-                  color: Colors.black,
-                ),
-              ),
-              suffixIcon: IconButton(
-                icon: suffixIcon(),
-                onPressed: () {
-                  setState(() {
-                    _obscuretext = !_obscuretext;
-                  });
-                },
-              )),
-        ),
-      ),
+          labelText: "Your password",
+          prefixIcon: Icons.lock,
+          suffixIcon: suffixIcon(),
+          onPressedSuffixIcon: () {
+            setState(() {
+              _obscuretext = !_obscuretext;
+            });
+          }),
     );
   }
 }

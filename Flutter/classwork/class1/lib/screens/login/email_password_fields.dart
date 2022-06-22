@@ -1,6 +1,7 @@
 import 'package:class1/screens/home/home.dart';
 import 'package:class1/screens/login/password_field.dart';
 import 'package:class1/widgets/button.dart';
+import 'package:class1/widgets/login_signup_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,78 +19,56 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
   final _emailKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FormState>();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  bool userNotRegistered = false;
+  List<String>? emails = [];
   String? correctPassword;
 
-  Future<void> alreadyEmail(String email) async {
+  Future<List<String>?> getOldEmails() async {
     final SharedPreferences prefs = await _prefs;
-    final List<String>? emails = prefs.getStringList('emails');
-    if (((emails == null) || (emails.isEmpty))) {
-      userNotRegistered = true;
-    } else {
-      if (!(emails.contains(email))) {
-        userNotRegistered = true;
-      } else {
-        final List<String>? passwords = prefs.getStringList('passwords');
-        int pwdInd = emails.indexOf(email);
-        correctPassword = passwords?.elementAt(pwdInd);
-      }
-    }
+    final List<String>? oldEmails = prefs.getStringList('emails');
+    return oldEmails;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getOldEmails().then((value) => emails = value);
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Form(
           key: _emailKey,
-          child: Container(
-            width: 350,
-            child: TextFormField(
+          child: loginSignUpTextField(
+              width: size.width * 0.85,
               validator: (email) {
                 if ((email == null) || (email.isEmpty)) {
                   return 'Please enter email';
                 } else {
-                  alreadyEmail(email);
-                  if (userNotRegistered) {
+                  if (emails!.contains(email)) {
+                    print(emails);
+                    print(email);
                     return null;
                   } else {
+                    print(emails);
+                    print(email);
                     return "Email is not registered";
                   }
                 }
               },
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              cursorColor: Colors.black,
-              onSaved: (email) {},
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-                hintText: "Your email",
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: size.height * 0.020,
+              keyboardtype: TextInputType.emailAddress,
+              labelText: "Your email",
+              prefixIcon: Icons.person),
         ),
         PasswordField(
             passwordKey: _passwordKey, correctPassword: correctPassword),
-        SizedBox(height: size.height * 0.03),
+        SizedBox(height: size.height * 0.025),
         buttonWidget(
             context: context,
             text: "Log in",
-            button_color: Colors.black,
             width: size.width * 0.8,
             text_size: 20.0,
             validation: true,

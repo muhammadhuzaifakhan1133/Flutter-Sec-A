@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
                           style: TextStyle(color: Colors.grey, fontSize: 18)))
                 ],
               ),
-              SizedBox(height: size.height * 0.04),
+              SizedBox(height: size.height * 0.02),
               EmailPasswordFields(),
             ],
           ),
