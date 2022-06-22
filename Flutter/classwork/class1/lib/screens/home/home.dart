@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:class1/widgets/listview.dart';
-import 'package:class1/widgets/txtfield.dart';
+import 'package:class1/screens/home/listview.dart';
+import 'package:class1/screens/home/txtfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 

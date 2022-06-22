@@ -1,4 +1,5 @@
-import 'package:class1/screens/login.dart';
+import 'package:class1/screens/login/login.dart';
+import 'package:class1/screens/sign_up.dart';
 import 'package:class1/widgets/button.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +52,7 @@ class Welcome extends StatelessWidget {
                 button_color: Colors.black,
                 width: size.width * 0.8,
                 text_size: 20.0,
-                go_to: Login()),
+                go_to: SignUp()),
           ],
         ),
       ),

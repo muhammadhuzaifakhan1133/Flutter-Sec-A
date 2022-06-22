@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:class1/screens/home.dart';
+import 'package:class1/screens/welcome.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,18 +16,21 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
         Duration(seconds: 4),
         () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => Home())));
+            MaterialPageRoute(builder: (BuildContext context) => Welcome())));
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Image.asset(
-        "assets/images/splash.png",
-        fit: BoxFit.cover,
-        height: double.infinity,
-        width: double.infinity,
-        alignment: Alignment.center,
+      body: Center(
+        child: Image.asset(
+          "assets/images/logo.png",
+          // fit: BoxFit.cover,
+          height: size.height * 0.4,
+          width: size.width * 0.4,
+          // alignment: Alignment.center,
+        ),
       ),
     );
   }

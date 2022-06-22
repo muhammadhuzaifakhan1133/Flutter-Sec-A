@@ -16,10 +16,25 @@ buttonWidget(
     width = double.infinity,
     height = 43.0,
     radius = 12.0,
-    go_to}) {
+    go_to,
+    validation = false,
+    validation_keys}) {
+  bool all_validate = false;
   return ElevatedButton(
     onPressed: () {
-      navigateTo(context, go_to);
+      if (validation) {
+        for (var i = 0; i < validation_keys.length; i++) {
+          if (validation_keys[i].currentState!.validate()) {
+            if (i == validation_keys.length - 1) {
+              navigateTo(context, go_to);
+            }
+          } else {
+            break;
+          }
+        }
+      } else {
+        navigateTo(context, go_to);
+      }
     },
     child: Text(
       text,
