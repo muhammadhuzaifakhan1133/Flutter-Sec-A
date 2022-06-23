@@ -1,3 +1,4 @@
+import 'package:class1/constants/color_constants.dart';
 import 'package:class1/widgets/login_signup_textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -22,12 +23,12 @@ class _PasswordFieldState extends State<PasswordField> {
     if (_obscuretext) {
       return Icon(
         Icons.visibility,
-        color: Colors.grey,
+        color: suffixIconColor,
       );
     } else {
       return Icon(
         Icons.visibility_off,
-        color: Colors.grey,
+        color: suffixIconColor,
       );
     }
   }
@@ -44,6 +45,8 @@ class _PasswordFieldState extends State<PasswordField> {
             if ((password == null) || (password.isEmpty)) {
               return "Enter password";
             } else if (password != widget.correctPassword) {
+              print(password);
+              print(widget.correctPassword);
               return "Invalid password";
             } else {
               return null;

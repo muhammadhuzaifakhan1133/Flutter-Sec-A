@@ -1,3 +1,4 @@
+import 'package:class1/constants/local_storage_keys.dart';
 import 'package:class1/screens/home/home.dart';
 import 'package:class1/screens/login/password_field.dart';
 import 'package:class1/widgets/button.dart';
@@ -19,19 +20,33 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
   final _emailKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FormState>();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  List<String>? emails = [];
-  String? correctPassword;
+  // bool isUserRegistered = true;
+  List<String> emails = [];
+  String correctPassword = '';
+  String setEmail = '';
+  String name = '';
 
-  Future<List<String>?> getOldEmails() async {
+  Future<void> getEmials() async {
     final SharedPreferences prefs = await _prefs;
-    final List<String>? oldEmails = prefs.getStringList('emails');
-    return oldEmails;
+    final List<String>? oldEmails = prefs.getStringList(emailsKey);
+    print(oldEmails);
+    if (oldEmails != null) {
+      emails = oldEmails;
+    }
+  }
+
+  Future<void> getRelatedValues(int index) async {
+    final SharedPreferences prefs = await _prefs;
+    final List<String>? oldPasswords = prefs.getStringList(passwordsKey);
+    final List<String>? oldNames = prefs.getStringList(namesKey);
+    correctPassword = oldPasswords!.elementAt(index);
+    name = oldNames!.elementAt(index);
   }
 
   @override
   void initState() {
     super.initState();
-    getOldEmails().then((value) => emails = value);
+    getEmials();
   }
 
   @override
@@ -48,13 +63,12 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
                 if ((email == null) || (email.isEmpty)) {
                   return 'Please enter email';
                 } else {
-                  if (emails!.contains(email)) {
-                    print(emails);
-                    print(email);
+                  if (emails.contains(email)) {
+                    getRelatedValues(emails.indexOf(email));
+                    setEmail = email;
                     return null;
                   } else {
                     print(emails);
-                    print(email);
                     return "Email is not registered";
                   }
                 }
@@ -64,7 +78,9 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
               prefixIcon: Icons.person),
         ),
         PasswordField(
-            passwordKey: _passwordKey, correctPassword: correctPassword),
+          passwordKey: _passwordKey,
+          correctPassword: correctPassword,
+        ),
         SizedBox(height: size.height * 0.025),
         buttonWidget(
             context: context,
@@ -73,6 +89,10 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
             text_size: 20.0,
             validation: true,
             validation_keys: [_emailKey, _passwordKey],
+            isLogin: true,
+            name: name,
+            email: setEmail,
+            password: correctPassword,
             go_to: Home()),
       ],
     );

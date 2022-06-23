@@ -1,8 +1,6 @@
-import 'package:class1/screens/home/home.dart';
+import 'package:class1/constants/color_constants.dart';
 import 'package:class1/screens/login/email_password_fields.dart';
-import 'package:class1/widgets/button.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -23,7 +21,7 @@ class _LoginState extends State<Login> {
               SizedBox(height: size.height * 0.1),
               Text("Log in",
                   style: TextStyle(
-                      color: Colors.black,
+                      color: textColor,
                       fontWeight: FontWeight.bold,
                       fontFamily: "Algerian",
                       fontSize: 26)),
@@ -36,7 +34,7 @@ class _LoginState extends State<Login> {
                   Positioned(
                       bottom: 0,
                       child: Text("Schedule task and mark important one",
-                          style: TextStyle(color: Colors.grey, fontSize: 18)))
+                          style: TextStyle(color: subTextColor, fontSize: 18)))
                 ],
               ),
               SizedBox(height: size.height * 0.02),

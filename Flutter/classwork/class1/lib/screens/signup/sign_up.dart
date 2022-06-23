@@ -1,3 +1,5 @@
+import 'package:class1/constants/color_constants.dart';
+import 'package:class1/constants/local_storage_keys.dart';
 import 'package:class1/screens/home/home.dart';
 import 'package:class1/widgets/button.dart';
 import 'package:class1/widgets/login_signup_textfield.dart';
@@ -29,7 +31,7 @@ class _SignUpState extends State<SignUp> {
 
   Future<List<String>?> getOldEmail() async {
     final SharedPreferences prefs = await _prefs;
-    final List<String>? emails = prefs.getStringList('emails');
+    final List<String>? emails = prefs.getStringList(emailsKey);
     return emails;
   }
 
@@ -65,12 +67,27 @@ class _SignUpState extends State<SignUp> {
               children: [
                 Text("Sign Up",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: textColor,
                         fontWeight: FontWeight.bold,
                         fontFamily: "Algerian",
                         fontSize: 26)),
-                Image(
-                  image: AssetImage("assets/images/signup.jpg"),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image(
+                      image: AssetImage("assets/images/signup.jpg"),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        child: Text("Filter task according to type and date",
+                            style: TextStyle(
+                              color: subTextColor,
+                              fontSize: 18,
+                            )))
+                  ],
+                ),
+                SizedBox(
+                  height: size.height * 0.030,
                 ),
                 Form(
                   key: _nameKey,
@@ -83,6 +100,7 @@ class _SignUpState extends State<SignUp> {
                           return "Please enter your name";
                         } else {
                           setName = name;
+                          // print(setName);
                           return null;
                         }
                       }),
@@ -97,11 +115,13 @@ class _SignUpState extends State<SignUp> {
                         } else {
                           if (emails == null) {
                             setEmail = email;
+                            // print(setEmail);
                             return null;
                           } else if (emails!.contains(email)) {
                             return "Email is already registered";
                           } else {
                             setEmail = email;
+                            // print(setEmail);
                             return null;
                           }
                         }
@@ -146,6 +166,7 @@ class _SignUpState extends State<SignUp> {
                           return "Confirm password does not match";
                         } else {
                           setPassword = password;
+                          // print(setEmail);
                           return null;
                         }
                       },

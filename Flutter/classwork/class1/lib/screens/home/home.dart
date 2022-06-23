@@ -113,7 +113,26 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
+        drawer: Drawer(
+          width: size.width * 0.5,
+          child: Column(
+            children: [
+              DrawerHeader(
+                  child:
+                      Image(image: AssetImage("assets/images/drawer_img.jpg"))),
+              ListTile(
+                title: Text("Profile"),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text("Logout"),
+                onTap: () {},
+              )
+            ],
+          ),
+        ),
         appBar: AppBar(
           title: Text("To Do List"),
           actions: [

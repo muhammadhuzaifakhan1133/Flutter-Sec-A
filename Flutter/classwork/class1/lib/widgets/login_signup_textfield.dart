@@ -1,3 +1,4 @@
+import 'package:class1/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 Widget loginSignUpTextField(
@@ -7,13 +8,13 @@ Widget loginSignUpTextField(
     validator,
     TextInputType? keyboardtype,
     TextInputAction? textInputAction = TextInputAction.next,
-    Color cursorColor = Colors.black,
-    Color borderColor = Colors.black,
+    Color cursorColor = cursorColor,
+    Color borderColor = borderColor,
     double borderradius = 0.0,
     IconData? prefixIcon,
-    Color prefixIconColor = Colors.black,
+    Color prefixIconColor = prefixIconColor,
     Widget? suffixIcon,
-    Color? suffixIconColor = Colors.grey,
+    Color? suffixIconColor = suffixIconColor,
     onPressedSuffixIcon}) {
   return Padding(
     padding: const EdgeInsets.all(8.0),

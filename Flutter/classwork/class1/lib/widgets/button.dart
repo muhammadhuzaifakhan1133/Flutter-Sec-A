@@ -1,26 +1,36 @@
-import 'package:class1/screens/signup/save_values.dart';
+import 'package:class1/constants/color_constants.dart';
+import 'package:class1/screens/login/save_login_values.dart';
+import 'package:class1/screens/signup/save_signup_values.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-navigateTo(context, goTo) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => goTo),
-  );
+navigateTo(context, goTo, {bool comeBack = true}) {
+  if (comeBack) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => goTo),
+    );
+  } else {
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(builder: (BuildContext context) => goTo),
+    );
+  }
 }
 
 buttonWidget(
     {required BuildContext context,
     required text,
-    Color text_color = Colors.white,
+    Color text_color = buttonTextColor,
     double text_size = 16.0,
-    Color button_color = Colors.black,
+    Color button_color = buttonColor,
     double width = double.infinity,
     double height = 43.0,
     double radius = 12.0,
     Widget? go_to,
     bool validation = false,
     bool isSignup = false,
+    bool isLogin = false,
     String? name,
     String? email,
     String? password,
@@ -31,10 +41,12 @@ buttonWidget(
         for (var i = 0; i < validation_keys!.length; i++) {
           if (validation_keys[i].currentState!.validate()) {
             if (i == validation_keys.length - 1) {
-              navigateTo(context, go_to);
               if (isSignup) {
-                saveValues(name, email, password);
+                saveSignUpValues(name, email, password);
+              } else if (isLogin) {
+                saveLoginValues(name, email, password);
               }
+              // navigateTo(context, go_to, comeBack: false);
             }
           } else {
             break;
