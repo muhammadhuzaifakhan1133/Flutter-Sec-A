@@ -1,9 +1,8 @@
-import 'dart:ui';
-
-import 'package:class1/screens/home/listview.dart';
-import 'package:class1/screens/home/txtfield.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/screens/home/profile_bar.dart';
+import 'package:class1/screens/welcome/welcome.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,147 +12,41 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<String> chatnames = [];
+  String name = '';
+  String email = '';
+  String password = '';
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  TextEditingController controller = TextEditingController();
-  TextEditingController update_controller = TextEditingController();
+
+  Future<void> getActiveUser() async {
+    final SharedPreferences prefs = await _prefs;
+    setState(() {
+      name = prefs.getString(activeNameKey)!;
+      email = prefs.getString(activeEmailKey)!;
+      password = prefs.getString(activePasswordKey)!;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    getOldChat();
-  }
-
-  Future<void> getOldChat() async {
-    final SharedPreferences prefs = await _prefs;
-    final List<String>? chats = prefs.getStringList('chats');
-    if (chats != null) {
-      setState(() {
-        chatnames = chats;
-      });
-    }
-  }
-
-  Future<void> saveChat() async {
-    final SharedPreferences prefs = await _prefs;
-    await prefs.setStringList('chats', chatnames);
-  }
-
-  addChat() {
-    if (controller.text != "") {
-      setState(() {
-        chatnames.add(controller.text);
-        controller.clear();
-        saveChat();
-      });
-    } else {
-      const snackBar = SnackBar(
-        content: Text('Please enter some text'),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
-
-  removeChat(i) {
-    setState(() {
-      chatnames.removeAt(i);
-    });
-  }
-
-  removeAllChat() {
-    setState(() {
-      chatnames = [];
-    });
-  }
-
-  updateChat(context, i) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => AlertDialog(
-              title: Text("Update"),
-              content: TextField(
-                decoration: InputDecoration(hintText: chatnames[i]),
-                controller: update_controller,
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      update_controller.clear();
-                    },
-                    child: Text("Cancel")),
-                TextButton(
-                    onPressed: () {
-                      setState(() {
-                        chatnames[i] = update_controller.text;
-                      });
-                      Navigator.pop(context);
-                      update_controller.clear();
-                    },
-                    child: Text("OK"))
-              ],
-            ));
-  }
-
-  tileButtons(i) {
-    return <Widget>[
-      IconButton(
-          onPressed: () {
-            removeChat(i);
-          },
-          icon: Icon(Icons.delete)),
-      IconButton(
-          onPressed: () {
-            updateChat(context, i);
-          },
-          icon: Icon(Icons.edit)),
-    ];
+    (() async {
+      await getActiveUser();
+    })();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        drawer: Drawer(
-          width: size.width * 0.5,
-          child: Column(
-            children: [
-              DrawerHeader(
-                  child:
-                      Image(image: AssetImage("assets/images/drawer_img.jpg"))),
-              ListTile(
-                title: Text("Profile"),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text("Logout"),
-                onTap: () {},
-              )
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          title: Text("To Do List"),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  addChat();
-                },
-                child: Icon(Icons.add)),
-            ElevatedButton(
-                onPressed: () {
-                  removeAllChat();
-                },
-                child: Icon(Icons.delete_forever))
-          ],
-        ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            textFieldWidget(controller),
-            SizedBox(height: 20),
-            listViewWidget(chatnames, tileButtons),
+            ProfileBar(email: email, name: name, password: password),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,6 @@
+import 'package:class1/constants/color_constants.dart';
 import 'package:class1/constants/local_storage_keys.dart';
 import 'package:class1/screens/home/home.dart';
-import 'package:class1/screens/login/password_field.dart';
 import 'package:class1/widgets/button.dart';
 import 'package:class1/widgets/login_signup_textfield.dart';
 import 'package:flutter/material.dart';
@@ -21,32 +21,61 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
   final _passwordKey = GlobalKey<FormState>();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   // bool isUserRegistered = true;
+  List<String> names = [];
   List<String> emails = [];
+  List<String> passwords = [];
   String correctPassword = '';
   String setEmail = '';
   String name = '';
 
-  Future<void> getEmials() async {
-    final SharedPreferences prefs = await _prefs;
-    final List<String>? oldEmails = prefs.getStringList(emailsKey);
-    print(oldEmails);
-    if (oldEmails != null) {
-      emails = oldEmails;
+  bool _obscuretext = true;
+  Widget suffixIcon() {
+    if (_obscuretext) {
+      return Icon(
+        Icons.visibility,
+        color: suffixIconColor,
+      );
+    } else {
+      return Icon(
+        Icons.visibility_off,
+        color: suffixIconColor,
+      );
     }
   }
 
-  Future<void> getRelatedValues(int index) async {
+  Future<void> getOldValues() async {
     final SharedPreferences prefs = await _prefs;
-    final List<String>? oldPasswords = prefs.getStringList(passwordsKey);
     final List<String>? oldNames = prefs.getStringList(namesKey);
-    correctPassword = oldPasswords!.elementAt(index);
-    name = oldNames!.elementAt(index);
+    if (oldNames != null) {
+      names = oldNames;
+    }
+    final List<String>? oldEmails = prefs.getStringList(emailsKey);
+    if (oldEmails != null) {
+      emails = oldEmails;
+    }
+    final List<String>? oldPasswords = prefs.getStringList(passwordsKey);
+    if (oldPasswords != null) {
+      passwords = oldPasswords;
+    }
+  }
+
+  Future<void> saveLoginAsActiveUser(
+      String name, String email, String password) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setString(activeNameKey, name);
+    await prefs.setString(activeEmailKey, email);
+    await prefs.setString(activePasswordKey, password);
+  }
+
+  void getRelatedValues(int index) {
+    correctPassword = passwords.elementAt(index);
+    name = names.elementAt(index);
   }
 
   @override
   void initState() {
     super.initState();
-    getEmials();
+    getOldValues();
   }
 
   @override
@@ -68,7 +97,6 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
                     setEmail = email;
                     return null;
                   } else {
-                    print(emails);
                     return "Email is not registered";
                   }
                 }
@@ -77,9 +105,32 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
               labelText: "Your email",
               prefixIcon: Icons.person),
         ),
-        PasswordField(
-          passwordKey: _passwordKey,
-          correctPassword: correctPassword,
+        Form(
+          key: _passwordKey,
+          child: loginSignUpTextField(
+              width: size.width * 0.85,
+              obscuretext: _obscuretext,
+              validator: (password) {
+                if ((password == null) || (password.isEmpty)) {
+                  return "Enter password";
+                } else if (password != correctPassword) {
+                  print("Password $password");
+                  print("Correct Password $correctPassword");
+                  return "Invalid password";
+                } else {
+                  return null;
+                }
+              },
+              keyboardtype: TextInputType.text,
+              textInputAction: TextInputAction.done,
+              labelText: "Your password",
+              prefixIcon: Icons.lock,
+              suffixIcon: suffixIcon(),
+              onPressedSuffixIcon: () {
+                setState(() {
+                  _obscuretext = !_obscuretext;
+                });
+              }),
         ),
         SizedBox(height: size.height * 0.025),
         buttonWidget(
@@ -87,13 +138,19 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
             text: "Log in",
             width: size.width * 0.8,
             text_size: 20.0,
-            validation: true,
-            validation_keys: [_emailKey, _passwordKey],
             isLogin: true,
-            name: name,
-            email: setEmail,
-            password: correctPassword,
-            go_to: Home()),
+            onpressed: () {
+              if ((_emailKey.currentState!.validate()) &&
+                  (_passwordKey.currentState!.validate())) {
+                saveLoginAsActiveUser(name, setEmail, correctPassword);
+                Navigator.pushReplacement<void, void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => Home(),
+                  ),
+                );
+              }
+            }),
       ],
     );
   }
