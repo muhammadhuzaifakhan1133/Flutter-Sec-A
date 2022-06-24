@@ -204,12 +204,12 @@ class _SignUpState extends State<SignUp> {
                     width: size.width * 0.8,
                     text_size: 20.0,
                     isSignup: true,
-                    onpressed: () {
+                    onpressed: () async {
                       if ((_nameKey.currentState!.validate()) &&
                           (_emailKey.currentState!.validate()) &&
                           (_passwordKey.currentState!.validate()) &&
                           (_confirmPasswordKey.currentState!.validate())) {
-                        saveNewUser();
+                        await saveNewUser();
                         Navigator.pushReplacement<void, void>(
                           context,
                           MaterialPageRoute<void>(

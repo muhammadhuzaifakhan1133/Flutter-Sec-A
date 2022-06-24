@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:second/services/api_client.dart';
 import 'package:second/widgets/drop_down.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'dart:convert';
 
 class CurrencyConverter extends StatefulWidget {
   @override
@@ -14,7 +16,9 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   String? toCountry = "PKR";
   double? rate;
   List<String>? currencies = [];
+  Map<String, Map<String, double>> rates = {};
   String? answer;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -28,6 +32,31 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     })();
     getResult();
   }
+
+  // Future<void> storeCountriesAndRatesLocally() async {
+  //   List<String> currencies = await client.getCurrencies();
+  //   currencies.sort();
+  //   Map<String, Map<String, double>> rates = {};
+  //   for (var leftCurrency in currencies) {
+  //     Map<String, double> leftCurrencyConversiontForAll = {};
+  //     for (var rightCurrency in currencies) {
+  //       double rate = await client.getRate(leftCurrency, rightCurrency);
+  //       leftCurrencyConversiontForAll[rightCurrency] = rate;
+  //     }
+  //     rates[leftCurrency] = leftCurrencyConversiontForAll;
+  //   }
+  //   final SharedPreferences prefs = await _prefs;
+  //   await prefs.setStringList('currencies', currencies);
+  //   String conversion = json.encode(rates);
+  //   await prefs.setString('rates', conversion);
+  // }
+
+  // Future<void> getCountriesAndRatesLocally() async {
+  //   final SharedPreferences prefs = await _prefs;
+  //   currencies = prefs.getStringList('currencies');
+  //   String? stringMapRates = prefs.getString('rates');
+  //   rates = json.decode(stringMapRates!);
+  // }
 
   getResult() async {
     rate = await client.getRate(fromCountry, toCountry);

@@ -22,6 +22,7 @@ class _ProfileBarState extends State<ProfileBar> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return ListTile(
       onTap: () {
         Navigator.push(
@@ -43,19 +44,29 @@ class _ProfileBarState extends State<ProfileBar> {
           children: [
             Row(
               children: [
-                Text(
-                  widget.name,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 19),
+                Flexible(
+                  child: Text(
+                    widget.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19),
+                  ),
                 ),
                 Icon(Icons.keyboard_arrow_down)
               ],
             ),
-            Text(
-              widget.email,
-              style: TextStyle(color: Colors.grey, fontSize: 15),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    widget.email,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                ),
+              ],
             )
           ],
         ),

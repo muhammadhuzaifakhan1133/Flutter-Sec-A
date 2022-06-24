@@ -46,10 +46,6 @@ class _ProfileState extends State<Profile> {
               profileArea(context, widget.name, widget.email),
               Divider(color: Colors.black),
               ListTile(
-                leading: Icon(Icons.lock_reset),
-                title: Text("Change password"),
-              ),
-              ListTile(
                 onTap: () {
                   logout();
                 },

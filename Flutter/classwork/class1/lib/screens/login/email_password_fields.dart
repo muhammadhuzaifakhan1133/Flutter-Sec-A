@@ -49,14 +49,17 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
     if (oldNames != null) {
       names = oldNames;
     }
+    print("names $names");
     final List<String>? oldEmails = prefs.getStringList(emailsKey);
     if (oldEmails != null) {
       emails = oldEmails;
     }
+    print("emails $emails");
     final List<String>? oldPasswords = prefs.getStringList(passwordsKey);
     if (oldPasswords != null) {
       passwords = oldPasswords;
     }
+    print("passwords $passwords");
   }
 
   Future<void> saveLoginAsActiveUser(
@@ -75,7 +78,9 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
   @override
   void initState() {
     super.initState();
-    getOldValues();
+    (() async {
+      await getOldValues();
+    })();
   }
 
   @override
@@ -93,6 +98,7 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
                   return 'Please enter email';
                 } else {
                   if (emails.contains(email)) {
+                    print(emails);
                     getRelatedValues(emails.indexOf(email));
                     setEmail = email;
                     return null;
@@ -139,10 +145,10 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
             width: size.width * 0.8,
             text_size: 20.0,
             isLogin: true,
-            onpressed: () {
+            onpressed: () async {
               if ((_emailKey.currentState!.validate()) &&
                   (_passwordKey.currentState!.validate())) {
-                saveLoginAsActiveUser(name, setEmail, correctPassword);
+                await saveLoginAsActiveUser(name, setEmail, correctPassword);
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(

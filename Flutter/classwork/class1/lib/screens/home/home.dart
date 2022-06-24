@@ -1,6 +1,9 @@
 import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/screens/home/bottom_bar.dart';
+import 'package:class1/screens/home/contant_tiles.dart';
 import 'package:class1/screens/home/profile_bar.dart';
-import 'package:class1/screens/welcome/welcome.dart';
+import 'package:class1/screens/home/task_tiles.dart';
+import 'package:class1/screens/task_main_screen/task_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,6 +19,7 @@ class _HomeState extends State<Home> {
   String email = '';
   String password = '';
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  List<String> lists = [];
 
   Future<void> getActiveUser() async {
     final SharedPreferences prefs = await _prefs;
@@ -29,6 +33,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    lists = [];
     (() async {
       await getActiveUser();
     })();
@@ -39,11 +44,26 @@ class _HomeState extends State<Home> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: bottomNavigationBar(
+            onNewPressed: () {
+              // setState(() {
+              //   lists.add("value");
+              // });
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TaskMainScreen()));
+            },
+            onFolderPressed: () {}),
         backgroundColor: Colors.white,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileBar(email: email, name: name, password: password),
+            SizedBox(height: size.height * 0.010),
+            Container(height: 230, child: constanstTiles()),
+            Divider(
+              thickness: 2,
+            ),
+            taskTiles(lists)
           ],
         ),
       ),
