@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String> all_key = [namesKey, emailsKey, passwordsKey];
-  List<String> all_key2 = [activeNameKey, activeEmailKey, activePasswordKey];
+  // List<String> all_key = [namesKey, emailsKey, passwordsKey];
+  // List<String> all_key2 = [activeNameKey, activeEmailKey, activePasswordKey];
   // for (var key in all_key) {
   //   var value = prefs.getStringList(key);
   //   print("$key : $value");
@@ -22,6 +22,6 @@ Future<void> main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(primaryColor: backgroundColor),
-    home: active == null ? SplashScreen() : Home(),
+    home: active == null ? const SplashScreen() : const Home(),
   ));
 }

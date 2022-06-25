@@ -4,9 +4,14 @@ import 'package:class1/screens/signup/sign_up.dart';
 import 'package:class1/widgets/button.dart';
 import 'package:flutter/material.dart';
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
 
+  @override
+  State<Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -17,7 +22,7 @@ class Welcome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: size.height * 0.08),
-              Text("Welcome",
+              const Text("Welcome",
                   style: TextStyle(
                       color: textColor,
                       fontWeight: FontWeight.bold,
@@ -25,7 +30,7 @@ class Welcome extends StatelessWidget {
                       fontSize: 26)),
               Stack(
                 alignment: Alignment.center,
-                children: [
+                children: const [
                   Image(
                     image: AssetImage("assets/images/welcome.jpg"),
                   ),
