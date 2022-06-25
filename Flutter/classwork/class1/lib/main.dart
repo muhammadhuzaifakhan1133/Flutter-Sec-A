@@ -18,6 +18,7 @@ Future<void> main() async {
   //   var value = prefs.getString(key);
   //   print("$key : $value");
   // }
+
   String? active = prefs.getString(activeEmailKey);
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,

@@ -3,8 +3,8 @@ import 'package:class1/screens/home/bottom_bar.dart';
 import 'package:class1/screens/home/contant_tiles.dart';
 import 'package:class1/screens/home/profile_bar.dart';
 import 'package:class1/screens/home/task_tiles.dart';
-import 'package:class1/screens/task_main_screen/task_main_screen.dart';
-import 'package:class1/widgets/list_name_entry.dart';
+import 'package:class1/screens/list_main_screen/list_main_screen.dart';
+import 'package:class1/widgets/create_rename_list_folder.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +20,7 @@ class _HomeState extends State<Home> {
   String email = '';
   String password = '';
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  TextEditingController controller = TextEditingController();
   List<String> lists = [];
   bool isValidAlert = false;
 
@@ -32,60 +33,29 @@ class _HomeState extends State<Home> {
     });
   }
 
-  _displayDialog(BuildContext context) async {
-    return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              title: Text('New list'),
-              content: TextFormField(
-                onChanged: (text) {
-                  setState(() {
-                    if (text.isNotEmpty) {
-                      isValidAlert = true;
-                    } else {
-                      isValidAlert = false;
-                    }
-                  });
-                },
-                decoration: InputDecoration(hintText: 'Enter list tile'),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    isValidAlert = false;
-                  },
-                  child: Text("CANCEL"),
-                ),
-                TextButton(
-                  onPressed: isValidAlert
-                      ? () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TaskMainScreen()));
-                          isValidAlert = false;
-                        }
-                      : null,
-                  child: Text("CREATE LIST"),
-                )
-              ],
-            );
-          });
-        });
+  Future<void> getUserLists() async {
+    final SharedPreferences prefs = await _prefs;
+    final List<String>? oldLists = prefs.getStringList(email);
+    if (oldLists != null) {
+      setState(() {
+        lists = oldLists;
+      });
+    }
+  }
+
+  Future<void> saveListLocally(list_name) async {
+    lists.add(list_name);
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setStringList(email, lists);
   }
 
   @override
   void initState() {
     super.initState();
-    // lists = [];
     if (email == "") {
       (() async {
         await getActiveUser();
+        await getUserLists();
       })();
     }
   }
@@ -97,7 +67,26 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         bottomNavigationBar: bottomNavigationBar(
             onNewPressed: () {
-              _displayDialog(context);
+              createRenameListOrFolder(
+                  context: context,
+                  controller: controller,
+                  hintText: "Enter list title",
+                  dialogTitile: "New list",
+                  finalButtonText: "CREATE LIST",
+                  onPressedfinalButton: () async {
+                    saveListLocally(controller.text);
+                    Navigator.pop(context);
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ListMainScreen(list_name: controller.text)))
+                        .then((_) {
+                      // you have come back to your Settings screen
+                      getUserLists();
+                    });
+                    isValidAlert = false;
+                  });
             },
             onFolderPressed: () {}),
         backgroundColor: Colors.white,
@@ -110,7 +99,29 @@ class _HomeState extends State<Home> {
             Divider(
               thickness: 2,
             ),
-            taskTiles(lists)
+            Expanded(
+              child: ListView.builder(
+                  itemCount: lists.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(lists[index]),
+                      leading: Icon(
+                        Icons.format_list_bulleted_outlined,
+                        color: Color.fromARGB(255, 132, 92, 139),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ListMainScreen(
+                                    list_name: lists[index]))).then((_) {
+                          // you have come back to your Settings screen
+                          getUserLists();
+                        });
+                      },
+                    );
+                  }),
+            )
           ],
         ),
       ),

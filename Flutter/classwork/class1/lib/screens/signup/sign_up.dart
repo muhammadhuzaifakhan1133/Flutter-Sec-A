@@ -32,9 +32,6 @@ class _SignUpState extends State<SignUp> {
 
   Future<void> saveNewUser() async {
     final SharedPreferences prefs = await _prefs;
-    print(newName);
-    print(newEmail);
-    print(newPassword);
     names.add(newName);
     emails.add(newEmail);
     passwords.add(newPassword);

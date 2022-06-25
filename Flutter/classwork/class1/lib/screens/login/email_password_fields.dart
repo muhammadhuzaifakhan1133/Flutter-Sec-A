@@ -49,17 +49,14 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
     if (oldNames != null) {
       names = oldNames;
     }
-    print("names $names");
     final List<String>? oldEmails = prefs.getStringList(emailsKey);
     if (oldEmails != null) {
       emails = oldEmails;
     }
-    print("emails $emails");
     final List<String>? oldPasswords = prefs.getStringList(passwordsKey);
     if (oldPasswords != null) {
       passwords = oldPasswords;
     }
-    print("passwords $passwords");
   }
 
   Future<void> saveLoginAsActiveUser(
@@ -98,7 +95,6 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
                   return 'Please enter email';
                 } else {
                   if (emails.contains(email)) {
-                    print(emails);
                     getRelatedValues(emails.indexOf(email));
                     setEmail = email;
                     return null;
@@ -120,8 +116,6 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
                 if ((password == null) || (password.isEmpty)) {
                   return "Enter password";
                 } else if (password != correctPassword) {
-                  print("Password $password");
-                  print("Correct Password $correctPassword");
                   return "Invalid password";
                 } else {
                   return null;
