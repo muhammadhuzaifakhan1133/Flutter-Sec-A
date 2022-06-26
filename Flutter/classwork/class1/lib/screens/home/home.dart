@@ -2,7 +2,7 @@ import 'package:class1/constants/local_storage_keys.dart';
 import 'package:class1/screens/home/bottom_bar.dart';
 import 'package:class1/screens/home/contant_tiles.dart';
 import 'package:class1/screens/home/profile_bar.dart';
-import 'package:class1/screens/home/task_tiles.dart';
+import 'package:class1/screens/home/list_tiles.dart';
 import 'package:class1/screens/list_main_screen/list_main_screen.dart';
 import 'package:class1/widgets/create_rename_list_folder.dart';
 import 'package:flutter/material.dart';
@@ -99,29 +99,7 @@ class _HomeState extends State<Home> {
             Divider(
               thickness: 2,
             ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: lists.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(lists[index]),
-                      leading: Icon(
-                        Icons.format_list_bulleted_outlined,
-                        color: Color.fromARGB(255, 132, 92, 139),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ListMainScreen(
-                                    list_name: lists[index]))).then((_) {
-                          // you have come back to your Settings screen
-                          getUserLists();
-                        });
-                      },
-                    );
-                  }),
-            )
+            ListTiles(lists: lists, functionAfterBack: getUserLists())
           ],
         ),
       ),
