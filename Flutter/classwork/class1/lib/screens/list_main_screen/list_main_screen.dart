@@ -1,5 +1,4 @@
 import 'package:class1/constants/local_storage_keys.dart';
-import 'package:class1/screens/home/list_tiles.dart';
 import 'package:class1/screens/list_main_screen/pop_menu_button.dart';
 import 'package:class1/screens/list_main_screen/task_tiles.dart';
 import 'package:class1/widgets/create_rename_list_folder.dart';
@@ -19,8 +18,11 @@ class _ListMainScreenState extends State<ListMainScreen> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController controller = TextEditingController();
   late int listIndex;
-  List<bool> isTaskComplete = [];
-  List<String> titles = [];
+  List<bool> isTasksComplete = [];
+  List<bool> isTasksImportant = [];
+  List<String> tasksDate = [];
+  List<String> tasksTime = [];
+  List<String> tasksTitle = [];
 
   Future<void> renameListLocally() async {
     final SharedPreferences prefs = await _prefs;
@@ -59,7 +61,65 @@ class _ListMainScreenState extends State<ListMainScreen> {
     });
   }
 
-  getTaskList() {}
+  getTaskList() async {
+    final SharedPreferences prefs = await _prefs;
+    String email = (prefs.getString(activeEmailKey))!;
+    List<String>? tasks = prefs.getStringList(email + widget.list_name);
+    List<String>? Complete =
+        prefs.getStringList(email + widget.list_name + taskCompletionKey);
+    List<String>? important =
+        prefs.getStringList(email + widget.list_name + taskImportancyKey);
+    List<String>? date =
+        prefs.getStringList(email + widget.list_name + taskDateKey);
+    List<String>? time =
+        prefs.getStringList(email + widget.list_name + taskTimeKey);
+    if ((tasks != null) &&
+        (Complete != null) &&
+        (important != null) &&
+        (date != null) &&
+        (time != null)) {
+      List<bool> completeTasks = Complete.map((e) => e == "true").toList();
+      List<bool> importantTasks = important.map((e) => e == "true").toList();
+      setState(() {
+        tasksTitle = tasks;
+        isTasksComplete = completeTasks;
+        isTasksImportant = importantTasks;
+        tasksDate = date;
+        tasksTime = time;
+      });
+    }
+  }
+
+  saveTaskLocally() async {
+    final SharedPreferences prefs = await _prefs;
+    String email = (prefs.getString(activeEmailKey))!;
+    prefs.setStringList(email + widget.list_name, tasksTitle);
+
+    List<String> isTasksCompleteString = [];
+    isTasksComplete.forEach((item) => item == true
+        ? isTasksCompleteString.add("ture")
+        : isTasksCompleteString.add("false"));
+    prefs.setStringList(
+        email + widget.list_name + taskCompletionKey, isTasksCompleteString);
+
+    List<String> isTasksImportantString = [];
+    isTasksImportant.forEach((item) => item == true
+        ? isTasksImportantString.add("ture")
+        : isTasksImportantString.add("false"));
+    prefs.setStringList(
+        email + widget.list_name + taskImportancyKey, isTasksImportantString);
+
+    prefs.setStringList(email + widget.list_name + taskDateKey, tasksDate);
+    prefs.setStringList(email + widget.list_name + taskTimeKey, tasksTime);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    (() async {
+      await getTaskList();
+    })();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,30 +167,34 @@ class _ListMainScreenState extends State<ListMainScreen> {
               ),
             ),
             TaskTiles(
-                titles: titles,
-                isTaskComplete: isTaskComplete,
-                functionAfterBack: getTaskList()),
+                list_name: widget.list_name,
+                tasksTitle: tasksTitle,
+                isTasksComplete: isTasksComplete,
+                isTasksImportant: isTasksImportant,
+                tasksTime: tasksTime,
+                tasksDate: tasksDate)
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // createRenameListOrFolder(
-          //     context: context,
-          //     controller: controller,
-          //     hintText: "New taks",
-          //     dialogTitile: "Enter task title",
-          //     finalButtonText: "CREATE",
-          //     onPressedfinalButton: () {
-          //       setState(() {
-          //         titles.add(controller.text);
-          //       });
-          //       Navigator.pop(context);
-          //     });
-          setState(() {
-            titles.add("value");
-            isTaskComplete.add(false);
-          });
+          createRenameListOrFolder(
+              context: context,
+              controller: controller,
+              hintText: "New taks",
+              dialogTitile: "Enter task title",
+              finalButtonText: "CREATE",
+              onPressedfinalButton: () {
+                setState(() {
+                  tasksTitle.add(controller.text);
+                  isTasksComplete.add(false);
+                  isTasksImportant.add(false);
+                  tasksTime.add("None");
+                  tasksDate.add("None");
+                });
+                saveTaskLocally();
+                Navigator.pop(context);
+              });
         },
         backgroundColor: Colors.white,
         child: Icon(
