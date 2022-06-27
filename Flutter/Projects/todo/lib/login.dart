@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Login")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -55,27 +56,27 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 14,
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: TextField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                        hintText: "Enter password",
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(width: 2),
+                            borderRadius: BorderRadius.circular(15)))),
+              ),
+            ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: TextField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                      hintText: "Enter password",
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2),
-                          borderRadius: BorderRadius.circular(15)))),
+              height: MediaQuery.of(context).size.height * 0.15,
             ),
             ElevatedButton(
                 onPressed: () {
                   loginRequest();
                 },
                 child: Text("Login")),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()));
-                },
-                child: Text("go to Signup Page"))
           ],
         ),
       ),

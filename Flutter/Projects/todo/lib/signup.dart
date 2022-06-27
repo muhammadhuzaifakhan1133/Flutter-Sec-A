@@ -22,6 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
         email: emailController.text,
         password: passwordController.text,
       );
+      print("Huzaifa1");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -30,6 +31,7 @@ class _SignUpPageState extends State<SignUpPage> {
       }
     } catch (e) {
       print(e);
+      print("Huzaifa");
     }
   }
 
@@ -37,6 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(title: Text("Sign up")),
         body: Center(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -52,27 +55,27 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderSide: BorderSide(width: 2),
                               borderRadius: BorderRadius.circular(15)))),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: TextField(
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                            hintText: "Enter password",
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(width: 2),
+                                borderRadius: BorderRadius.circular(15)))),
+                  ),
+                ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: TextField(
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                          hintText: "Enter password",
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2),
-                              borderRadius: BorderRadius.circular(15)))),
+                  height: MediaQuery.of(context).size.height * 0.15,
                 ),
                 ElevatedButton(
                     onPressed: () {
                       postData();
                     },
                     child: Text("Sign Up")),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
-                    },
-                    child: Text("Go to login"))
               ]),
         ),
       ),

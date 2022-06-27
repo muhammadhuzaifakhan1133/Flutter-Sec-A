@@ -55,23 +55,21 @@ class _TaskTilesState extends State<TaskTiles> {
   saveTaskImportancyLocally(index) async {
     final SharedPreferences prefs = await _prefs;
     String email = (prefs.getString(activeEmailKey))!;
-    List<String> isTasksImportantString = [];
-    widget.isTasksImportant.forEach((item) => item == true
-        ? isTasksImportantString.add("ture")
-        : isTasksImportantString.add("false"));
-    Future<bool> sucess = prefs.setStringList(
-        email + widget.list_name + taskImportancyKey, isTasksImportantString);
+    List<String> taskImportancy =
+        (prefs.getStringList(email + widget.list_name + taskImportancyKey))!;
+    taskImportancy[index] = taskImportancy[index] == "true" ? "false" : "true";
+    prefs.setStringList(
+        email + widget.list_name + taskImportancyKey, taskImportancy);
   }
 
   saveTaskCompletionLocally(index) async {
     final SharedPreferences prefs = await _prefs;
     String email = (prefs.getString(activeEmailKey))!;
-    List<String> isTasksCompleteString = [];
-    widget.isTasksComplete.forEach((item) => item == true
-        ? isTasksCompleteString.add("ture")
-        : isTasksCompleteString.add("false"));
+    List<String> taskCompletion =
+        (prefs.getStringList(email + widget.list_name + taskCompletionKey))!;
+    taskCompletion[index] = taskCompletion[index] == "true" ? "false" : "true";
     prefs.setStringList(
-        email + widget.list_name + taskCompletionKey, isTasksCompleteString);
+        email + widget.list_name + taskCompletionKey, taskCompletion);
   }
 
   @override

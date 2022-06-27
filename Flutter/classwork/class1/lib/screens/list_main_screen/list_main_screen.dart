@@ -42,6 +42,11 @@ class _ListMainScreenState extends State<ListMainScreen> {
     List<String>? oldLists = prefs.getStringList(email);
     oldLists!.remove(widget.list_name);
     await prefs.setStringList(email, oldLists);
+    await prefs.remove(email + widget.list_name);
+    await prefs.remove(email + widget.list_name + taskCompletionKey);
+    await prefs.remove(email + widget.list_name + taskImportancyKey);
+    await prefs.remove(email + widget.list_name + taskDateKey);
+    await prefs.remove(email + widget.list_name + taskTimeKey);
     Navigator.pop(context);
   }
 
@@ -67,6 +72,7 @@ class _ListMainScreenState extends State<ListMainScreen> {
     List<String>? tasks = prefs.getStringList(email + widget.list_name);
     List<String>? Complete =
         prefs.getStringList(email + widget.list_name + taskCompletionKey);
+    print(email + widget.list_name + taskImportancyKey);
     List<String>? important =
         prefs.getStringList(email + widget.list_name + taskImportancyKey);
     List<String>? date =
@@ -78,12 +84,10 @@ class _ListMainScreenState extends State<ListMainScreen> {
         (important != null) &&
         (date != null) &&
         (time != null)) {
-      List<bool> completeTasks = Complete.map((e) => e == "true").toList();
-      List<bool> importantTasks = important.map((e) => e == "true").toList();
       setState(() {
         tasksTitle = tasks;
-        isTasksComplete = completeTasks;
-        isTasksImportant = importantTasks;
+        isTasksComplete = Complete.map((e) => e == "true").toList();
+        isTasksImportant = important.map((e) => e == "true").toList();
         tasksDate = date;
         tasksTime = time;
       });
