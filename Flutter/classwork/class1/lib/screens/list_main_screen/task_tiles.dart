@@ -83,8 +83,8 @@ class _TaskTilesState extends State<TaskTiles> {
             title: Text(widget.tasksTitle[index]),
             leading: IconButton(
                 icon: widget.isTasksComplete[index]
-                    ? Icon(Icons.check_circle)
-                    : Icon(Icons.circle_outlined),
+                    ? Icon(Icons.check_circle, color: Colors.blue, size: 30)
+                    : Icon(Icons.circle_outlined, size: 30),
                 onPressed: () async {
                   setState(() {
                     widget.isTasksComplete[index] =
@@ -96,8 +96,8 @@ class _TaskTilesState extends State<TaskTiles> {
                 Text(widget.tasksDate[index] + " " + widget.tasksTime[index]),
             trailing: IconButton(
                 icon: widget.isTasksImportant[index]
-                    ? Icon(Icons.star)
-                    : Icon(Icons.star_border),
+                    ? Icon(Icons.star, color: Colors.blue, size: 30)
+                    : Icon(Icons.star_border, size: 30),
                 onPressed: () async {
                   setState(() {
                     widget.isTasksImportant[index] =

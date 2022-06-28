@@ -1,4 +1,5 @@
 import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/screens/list_main_screen/create_task.dart';
 import 'package:class1/screens/list_main_screen/pop_menu_button.dart';
 import 'package:class1/screens/list_main_screen/task_tiles.dart';
 import 'package:class1/widgets/create_rename_list_folder.dart';
@@ -17,6 +18,7 @@ class _ListMainScreenState extends State<ListMainScreen> {
   bool isValidAlert = false;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController controller = TextEditingController();
+  TextEditingController dateTimeController = TextEditingController();
   late int listIndex;
   List<bool> isTasksComplete = [];
   List<bool> isTasksImportant = [];
@@ -72,7 +74,6 @@ class _ListMainScreenState extends State<ListMainScreen> {
     List<String>? tasks = prefs.getStringList(email + widget.list_name);
     List<String>? Complete =
         prefs.getStringList(email + widget.list_name + taskCompletionKey);
-    print(email + widget.list_name + taskImportancyKey);
     List<String>? important =
         prefs.getStringList(email + widget.list_name + taskImportancyKey);
     List<String>? date =
@@ -182,21 +183,29 @@ class _ListMainScreenState extends State<ListMainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          createRenameListOrFolder(
+          createOrUpdateTask(
               context: context,
-              controller: controller,
+              titleController: controller,
+              dateTimeController: dateTimeController,
               hintText: "New taks",
               dialogTitile: "Enter task title",
               finalButtonText: "CREATE",
               onPressedfinalButton: () {
+                String date = dateTimeController.text != ""
+                    ? dateTimeController.text.split(' ')[0]
+                    : "None";
+                String time = dateTimeController.text != ""
+                    ? dateTimeController.text.split(" ")[1].split(".")[0]
+                    : "None";
                 setState(() {
                   tasksTitle.add(controller.text);
                   isTasksComplete.add(false);
                   isTasksImportant.add(false);
-                  tasksTime.add("None");
-                  tasksDate.add("None");
+                  tasksTime.add(time);
+                  tasksDate.add(date);
                 });
                 saveTaskLocally();
+                dateTimeController.text = "";
                 Navigator.pop(context);
               });
         },
