@@ -5,15 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
-  Profile(
-      {required this.name,
-      required this.email,
-      required this.password,
-      Key? key})
+  Profile({required this.name, required this.email, Key? key})
       : super(key: key);
   String name;
   String email;
-  String password;
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -24,9 +19,9 @@ class _ProfileState extends State<Profile> {
 
   Future<void> logout() async {
     final SharedPreferences prefs = await _prefs;
-    prefs.remove(activeNameKey);
-    prefs.remove(activeEmailKey);
-    prefs.remove(activePasswordKey);
+    await prefs.remove(activeNameKey);
+    await prefs.remove(activeEmailKey);
+    await prefs.remove(activePasswordKey);
     Navigator.pushReplacement<void, void>(
       context,
       MaterialPageRoute<void>(
@@ -46,8 +41,8 @@ class _ProfileState extends State<Profile> {
               profileArea(context, widget.name, widget.email),
               Divider(color: Colors.black),
               ListTile(
-                onTap: () {
-                  logout();
+                onTap: () async {
+                  await logout();
                 },
                 leading: Icon(Icons.logout),
                 title: Text("Sign out"),

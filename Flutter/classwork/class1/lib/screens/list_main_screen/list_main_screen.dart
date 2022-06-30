@@ -1,14 +1,18 @@
 import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/functions/shared_preferences.dart';
 import 'package:class1/screens/list_main_screen/create_task.dart';
 import 'package:class1/screens/list_main_screen/pop_menu_button.dart';
 import 'package:class1/screens/list_main_screen/task_tiles.dart';
-import 'package:class1/widgets/create_rename_list_folder.dart';
+import 'package:class1/widgets/create_rename_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class ListMainScreen extends StatefulWidget {
-  ListMainScreen({required this.list_name, Key? key}) : super(key: key);
+  ListMainScreen({required this.list_name, required this.email, Key? key})
+      : super(key: key);
   late String list_name;
+  String email;
 
   @override
   State<ListMainScreen> createState() => _ListMainScreenState();
@@ -16,83 +20,33 @@ class ListMainScreen extends StatefulWidget {
 
 class _ListMainScreenState extends State<ListMainScreen> {
   bool isValidAlert = false;
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   TextEditingController controller = TextEditingController();
   TextEditingController dateTimeController = TextEditingController();
-  late int listIndex;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<bool> isTasksComplete = [];
   List<bool> isTasksImportant = [];
   List<String> tasksDate = [];
   List<String> tasksTime = [];
   List<String> tasksTitle = [];
 
-  Future<void> renameListLocally() async {
-    final SharedPreferences prefs = await _prefs;
-    String email = (prefs.getString(activeEmailKey))!;
-    List<String>? lists = prefs.getStringList(email);
-    listIndex = lists!.indexOf(widget.list_name);
-    lists[listIndex] = controller.text;
-    await prefs.setStringList(email, lists);
-    setState(() {
-      widget.list_name = controller.text;
-    });
-  }
-
-  Future<void> deleteList() async {
-    final SharedPreferences prefs = await _prefs;
-    String email = (prefs.getString(activeEmailKey))!;
-    List<String>? oldLists = prefs.getStringList(email);
-    oldLists!.remove(widget.list_name);
-    await prefs.setStringList(email, oldLists);
-    await prefs.remove(email + widget.list_name);
-    await prefs.remove(email + widget.list_name + taskCompletionKey);
-    await prefs.remove(email + widget.list_name + taskImportancyKey);
-    await prefs.remove(email + widget.list_name + taskDateKey);
-    await prefs.remove(email + widget.list_name + taskTimeKey);
-    Navigator.pop(context);
-  }
-
-  renameList() {
+  renameListDialog() {
     Future.delayed(const Duration(seconds: 0), () {
-      createRenameListOrFolder(
+      createRenameDialog(
           context: context,
           controller: controller,
           hintText: widget.list_name,
           dialogTitile: "Rename list",
           finalButtonText: "SAVE",
           onPressedfinalButton: () async {
-            await renameListLocally();
+            await renameList(widget.email, widget.list_name, controller.text);
+            setState(() {
+              widget.list_name = controller.text;
+            });
             Navigator.pop(context, true);
             isValidAlert = false;
           });
     });
-  }
-
-  getTaskList() async {
-    final SharedPreferences prefs = await _prefs;
-    String email = (prefs.getString(activeEmailKey))!;
-    List<String>? tasks = prefs.getStringList(email + widget.list_name);
-    List<String>? Complete =
-        prefs.getStringList(email + widget.list_name + taskCompletionKey);
-    List<String>? important =
-        prefs.getStringList(email + widget.list_name + taskImportancyKey);
-    List<String>? date =
-        prefs.getStringList(email + widget.list_name + taskDateKey);
-    List<String>? time =
-        prefs.getStringList(email + widget.list_name + taskTimeKey);
-    if ((tasks != null) &&
-        (Complete != null) &&
-        (important != null) &&
-        (date != null) &&
-        (time != null)) {
-      setState(() {
-        tasksTitle = tasks;
-        isTasksComplete = Complete.map((e) => e == "true").toList();
-        isTasksImportant = important.map((e) => e == "true").toList();
-        tasksDate = date;
-        tasksTime = time;
-      });
-    }
   }
 
   saveTaskLocally() async {
@@ -122,7 +76,15 @@ class _ListMainScreenState extends State<ListMainScreen> {
   void initState() {
     super.initState();
     (() async {
-      await getTaskList();
+      List<List<dynamic>> values =
+          await getTaskList(widget.email, widget.list_name);
+      setState(() {
+        tasksTitle = values[0] as List<String>;
+        isTasksComplete = values[1] as List<bool>;
+        isTasksImportant = values[2] as List<bool>;
+        tasksDate = values[3] as List<String>;
+        tasksTime = values[4] as List<String>;
+      });
     })();
   }
 
@@ -143,9 +105,10 @@ class _ListMainScreenState extends State<ListMainScreen> {
         ),
         actions: <Widget>[
           popMenuButton(onRenamePressed: () {
-            renameList();
+            renameListDialog();
           }, onDeletePressed: () {
-            deleteList();
+            deleteList(widget.email, widget.list_name);
+            Navigator.pop(context);
           }),
         ],
       ),
@@ -160,7 +123,7 @@ class _ListMainScreenState extends State<ListMainScreen> {
               color: Colors.blue,
               child: InkWell(
                 onTap: () {
-                  renameList();
+                  renameListDialog();
                 },
                 child: Text(
                   widget.list_name,

@@ -1,5 +1,6 @@
 import 'package:class1/constants/color_constants.dart';
 import 'package:class1/screens/login/email_password_fields.dart';
+import 'package:class1/widgets/login_signup_image_title.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -18,26 +19,12 @@ class _LoginState extends State<Login> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: size.height * 0.1),
-              Text("Log in",
-                  style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "Algerian",
-                      fontSize: 26)),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image(
-                    image: AssetImage("assets/images/login.png"),
-                  ),
-                  Positioned(
-                      bottom: 0,
-                      child: Text("Schedule task and mark important one",
-                          style: TextStyle(color: subTextColor, fontSize: 18)))
-                ],
-              ),
-              SizedBox(height: size.height * 0.02),
+              ImageAndTile(
+                  gapBeforeWidget: 0.1,
+                  title: "Log in",
+                  image: "assets/images/login.png",
+                  imageTitle: "Schedule task and mark important one",
+                  gapAfterWidget: 0.02),
               EmailPasswordFields(),
             ],
           ),

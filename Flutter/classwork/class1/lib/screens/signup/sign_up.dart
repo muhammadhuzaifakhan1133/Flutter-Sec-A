@@ -1,12 +1,11 @@
 import 'package:class1/constants/color_constants.dart';
-import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/functions/shared_preferences.dart';
 import 'package:class1/screens/home/home.dart';
+import 'package:class1/screens/signup/passwords_suffix_icon.dart';
 import 'package:class1/widgets/button.dart';
+import 'package:class1/widgets/login_signup_image_title.dart';
 import 'package:class1/widgets/login_signup_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
@@ -16,67 +15,24 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final _nameKey = GlobalKey<FormState>();
   final _emailKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FormState>();
   final _confirmPasswordKey = GlobalKey<FormState>();
-  List<String> names = [];
   List<String> emails = [];
-  List<String> passwords = [];
   String newName = "";
   String newEmail = "";
   String newPassword = "";
   bool _passwordObscureText = true;
   bool _confirmPasswordObscureText = true;
 
-  Future<void> saveNewUser() async {
-    final SharedPreferences prefs = await _prefs;
-    names.add(newName);
-    emails.add(newEmail);
-    passwords.add(newPassword);
-    await prefs.setStringList(namesKey, names);
-    await prefs.setStringList(emailsKey, emails);
-    await prefs.setStringList(passwordsKey, passwords);
-    await prefs.setString(activeNameKey, newName);
-    await prefs.setString(activeEmailKey, newEmail);
-    await prefs.setString(activePasswordKey, newPassword);
-  }
-
-  Future<void> getOldValues() async {
-    final SharedPreferences prefs = await _prefs;
-    final List<String>? oldNames = prefs.getStringList(namesKey);
-    if (oldNames != null) {
-      names = oldNames;
-    }
-    final List<String>? oldEmails = prefs.getStringList(emailsKey);
-    if (oldEmails != null) {
-      emails = oldEmails;
-    }
-    final List<String>? oldPasswords = prefs.getStringList(passwordsKey);
-    if (oldPasswords != null) {
-      passwords = oldPasswords;
-    }
-  }
-
-  Widget suffixIcon(obscureText) {
-    if (obscureText) {
-      return Icon(
-        Icons.visibility,
-        color: Colors.grey,
-      );
-    } else {
-      return Icon(
-        Icons.visibility_off,
-        color: Colors.grey,
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    getOldValues();
+    (() async {
+      List<List<String>> userValues = await getUsers();
+      emails = userValues[0];
+    })();
   }
 
   @override
@@ -89,30 +45,12 @@ class _SignUpState extends State<SignUp> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text("Sign Up",
-                    style: TextStyle(
-                        color: textColor,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Algerian",
-                        fontSize: 26)),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image(
-                      image: AssetImage("assets/images/signup.jpg"),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        child: Text("Filter task according to type and date",
-                            style: TextStyle(
-                              color: subTextColor,
-                              fontSize: 18,
-                            )))
-                  ],
-                ),
-                SizedBox(
-                  height: size.height * 0.030,
-                ),
+                ImageAndTile(
+                    title: "Sign Up",
+                    image: "assets/images/signup.jpg",
+                    imageTitle: "Filter task according to type and date",
+                    gapBeforeWidget: 0,
+                    gapAfterWidget: 0.030),
                 Form(
                   key: _nameKey,
                   child: loginSignUpTextField(
@@ -206,11 +144,15 @@ class _SignUpState extends State<SignUp> {
                           (_emailKey.currentState!.validate()) &&
                           (_passwordKey.currentState!.validate()) &&
                           (_confirmPasswordKey.currentState!.validate())) {
-                        await saveNewUser();
+                        await registerNewUser(
+                            newEmail: newEmail,
+                            newName: newName,
+                            newPassword: newPassword);
                         Navigator.pushReplacement<void, void>(
                           context,
                           MaterialPageRoute<void>(
-                            builder: (BuildContext context) => Home(),
+                            builder: (BuildContext context) =>
+                                Home(userEmail: newEmail, userName: newName),
                           ),
                         );
                       }

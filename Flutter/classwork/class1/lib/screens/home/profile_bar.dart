@@ -5,13 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileBar extends StatefulWidget {
-  ProfileBar(
-      {required this.name,
-      required this.email,
-      required this.password,
-      Key? key})
+  ProfileBar({required this.name, required this.email, Key? key})
       : super(key: key);
-  String name, email, password;
+  String name, email;
 
   @override
   State<ProfileBar> createState() => _ProfileBarState();
@@ -28,10 +24,8 @@ class _ProfileBarState extends State<ProfileBar> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Profile(
-                  name: widget.name,
-                  email: widget.email,
-                  password: widget.password)),
+              builder: (context) =>
+                  Profile(name: widget.name, email: widget.email)),
         );
       },
       leading: Hero(

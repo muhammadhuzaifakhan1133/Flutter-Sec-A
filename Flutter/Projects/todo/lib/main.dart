@@ -1,9 +1,8 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:todo/home.dart';
-import 'package:todo/login.dart';
+import 'package:todo/home1.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:todo/signup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +17,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: Home1(),
     );
   }
 }

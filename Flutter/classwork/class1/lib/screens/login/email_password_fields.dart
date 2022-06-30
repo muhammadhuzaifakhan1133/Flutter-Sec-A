@@ -1,10 +1,9 @@
-import 'package:class1/constants/color_constants.dart';
-import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/functions/shared_preferences.dart';
 import 'package:class1/screens/home/home.dart';
+import 'package:class1/screens/signup/passwords_suffix_icon.dart';
 import 'package:class1/widgets/button.dart';
 import 'package:class1/widgets/login_signup_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailPasswordFields extends StatefulWidget {
   EmailPasswordFields({
@@ -19,64 +18,22 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
   // final _formKey = GlobalKey<FormState>();
   final _emailKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FormState>();
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  // bool isUserRegistered = true;
   List<String> names = [];
   List<String> emails = [];
   List<String> passwords = [];
   String correctPassword = '';
   String setEmail = '';
   String name = '';
-
   bool _obscuretext = true;
-  Widget suffixIcon() {
-    if (_obscuretext) {
-      return Icon(
-        Icons.visibility,
-        color: suffixIconColor,
-      );
-    } else {
-      return Icon(
-        Icons.visibility_off,
-        color: suffixIconColor,
-      );
-    }
-  }
-
-  Future<void> getOldValues() async {
-    final SharedPreferences prefs = await _prefs;
-    final List<String>? oldNames = prefs.getStringList(namesKey);
-    if (oldNames != null) {
-      names = oldNames;
-    }
-    final List<String>? oldEmails = prefs.getStringList(emailsKey);
-    if (oldEmails != null) {
-      emails = oldEmails;
-    }
-    final List<String>? oldPasswords = prefs.getStringList(passwordsKey);
-    if (oldPasswords != null) {
-      passwords = oldPasswords;
-    }
-  }
-
-  Future<void> saveLoginAsActiveUser(
-      String name, String email, String password) async {
-    final SharedPreferences prefs = await _prefs;
-    await prefs.setString(activeNameKey, name);
-    await prefs.setString(activeEmailKey, email);
-    await prefs.setString(activePasswordKey, password);
-  }
-
-  void getRelatedValues(int index) {
-    correctPassword = passwords.elementAt(index);
-    name = names.elementAt(index);
-  }
 
   @override
   void initState() {
     super.initState();
     (() async {
-      await getOldValues();
+      List<List<String>> users = await getUsers();
+      emails = users[0];
+      names = users[1];
+      passwords = users[2];
     })();
   }
 
@@ -95,10 +52,13 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
                   return 'Please enter email';
                 } else {
                   if (emails.contains(email)) {
-                    getRelatedValues(emails.indexOf(email));
+                    int index = emails.indexOf(email);
+                    correctPassword = passwords.elementAt(index);
+                    name = names.elementAt(index);
                     setEmail = email;
                     return null;
                   } else {
+                    print(passwords);
                     return "Email is not registered";
                   }
                 }
@@ -125,7 +85,7 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
               textInputAction: TextInputAction.done,
               labelText: "Your password",
               prefixIcon: Icons.lock,
-              suffixIcon: suffixIcon(),
+              suffixIcon: suffixIcon(_obscuretext),
               onPressedSuffixIcon: () {
                 setState(() {
                   _obscuretext = !_obscuretext;
@@ -142,11 +102,14 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
             onpressed: () async {
               if ((_emailKey.currentState!.validate()) &&
                   (_passwordKey.currentState!.validate())) {
-                await saveLoginAsActiveUser(name, setEmail, correctPassword);
+                await saveActiveUser(name, setEmail, correctPassword);
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => Home(),
+                    builder: (BuildContext context) => Home(
+                      userEmail: setEmail,
+                      userName: name,
+                    ),
                   ),
                 );
               }

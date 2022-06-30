@@ -1,7 +1,8 @@
+import 'package:class1/functions/shared_preferences.dart';
 import 'package:class1/screens/list_main_screen/list_main_screen.dart';
 import 'package:flutter/material.dart';
 
-Expanded ListTiles({lists, functionAfterBack}) {
+Expanded ListTiles({lists, email, functionAfterBack}) {
   return Expanded(
     child: ListView.builder(
       itemCount: lists.length,
@@ -17,8 +18,10 @@ Expanded ListTiles({lists, functionAfterBack}) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ListMainScreen(list_name: lists[index]))).then((_) {
+                    builder: (context) => ListMainScreen(
+                          list_name: lists[index],
+                          email: email,
+                        ))).then((_) {
               // you have come back to your Settings screen
               functionAfterBack;
             });

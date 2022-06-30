@@ -49,7 +49,7 @@ class _WelcomeState extends State<Welcome> {
                   text: "Log in",
                   width: size.width * 0.8,
                   text_size: 20.0,
-                  go_to: Login()),
+                  go_to: const Login()),
               SizedBox(
                 height: size.height * 0.01,
               ),

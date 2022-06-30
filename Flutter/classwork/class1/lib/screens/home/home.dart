@@ -1,63 +1,42 @@
-import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/functions/shared_preferences.dart';
 import 'package:class1/screens/home/bottom_bar.dart';
 import 'package:class1/screens/home/contant_tiles.dart';
 import 'package:class1/screens/home/profile_bar.dart';
 import 'package:class1/screens/home/list_tiles.dart';
 import 'package:class1/screens/list_main_screen/list_main_screen.dart';
-import 'package:class1/widgets/create_rename_list_folder.dart';
+import 'package:class1/widgets/create_rename_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
+  Home({required this.userName, required this.userEmail, Key? key})
+      : super(key: key);
+  String userName;
+  String userEmail;
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  String name = '';
-  String email = '';
-  String password = '';
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController controller = TextEditingController();
   List<String> lists = [];
   bool isValidAlert = false;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  Future<void> getActiveUser() async {
+  Future<void> getUserLists(email) async {
     final SharedPreferences prefs = await _prefs;
+    List<String> oldLists = prefs.getStringList(email) ?? [];
     setState(() {
-      name = prefs.getString(activeNameKey)!;
-      email = prefs.getString(activeEmailKey)!;
-      password = prefs.getString(activePasswordKey)!;
+      lists = oldLists;
     });
-  }
-
-  Future<void> getUserLists() async {
-    final SharedPreferences prefs = await _prefs;
-    final List<String>? oldLists = prefs.getStringList(email);
-    if (oldLists != null) {
-      setState(() {
-        lists = oldLists;
-      });
-    }
-  }
-
-  Future<void> saveListLocally(list_name) async {
-    lists.add(list_name);
-    final SharedPreferences prefs = await _prefs;
-    await prefs.setStringList(email, lists);
   }
 
   @override
   void initState() {
     super.initState();
-    if (email == "") {
-      (() async {
-        await getActiveUser();
-        await getUserLists();
-      })();
-    }
+    (() async {
+      getUserLists(widget.userEmail);
+    })();
   }
 
   @override
@@ -67,23 +46,26 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         bottomNavigationBar: bottomNavigationBar(
             onNewPressed: () {
-              createRenameListOrFolder(
+              createRenameDialog(
                   context: context,
                   controller: controller,
                   hintText: "Enter list title",
                   dialogTitile: "New list",
                   finalButtonText: "CREATE LIST",
                   onPressedfinalButton: () async {
-                    saveListLocally(controller.text);
+                    setState(() {
+                      lists.add(controller.text);
+                    });
+                    await saveListLocally(lists, widget.userEmail);
                     Navigator.pop(context);
                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ListMainScreen(list_name: controller.text)))
-                        .then((_) {
-                      // you have come back to your Settings screen
-                      getUserLists();
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ListMainScreen(
+                                  list_name: controller.text,
+                                  email: widget.userEmail,
+                                ))).then((_) async {
+                      getUserLists(widget.userEmail);
                     });
                     isValidAlert = false;
                   });
@@ -93,13 +75,16 @@ class _HomeState extends State<Home> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileBar(email: email, name: name, password: password),
+            ProfileBar(email: widget.userEmail, name: widget.userName),
             SizedBox(height: size.height * 0.010),
             Container(height: 230, child: constanstTiles()),
             Divider(
               thickness: 2,
             ),
-            ListTiles(lists: lists, functionAfterBack: getUserLists())
+            ListTiles(
+                lists: lists,
+                email: widget.userEmail,
+                functionAfterBack: getUserLists(widget.userEmail))
           ],
         ),
       ),
