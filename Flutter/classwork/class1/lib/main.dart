@@ -10,7 +10,6 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Future<List<String?>> futureUserValues = getActiveUser();
   List<String?> userValues = await futureUserValues;
-  print(userValues);
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: backgroundColor),

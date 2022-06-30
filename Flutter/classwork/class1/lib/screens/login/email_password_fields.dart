@@ -58,7 +58,6 @@ class _EmailPasswordFieldsState extends State<EmailPasswordFields> {
                     setEmail = email;
                     return null;
                   } else {
-                    print(passwords);
                     return "Email is not registered";
                   }
                 }

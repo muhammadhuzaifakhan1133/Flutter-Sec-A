@@ -72,7 +72,6 @@ Future<void> renameList(email, list_name, newName) async {
 
 Future<List<List<dynamic>>> getTaskList(email, listName) async {
   final SharedPreferences prefs = await _prefs;
-  String email = (prefs.getString(activeEmailKey))!;
   List<String> tasks = prefs.getStringList(email + listName) ?? [];
   List<String> Complete =
       prefs.getStringList(email + listName + taskCompletionKey) ?? [];
@@ -83,4 +82,32 @@ Future<List<List<dynamic>>> getTaskList(email, listName) async {
   List<bool> isTaskComplete = Complete.map((e) => e == "true").toList();
   List<bool> isTaskImportant = important.map((e) => e == "true").toList();
   return [tasks, isTaskComplete, isTaskImportant, date, time];
+}
+
+saveTaskLocally(
+    String email,
+    String list_name,
+    List<String> tasksTitle,
+    List<bool> isTasksComplete,
+    List<bool> isTasksImportant,
+    List<String> tasksDate,
+    List<String> tasksTime) async {
+  final SharedPreferences prefs = await _prefs;
+  prefs.setStringList(email + list_name, tasksTitle);
+  List<String> isTasksCompleteString = [];
+  isTasksComplete.forEach((item) => item == true
+      ? isTasksCompleteString.add("ture")
+      : isTasksCompleteString.add("false"));
+  prefs.setStringList(
+      email + list_name + taskCompletionKey, isTasksCompleteString);
+
+  List<String> isTasksImportantString = [];
+  isTasksImportant.forEach((item) => item == true
+      ? isTasksImportantString.add("ture")
+      : isTasksImportantString.add("false"));
+  prefs.setStringList(
+      email + list_name + taskImportancyKey, isTasksImportantString);
+
+  prefs.setStringList(email + list_name + taskDateKey, tasksDate);
+  prefs.setStringList(email + list_name + taskTimeKey, tasksTime);
 }

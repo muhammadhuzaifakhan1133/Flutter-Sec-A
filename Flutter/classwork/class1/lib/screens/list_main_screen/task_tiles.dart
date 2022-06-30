@@ -80,7 +80,11 @@ class _TaskTilesState extends State<TaskTiles> {
         itemBuilder: (context, index) {
           return ListTile(
             tileColor: Colors.white,
-            title: Text(widget.tasksTitle[index]),
+            title: Text(widget.tasksTitle[index],
+                style: TextStyle(
+                    decoration: widget.isTasksComplete[index]
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none)),
             leading: IconButton(
                 icon: widget.isTasksComplete[index]
                     ? Icon(Icons.check_circle, color: Colors.blue, size: 30)

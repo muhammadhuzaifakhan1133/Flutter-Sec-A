@@ -1,17 +1,14 @@
-import 'package:class1/constants/local_storage_keys.dart';
 import 'package:class1/functions/shared_preferences.dart';
-import 'package:class1/screens/list_main_screen/create_task.dart';
+import 'package:class1/screens/list_main_screen/create_task/create_task.dart';
 import 'package:class1/screens/list_main_screen/pop_menu_button.dart';
 import 'package:class1/screens/list_main_screen/task_tiles.dart';
 import 'package:class1/widgets/create_rename_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class ListMainScreen extends StatefulWidget {
   ListMainScreen({required this.list_name, required this.email, Key? key})
       : super(key: key);
-  late String list_name;
+  String list_name;
   String email;
 
   @override
@@ -22,8 +19,8 @@ class _ListMainScreenState extends State<ListMainScreen> {
   bool isValidAlert = false;
 
   TextEditingController controller = TextEditingController();
-  TextEditingController dateTimeController = TextEditingController();
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
   List<bool> isTasksComplete = [];
   List<bool> isTasksImportant = [];
   List<String> tasksDate = [];
@@ -47,29 +44,6 @@ class _ListMainScreenState extends State<ListMainScreen> {
             isValidAlert = false;
           });
     });
-  }
-
-  saveTaskLocally() async {
-    final SharedPreferences prefs = await _prefs;
-    String email = (prefs.getString(activeEmailKey))!;
-    prefs.setStringList(email + widget.list_name, tasksTitle);
-
-    List<String> isTasksCompleteString = [];
-    isTasksComplete.forEach((item) => item == true
-        ? isTasksCompleteString.add("ture")
-        : isTasksCompleteString.add("false"));
-    prefs.setStringList(
-        email + widget.list_name + taskCompletionKey, isTasksCompleteString);
-
-    List<String> isTasksImportantString = [];
-    isTasksImportant.forEach((item) => item == true
-        ? isTasksImportantString.add("ture")
-        : isTasksImportantString.add("false"));
-    prefs.setStringList(
-        email + widget.list_name + taskImportancyKey, isTasksImportantString);
-
-    prefs.setStringList(email + widget.list_name + taskDateKey, tasksDate);
-    prefs.setStringList(email + widget.list_name + taskTimeKey, tasksTime);
   }
 
   @override
@@ -106,8 +80,8 @@ class _ListMainScreenState extends State<ListMainScreen> {
         actions: <Widget>[
           popMenuButton(onRenamePressed: () {
             renameListDialog();
-          }, onDeletePressed: () {
-            deleteList(widget.email, widget.list_name);
+          }, onDeletePressed: () async {
+            await deleteList(widget.email, widget.list_name);
             Navigator.pop(context);
           }),
         ],
@@ -149,26 +123,23 @@ class _ListMainScreenState extends State<ListMainScreen> {
           createOrUpdateTask(
               context: context,
               titleController: controller,
-              dateTimeController: dateTimeController,
+              dateController: dateController,
+              timeController: timeController,
               hintText: "New taks",
               dialogTitile: "Enter task title",
               finalButtonText: "CREATE",
               onPressedfinalButton: () {
-                String date = dateTimeController.text != ""
-                    ? dateTimeController.text.split(' ')[0]
-                    : "None";
-                String time = dateTimeController.text != ""
-                    ? dateTimeController.text.split(" ")[1].split(".")[0]
-                    : "None";
                 setState(() {
                   tasksTitle.add(controller.text);
                   isTasksComplete.add(false);
                   isTasksImportant.add(false);
-                  tasksTime.add(time);
-                  tasksDate.add(date);
+                  tasksTime.add(timeController.text);
+                  tasksDate.add(dateController.text);
                 });
-                saveTaskLocally();
-                dateTimeController.text = "";
+                saveTaskLocally(widget.email, widget.list_name, tasksTitle,
+                    isTasksComplete, isTasksImportant, tasksDate, tasksTime);
+                dateController.text = "";
+                timeController.text = "";
                 Navigator.pop(context);
               });
         },
