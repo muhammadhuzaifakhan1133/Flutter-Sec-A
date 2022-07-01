@@ -9,19 +9,38 @@ class CompletedTasks extends StatefulWidget {
 
 class _CompletedTasksState extends State<CompletedTasks> {
   bool tileExpanded = false;
-  List<String> foods = ["biryani", "Qourma", "Custord"];
-  List<Widget> childrens = [];
+  List<String> expansionTitle = ["foods", "places"];
+  List<String> expansionSubTitle = [
+    "Your favourite food is here",
+    "Your favorite places is here"
+  ];
+  List<List<String>> childrens = [
+    ["biryani", "Qourma", "Custord"],
+    ["Mazar e Qaid", "Sea View", "Karli Jheel", "Farm House"]
+  ];
 
-  createChildTiles() {
-    for (var i = 0; i < foods.length; i++) {
-      childrens.add(ListTile(title: Text(foods[i])));
+  createExpansionTiles() {
+    List<Widget> tileWidgets = [];
+    for (var i = 0; i < expansionTitle.length; i++) {
+      List<Widget> listTiles = [];
+      for (var j = 0; j < childrens[i].length; j++) {
+        listTiles.add(ListTile(title: Text(childrens[i][j])));
+      }
+      tileWidgets.add(ExpansionTile(
+          initiallyExpanded: true,
+          title: Text(expansionTitle[i]),
+          subtitle: Text(expansionSubTitle[i]),
+          trailing: Icon(tileExpanded
+              ? Icons.arrow_drop_down_circle
+              : Icons.arrow_drop_down),
+          onExpansionChanged: (bool expanded) {
+            setState(() {
+              tileExpanded = expanded;
+            });
+          },
+          children: listTiles));
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    createChildTiles();
+    return tileWidgets;
   }
 
   @override
@@ -30,21 +49,7 @@ class _CompletedTasksState extends State<CompletedTasks> {
       appBar: AppBar(),
       body: SafeArea(
         child: Column(
-          children: [
-            ExpansionTile(
-              title: Text("Foods"),
-              subtitle: Text("Your Favorite foods is here"),
-              trailing: Icon(tileExpanded
-                  ? Icons.arrow_drop_down_circle
-                  : Icons.arrow_drop_down),
-              onExpansionChanged: (bool expanded) {
-                setState(() {
-                  tileExpanded = expanded;
-                });
-              },
-              children: childrens,
-            )
-          ],
+          children: createExpansionTiles(),
         ),
       ),
     );
