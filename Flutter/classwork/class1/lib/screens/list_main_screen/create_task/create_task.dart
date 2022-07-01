@@ -1,5 +1,7 @@
 import 'package:class1/screens/list_main_screen/create_task/action_buttons.dart';
+import 'package:class1/screens/list_main_screen/create_task/date_field.dart';
 import 'package:class1/screens/list_main_screen/create_task/horizontal_line.dart';
+import 'package:class1/screens/list_main_screen/create_task/time_feild.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -47,12 +49,7 @@ createOrUpdateTask(
                 SizedBox(
                   height: 15,
                 ),
-                DateTimeField(
-                  controller: dateController,
-                  decoration: InputDecoration(
-                      hintText: "Select Due Date",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4))),
+                DateField(
                   onChanged: (date) {
                     setState(() {
                       if (dateController.text.isNotEmpty) {
@@ -65,33 +62,11 @@ createOrUpdateTask(
                       }
                     });
                   },
-                  format: DateFormat("dd-MM-yyyy"),
-                  onShowPicker: (context, currentValue) {
-                    return showDatePicker(
-                        context: context,
-                        firstDate: DateTime(1900),
-                        initialDate: currentValue ?? DateTime.now(),
-                        lastDate: DateTime(2100));
-                  },
+                  dateController: dateController,
                 ),
                 SizedBox(height: 15),
-                DateTimeField(
-                  enabled: isTimeEnable,
-                  decoration: InputDecoration(
-                      hintText: "Select Due Time",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4))),
-                  controller: timeController,
-                  format: DateFormat("HH:mm"),
-                  onShowPicker: (context, currentValue) async {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(
-                          currentValue ?? DateTime.now()),
-                    );
-                    return DateTimeField.convert(time);
-                  },
-                ),
+                TimeField(
+                    isTimeEnable: isTimeEnable, timeController: timeController),
               ],
             ),
             actions: actionButtons(context, timeController, dateController,

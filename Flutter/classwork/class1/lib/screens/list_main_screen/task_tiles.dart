@@ -1,11 +1,13 @@
 import 'package:class1/constants/local_storage_keys.dart';
+import 'package:class1/functions/shared_preferences.dart';
 import 'package:class1/screens/task_main_screen/task_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TaskTiles extends StatefulWidget {
   TaskTiles(
-      {required this.list_name,
+      {required this.email,
+      required this.list_name,
       required this.tasksTitle,
       required this.isTasksComplete,
       required this.isTasksImportant,
@@ -13,6 +15,7 @@ class TaskTiles extends StatefulWidget {
       required this.tasksDate,
       Key? key})
       : super(key: key);
+  String email;
   String list_name;
   List<String> tasksTitle;
   List<bool> isTasksComplete;
@@ -26,51 +29,6 @@ class TaskTiles extends StatefulWidget {
 
 class _TaskTilesState extends State<TaskTiles> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
-  getTaskList() async {
-    final SharedPreferences prefs = await _prefs;
-    String email = (prefs.getString(activeEmailKey))!;
-    List<String>? tasks = prefs.getStringList(email + widget.list_name);
-    List<String>? Complete =
-        prefs.getStringList(email + widget.list_name + taskCompletionKey);
-    List<String>? important =
-        prefs.getStringList(email + widget.list_name + taskImportancyKey);
-    List<String>? date =
-        prefs.getStringList(email + widget.list_name + taskDateKey);
-    List<String>? time =
-        prefs.getStringList(email + widget.list_name + taskTimeKey);
-    if ((tasks != null) &&
-        (Complete != null) &&
-        (important != null) &&
-        (date != null) &&
-        (time != null)) {
-      widget.tasksTitle = tasks;
-      widget.isTasksComplete = Complete.map((e) => e == "true").toList();
-      widget.isTasksImportant = important.map((e) => e == "true").toList();
-      widget.tasksDate = date;
-      widget.tasksTime = time;
-    }
-  }
-
-  saveTaskImportancyLocally(index) async {
-    final SharedPreferences prefs = await _prefs;
-    String email = (prefs.getString(activeEmailKey))!;
-    List<String> taskImportancy =
-        (prefs.getStringList(email + widget.list_name + taskImportancyKey))!;
-    taskImportancy[index] = taskImportancy[index] == "true" ? "false" : "true";
-    prefs.setStringList(
-        email + widget.list_name + taskImportancyKey, taskImportancy);
-  }
-
-  saveTaskCompletionLocally(index) async {
-    final SharedPreferences prefs = await _prefs;
-    String email = (prefs.getString(activeEmailKey))!;
-    List<String> taskCompletion =
-        (prefs.getStringList(email + widget.list_name + taskCompletionKey))!;
-    taskCompletion[index] = taskCompletion[index] == "true" ? "false" : "true";
-    prefs.setStringList(
-        email + widget.list_name + taskCompletionKey, taskCompletion);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +52,8 @@ class _TaskTilesState extends State<TaskTiles> {
                     widget.isTasksComplete[index] =
                         !widget.isTasksComplete[index];
                   });
-                  await saveTaskCompletionLocally(index);
+                  await saveTaskCompletionLocally(
+                      widget.email, widget.list_name, index);
                 }),
             subtitle:
                 Text(widget.tasksDate[index] + " " + widget.tasksTime[index]),
@@ -107,15 +66,25 @@ class _TaskTilesState extends State<TaskTiles> {
                     widget.isTasksImportant[index] =
                         !widget.isTasksImportant[index];
                   });
-                  await saveTaskImportancyLocally(index);
+                  await saveTaskImportancyLocally(
+                      widget.email, widget.list_name, index);
                 }),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TaskMainScreen(
-                          task_name: widget.tasksTitle[index]))).then((_) {
-                getTaskList();
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TaskMainScreen(
+                              task_name: widget.tasksTitle[index])))
+                  .then((_) async {
+                List<List<dynamic>> values =
+                    await getTaskList(widget.email, widget.list_name);
+                widget.tasksTitle = values[0] as List<String>;
+                widget.isTasksComplete =
+                    values[1].map((e) => e == "true").toList();
+                widget.isTasksImportant =
+                    values[2].map((e) => e == "true").toList();
+                widget.tasksDate = values[3] as List<String>;
+                widget.tasksTime = values[4] as List<String>;
               });
             },
           );

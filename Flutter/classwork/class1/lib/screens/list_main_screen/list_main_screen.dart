@@ -109,6 +109,7 @@ class _ListMainScreenState extends State<ListMainScreen> {
               ),
             ),
             TaskTiles(
+                email: widget.email,
                 list_name: widget.list_name,
                 tasksTitle: tasksTitle,
                 isTasksComplete: isTasksComplete,

@@ -111,3 +111,19 @@ saveTaskLocally(
   prefs.setStringList(email + list_name + taskDateKey, tasksDate);
   prefs.setStringList(email + list_name + taskTimeKey, tasksTime);
 }
+
+saveTaskImportancyLocally(email, list_name, index) async {
+  final SharedPreferences prefs = await _prefs;
+  List<String> taskImportancy =
+      (prefs.getStringList(email + list_name + taskImportancyKey))!;
+  taskImportancy[index] = taskImportancy[index] == "true" ? "false" : "true";
+  prefs.setStringList(email + list_name + taskImportancyKey, taskImportancy);
+}
+
+saveTaskCompletionLocally(email, list_name, index) async {
+  final SharedPreferences prefs = await _prefs;
+  List<String> taskCompletion =
+      (prefs.getStringList(email + list_name + taskCompletionKey))!;
+  taskCompletion[index] = taskCompletion[index] == "true" ? "false" : "true";
+  prefs.setStringList(email + list_name + taskCompletionKey, taskCompletion);
+}
