@@ -55,7 +55,7 @@ Future<void> deleteList(email, listName) async {
   List<String>? oldLists = prefs.getStringList(email);
   oldLists!.remove(listName);
   await prefs.setStringList(email, oldLists);
-  await prefs.remove(email + listName);
+  await prefs.remove(email + listName + taskTitleKey);
   await prefs.remove(email + listName + taskCompletionKey);
   await prefs.remove(email + listName + taskImportancyKey);
   await prefs.remove(email + listName + taskDateKey);
@@ -72,7 +72,8 @@ Future<void> renameList(email, list_name, newName) async {
 
 Future<List<List<dynamic>>> getTaskList(email, listName) async {
   final SharedPreferences prefs = await _prefs;
-  List<String> tasks = prefs.getStringList(email + listName) ?? [];
+  List<String> tasks =
+      prefs.getStringList(email + listName + taskTitleKey) ?? [];
   List<String> Complete =
       prefs.getStringList(email + listName + taskCompletionKey) ?? [];
   List<String> important =
@@ -84,6 +85,44 @@ Future<List<List<dynamic>>> getTaskList(email, listName) async {
   return [tasks, isTaskComplete, isTaskImportant, date, time];
 }
 
+Future<List<String>> getList(email) async {
+  final SharedPreferences prefs = await _prefs;
+  List<String> lists = prefs.getStringList(email) ?? [];
+  return lists;
+}
+
+dynamic getTasksOfAllList(email, lists) async {
+  final SharedPreferences prefs = await _prefs;
+  List<String> subKeys = [
+    taskTitleKey,
+    taskCompletionKey,
+    taskImportancyKey,
+    taskDateKey,
+    taskTimeKey
+  ];
+  List<String> listNames = [];
+  List<List<List<dynamic>>> tasksInfo = [];
+  for (var i = 0; i < lists.length; i++) {
+    listNames.add(lists[i]);
+    List<List<dynamic>> values = [];
+    for (var j = 0; j < subKeys.length; j++) {
+      if ((subKeys[j] != taskCompletionKey) ||
+          (subKeys[j] != taskImportancyKey)) {
+        List<String> subValues =
+            prefs.getStringList(email + lists[i] + subKeys[j]) ?? [];
+        values.add(subValues);
+      } else {
+        List<dynamic> subValues =
+            prefs.getStringList(email + lists[i] + subKeys[j]) ?? [];
+        subValues = subValues.map((e) => e == "true").toList();
+        values.add(subValues);
+      }
+    }
+    tasksInfo.add(values);
+  }
+  return [listNames, tasksInfo];
+}
+
 saveTaskLocally(
     String email,
     String list_name,
@@ -93,7 +132,7 @@ saveTaskLocally(
     List<String> tasksDate,
     List<String> tasksTime) async {
   final SharedPreferences prefs = await _prefs;
-  prefs.setStringList(email + list_name, tasksTitle);
+  prefs.setStringList(email + list_name + taskTitleKey, tasksTitle);
   List<String> isTasksCompleteString = [];
   isTasksComplete.forEach((item) => item == true
       ? isTasksCompleteString.add("ture")

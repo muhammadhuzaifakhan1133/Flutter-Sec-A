@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo/login.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -14,6 +15,15 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  late String error;
+
+  showToaster() {
+    return Fluttertoast.showToast(
+        msg: error,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
 
   postData() async {
     try {
@@ -22,16 +32,20 @@ class _SignUpPageState extends State<SignUpPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-      print("Huzaifa1");
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+      if (emailController.text.isEmpty) {
+        error = "enter email";
+      } else if (passwordController.text.isEmpty) {
+        error = "Enter password";
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        error = 'The account already exists for that email.';
+      } else if (e.code == 'weak-password') {
+        error = 'The password provided is too weak.';
       }
+      showToaster();
     } catch (e) {
-      print(e);
-      print("Huzaifa");
+      error = e.toString();
+      showToaster();
     }
   }
 

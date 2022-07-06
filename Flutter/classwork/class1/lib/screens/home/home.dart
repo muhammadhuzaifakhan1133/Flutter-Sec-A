@@ -21,6 +21,7 @@ class _HomeState extends State<Home> {
   TextEditingController controller = TextEditingController();
   List<String> lists = [];
   bool isValidAlert = false;
+  List<List<dynamic>> values = [];
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<void> getUserLists(email) async {
@@ -36,6 +37,8 @@ class _HomeState extends State<Home> {
     super.initState();
     (() async {
       getUserLists(widget.userEmail);
+      lists = await getList(widget.userEmail);
+      values = await getTasksOfAllList(widget.userEmail, lists);
     })();
   }
 
@@ -77,7 +80,9 @@ class _HomeState extends State<Home> {
           children: [
             ProfileBar(email: widget.userEmail, name: widget.userName),
             SizedBox(height: size.height * 0.010),
-            Container(height: 230, child: constanstTiles()),
+            Container(
+                height: 230,
+                child: constanstTiles(email: widget.userEmail, values: values)),
             Divider(
               thickness: 2,
             ),

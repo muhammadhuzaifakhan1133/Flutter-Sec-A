@@ -8,8 +8,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  Future<List<String?>> futureUserValues = getActiveUser();
-  List<String?> userValues = await futureUserValues;
+  // List<List<String>> values = await getUsers();
+  // List<String> allEmails = values[0];
+  // for (var email in allEmails) {
+  //   List<String> allLists = await getList(email);
+  //   for (var list in allLists) {
+  //     prefs.remove(email);
+  //     prefs.remove(email + list);
+  //     prefs.remove(email + list + taskImportancyKey);
+  //     prefs.remove(email + list + taskImportancyKey);
+  //     prefs.remove(email + list + taskDateKey);
+  //     prefs.remove(email + list + taskTimeKey);
+  //   }
+  // }
+  List<String?> userValues = await getActiveUser();
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: backgroundColor),

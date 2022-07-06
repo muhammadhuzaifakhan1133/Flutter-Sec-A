@@ -4,7 +4,7 @@ import 'package:class1/screens/planned_tasks/planned_tasks.dart';
 import 'package:class1/screens/unplanned_tasks/unplanned_tasks.dart';
 import 'package:flutter/material.dart';
 
-Widget constanstTiles() {
+Widget constanstTiles({email, values}) {
   List<String> titles = ["Important", "Planned", "Unplanned", "Completed"];
   List<IconData> icons = [
     Icons.star_border,
@@ -17,7 +17,10 @@ Widget constanstTiles() {
     ImportantTasks(),
     PlannedTasks(),
     UnplannedTasks(),
-    CompletedTasks()
+    CompletedTasks(
+      email: email,
+      values: values,
+    )
   ];
   return ListView.builder(
       itemCount: titles.length,

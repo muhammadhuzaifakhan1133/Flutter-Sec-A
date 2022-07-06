@@ -1,7 +1,12 @@
+import 'package:class1/functions/shared_preferences.dart';
+import 'package:class1/screens/task_main_screen/task_main_screen.dart';
 import 'package:flutter/material.dart';
 
 class CompletedTasks extends StatefulWidget {
-  const CompletedTasks({Key? key}) : super(key: key);
+  CompletedTasks({required this.email, required this.values, Key? key})
+      : super(key: key);
+  String email;
+  List<List<dynamic>> values;
 
   @override
   State<CompletedTasks> createState() => _CompletedTasksState();
@@ -9,27 +14,62 @@ class CompletedTasks extends StatefulWidget {
 
 class _CompletedTasksState extends State<CompletedTasks> {
   bool tileExpanded = false;
-  List<String> expansionTitle = ["foods", "places"];
-  List<String> expansionSubTitle = [
-    "Your favourite food is here",
-    "Your favorite places is here"
-  ];
-  List<List<String>> childrens = [
-    ["biryani", "Qourma", "Custord"],
-    ["Mazar e Qaid", "Sea View", "Karli Jheel", "Farm House"]
-  ];
+  // List<List<dynamic>> values = [];
 
-  createExpansionTiles() {
+  createExpansionTiles(values) {
     List<Widget> tileWidgets = [];
-    for (var i = 0; i < expansionTitle.length; i++) {
+    for (var i = 0; i < values[0].length; i++) {
       List<Widget> listTiles = [];
-      for (var j = 0; j < childrens[i].length; j++) {
-        listTiles.add(ListTile(title: Text(childrens[i][j])));
+      for (var j = 0; j < values[1][i][0].length; j++) {
+        listTiles.add(ListTile(
+          tileColor: Colors.white,
+          title: Text(values[1][0][j],
+              style: TextStyle(
+                  decoration: values[1][1][j]
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none)),
+          leading: IconButton(
+              icon: values[1][1][j]
+                  ? Icon(Icons.check_circle, color: Colors.blue, size: 30)
+                  : Icon(Icons.circle_outlined, size: 30),
+              onPressed: () async {
+                setState(() {
+                  values[1][1][j] = !values[1][1][j];
+                });
+                await saveTaskCompletionLocally(widget.email, values[0][i], j);
+              }),
+          subtitle: Text(values[1][3][j] + " " + values[1][4][j]),
+          trailing: IconButton(
+              icon: values[1][2][j]
+                  ? Icon(Icons.star, color: Colors.blue, size: 30)
+                  : Icon(Icons.star_border, size: 30),
+              onPressed: () async {
+                setState(() {
+                  values[1][2][j] = !values[1][2][j];
+                });
+                await saveTaskImportancyLocally(widget.email, values[0][i], j);
+              }),
+          onTap: () {
+            Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            TaskMainScreen(task_name: values[1][0][j])))
+                .then((_) async {
+              List<List<dynamic>> Values =
+                  await getTaskList(widget.email, values[0][i]);
+              values[1][0][j] = Values[0] as List<String>;
+              values[1][1][j] = Values[1].map((e) => e == "true").toList();
+              values[1][2][j] = Values[2].map((e) => e == "true").toList();
+              values[1][3][j] = Values[3] as List<String>;
+              values[1][4][j] = Values[4] as List<String>;
+            });
+          },
+        ));
       }
       tileWidgets.add(ExpansionTile(
           initiallyExpanded: true,
-          title: Text(expansionTitle[i]),
-          subtitle: Text(expansionSubTitle[i]),
+          title: Text(values[0][i]),
           trailing: Icon(tileExpanded
               ? Icons.arrow_drop_down_circle
               : Icons.arrow_drop_down),
@@ -44,12 +84,18 @@ class _CompletedTasksState extends State<CompletedTasks> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    (() async {})();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
         child: Column(
-          children: createExpansionTiles(),
+          children: createExpansionTiles(widget.values),
         ),
       ),
     );

@@ -4,6 +4,7 @@ const String passwordsKey = "passwords";
 const String activeNameKey = "active-name";
 const String activeEmailKey = "active-email";
 const String activePasswordKey = "active-password";
+const String taskTitleKey = "title";
 const String taskCompletionKey = "completed";
 const String taskImportancyKey = "important";
 const String taskDateKey = "date";

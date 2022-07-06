@@ -1,6 +1,8 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:todo/home1.dart';
+import 'package:todo/add_user.dart';
+import 'package:todo/get_user.dart';
+import 'package:todo/get_users.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home1(),
+      home: GetUsers(),
     );
   }
 }
