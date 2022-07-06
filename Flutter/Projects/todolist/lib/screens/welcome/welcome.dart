@@ -3,9 +3,14 @@ import 'package:todolist/screens/signup/signup.dart';
 import 'package:todolist/widgets/button.dart';
 import 'package:todolist/widgets/title_with_image.dart';
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
 
+  @override
+  State<Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

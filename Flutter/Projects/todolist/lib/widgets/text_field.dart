@@ -5,7 +5,6 @@ Widget textFieldWidget(
     required TextEditingController controller,
     required String labelText,
     required TextInputType keyboardtype,
-    required Key formKey,
     validator,
     String? errorText,
     TextInputAction textInputAction = TextInputAction.next,
@@ -20,7 +19,6 @@ Widget textFieldWidget(
     child: Container(
       width: size.width * 0.8,
       child: TextFormField(
-        key: formKey,
         validator: validator,
         obscureText: obscureText,
         controller: controller,
