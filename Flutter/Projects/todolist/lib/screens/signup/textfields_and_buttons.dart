@@ -1,9 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/screens/home/home.dart';
+import 'package:todolist/screens/signup/save_user_as_active.dart';
+import 'package:todolist/screens/signup/save_user_name.dart';
 import 'package:todolist/widgets/button.dart';
+import 'package:todolist/widgets/is_email_valid.dart';
+import 'package:todolist/widgets/loading_widget.dart';
 import 'package:todolist/widgets/password_suffix_icon.dart';
 import 'package:todolist/widgets/text_field.dart';
 
@@ -15,7 +18,6 @@ class FieldsAndButtons extends StatefulWidget {
 }
 
 class _FieldsAndButtonsState extends State<FieldsAndButtons> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -53,6 +55,19 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
       });
       return 0;
     }
+    int emailValidated = isEmailValid(emailController.text);
+    if (emailValidated == 0) {
+      setState(() {
+        emailError = "Please enter valid email";
+      });
+      return 0;
+    }
+    if (passwordController.text.length < 6) {
+      setState(() {
+        passwordError = "password length must be equal or greater than 6";
+      });
+      return 0;
+    }
     return 1;
   }
 
@@ -65,12 +80,7 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
       );
       return 1;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        setState(() {
-          passwordError = 'The password provided is too weak.';
-        });
-        return 0;
-      } else if (e.code == 'email-already-in-use') {
+      if (e.code == 'email-already-in-use') {
         setState(() {
           emailError = "The account already exists for that email.";
         });
@@ -81,24 +91,8 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
         content: Text(e.toString()),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return 0;
     }
-  }
-
-  saveNameAndPassword() async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    await users
-        .doc(emailController.text)
-        .set({
-          'name': nameController.text,
-        })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
-  }
-
-  saveAsActiveUser() async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString("activeEmail", emailController.text);
-    prefs.setString("activeName", nameController.text);
   }
 
   @override
@@ -154,10 +148,13 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
               });
               int fieldValidated = ensureFieldIsNotEmpty();
               if (fieldValidated == 1) {
+                circleProgressDialog(context);
                 int valueValidated = await addUser();
                 if (valueValidated == 1) {
-                  await saveNameAndPassword();
-                  await saveAsActiveUser();
+                  await saveName(emailController.text, nameController.text);
+                  await saveAsActiveUser(
+                      emailController.text, nameController.text);
+                  Navigator.pop(context);
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) => Home(
@@ -165,6 +162,8 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
                                 email: emailController.text,
                               )),
                       (route) => false);
+                } else {
+                  Navigator.pop(context);
                 }
               }
             })

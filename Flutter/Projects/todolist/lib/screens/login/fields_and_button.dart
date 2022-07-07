@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/widgets/button.dart';
+import 'package:todolist/widgets/is_email_valid.dart';
+import 'package:todolist/widgets/loading_widget.dart';
 import 'package:todolist/widgets/password_suffix_icon.dart';
 import 'package:todolist/widgets/text_field.dart';
 
@@ -24,6 +25,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
   String? name;
   bool obscureText = true;
   dynamic data;
+  bool isLoading = true;
   Future<void> getUserName({required String doucmentID}) async {
     DocumentReference user =
         FirebaseFirestore.instance.collection("users").doc(doucmentID);
@@ -32,7 +34,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
     name = values["name"];
   }
 
-  Future<int> ensureFieldIsNotEmpty() async {
+  int ensureFieldIsNotEmpty() {
     String error = "This field is required";
     if (emailController.text.isEmpty) {
       setState(() {
@@ -43,6 +45,13 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
     if (passController.text.isEmpty) {
       setState(() {
         passwordError = error;
+      });
+      return 0;
+    }
+    int emailValidated = isEmailValid(emailController.text);
+    if (emailValidated == 0) {
+      setState(() {
+        emailError = "Please enter valid email";
       });
       return 0;
     }
@@ -109,18 +118,22 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
               setState(() {
                 emailError = passwordError = null;
               });
-              int fieldValidated = await ensureFieldIsNotEmpty();
+              int fieldValidated = ensureFieldIsNotEmpty();
               if (fieldValidated == 1) {
+                circleProgressDialog(context);
                 int validUser = await logIn();
                 if (validUser == 1) {
                   await getUserName(doucmentID: emailController.text);
                   await saveAsActiveUser();
+                  Navigator.pop(context);
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
                               Home(name: name, email: emailController.text)),
                       (route) => false);
+                } else {
+                  Navigator.pop(context); // close loading dialog
                 }
               }
             })
