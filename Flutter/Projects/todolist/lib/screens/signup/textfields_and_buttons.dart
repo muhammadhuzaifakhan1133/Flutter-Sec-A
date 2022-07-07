@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/widgets/button.dart';
+import 'package:todolist/widgets/password_suffix_icon.dart';
 import 'package:todolist/widgets/text_field.dart';
 
 class FieldsAndButtons extends StatefulWidget {
@@ -25,14 +26,6 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
   String? nameError;
   String? passwordError;
   String? confirmPasswordError;
-
-  IconData suffixIcon(bool obscure) {
-    if (obscure) {
-      return Icons.visibility;
-    } else {
-      return Icons.visibility_off;
-    }
-  }
 
   ensureFieldIsNotEmpty() {
     String emptyError = "This field is required";
@@ -97,7 +90,6 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
         .doc(emailController.text)
         .set({
           'name': nameController.text,
-          'password': passwordController.text,
         })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
@@ -156,8 +148,10 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
             size: size,
             text: "Sign up",
             onpressed: () async {
-              nameError =
-                  emailError = passwordError = confirmPasswordError = null;
+              setState(() {
+                nameError =
+                    emailError = passwordError = confirmPasswordError = null;
+              });
               int fieldValidated = ensureFieldIsNotEmpty();
               if (fieldValidated == 1) {
                 int valueValidated = await addUser();
