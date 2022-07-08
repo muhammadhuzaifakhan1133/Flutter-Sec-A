@@ -1,10 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/widgets/button.dart';
-import 'package:todolist/widgets/is_email_valid.dart';
+import 'package:todolist/functions/is_email_valid.dart';
 import 'package:todolist/widgets/loading_widget.dart';
 import 'package:todolist/widgets/password_suffix_icon.dart';
 import 'package:todolist/widgets/text_field.dart';
@@ -19,52 +20,51 @@ class FieldsAndButton extends StatefulWidget {
 class _FieldsAndButtonState extends State<FieldsAndButton> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController emailController = TextEditingController();
-  TextEditingController passController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   String? emailError;
   String? passwordError;
   String? name;
   bool obscureText = true;
   dynamic data;
   bool isLoading = true;
-  Future<void> getUserName({required String doucmentID}) async {
-    DocumentReference user =
-        FirebaseFirestore.instance.collection("users").doc(doucmentID);
-    DocumentSnapshot data = await user.get();
-    Map<String, dynamic> values = data.data() as Map<String, dynamic>;
-    name = values["name"];
-  }
 
-  int ensureFieldIsNotEmpty() {
+  bool isFieldNotEmpty() {
     String error = "This field is required";
     if (emailController.text.isEmpty) {
       setState(() {
         emailError = error;
       });
-      return 0;
+      return false;
     }
-    if (passController.text.isEmpty) {
+    if (passwordController.text.isEmpty) {
       setState(() {
         passwordError = error;
       });
-      return 0;
+      return false;
     }
-    int emailValidated = isEmailValid(emailController.text);
-    if (emailValidated == 0) {
+    return true;
+  }
+
+  loginFieldsValidation() {
+    bool validFields = isFieldNotEmpty();
+    if (!validFields) {
+      return false;
+    }
+    if (!isEmailValid(emailController.text)) {
       setState(() {
         emailError = "Please enter valid email";
       });
-      return 0;
+      return false;
     }
-    return 1;
+    return true;
   }
 
-  Future<int> logIn() async {
+  Future<bool> logIn() async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passController.text);
-      return 1;
+          email: emailController.text, password: passwordController.text);
+      return true;
     } on FirebaseAuthException catch (e) {
-      print("hello");
       if (e.code == 'user-not-found') {
         setState(() {
           emailError = 'No user found for that email.';
@@ -74,14 +74,8 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
           passwordError = 'Wrong password provided for that user.';
         });
       }
-      return 0;
+      return false;
     }
-  }
-
-  saveAsActiveUser() async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString("activeEmail", emailController.text);
-    prefs.setString("activeName", name!);
   }
 
   @override
@@ -100,7 +94,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
           size: size,
           errorText: passwordError,
           obscureText: obscureText,
-          controller: passController,
+          controller: passwordController,
           labelText: "Enter your password",
           keyboardtype: TextInputType.visiblePassword,
           suffixIcon: suffixIcon(obscureText),
@@ -118,13 +112,13 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
               setState(() {
                 emailError = passwordError = null;
               });
-              int fieldValidated = ensureFieldIsNotEmpty();
-              if (fieldValidated == 1) {
+              bool fieldValidated = loginFieldsValidation();
+              if (fieldValidated) {
                 circleProgressDialog(context);
-                int validUser = await logIn();
-                if (validUser == 1) {
-                  await getUserName(doucmentID: emailController.text);
-                  await saveAsActiveUser();
+                bool isLoginSuccessfully = await logIn();
+                if (isLoginSuccessfully) {
+                  name = await getUserName(documentID: emailController.text);
+                  await saveAsActiveUser(emailController.text, name!);
                   Navigator.pop(context);
                   Navigator.pushAndRemoveUntil(
                       context,

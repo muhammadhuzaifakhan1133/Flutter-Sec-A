@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/screens/signup/textfields_and_buttons.dart';
+import 'package:todolist/screens/signup/fields_and_button.dart';
 import 'package:todolist/widgets/title_with_image.dart';
 
 class SignUp extends StatefulWidget {
@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
                   imgPath: "assets/images/signup.jpg",
                   subTitle: "Filter task according to type and date"),
               SizedBox(height: size.height * 0.03),
-              const FieldsAndButtons()
+              const FieldsAndButton()
             ],
           ),
         ),

@@ -1,23 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/home/home.dart';
-import 'package:todolist/screens/signup/save_user_as_active.dart';
-import 'package:todolist/screens/signup/save_user_name.dart';
+import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/widgets/button.dart';
-import 'package:todolist/widgets/is_email_valid.dart';
+import 'package:todolist/functions/is_email_valid.dart';
 import 'package:todolist/widgets/loading_widget.dart';
 import 'package:todolist/widgets/password_suffix_icon.dart';
 import 'package:todolist/widgets/text_field.dart';
 
-class FieldsAndButtons extends StatefulWidget {
-  const FieldsAndButtons({Key? key}) : super(key: key);
+class FieldsAndButton extends StatefulWidget {
+  const FieldsAndButton({Key? key}) : super(key: key);
 
   @override
-  State<FieldsAndButtons> createState() => _FieldsAndButtonsState();
+  State<FieldsAndButton> createState() => _FieldsAndButtonState();
 }
 
-class _FieldsAndButtonsState extends State<FieldsAndButtons> {
+class _FieldsAndButtonState extends State<FieldsAndButton> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -29,46 +28,53 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
   String? passwordError;
   String? confirmPasswordError;
 
-  ensureFieldIsNotEmpty() {
-    String emptyError = "This field is required";
+  bool isFieldNotEmpty() {
+    String error = "This field is required";
     if (nameController.text.isEmpty) {
       setState(() {
-        nameError = emptyError;
+        nameError = error;
       });
-      return 0;
+      return false;
     }
     if (emailController.text.isEmpty) {
       setState(() {
-        emailError = emptyError;
+        emailError = error;
       });
-      return 0;
+      return false;
     }
     if (passwordController.text.isEmpty) {
       setState(() {
-        passwordError = emptyError;
+        passwordError = error;
       });
-      return 0;
+      return false;
+    }
+    return true;
+  }
+
+  bool signupFieldsValidation() {
+    bool validFields = isFieldNotEmpty();
+    if (!validFields) {
+      return false;
     }
     if (confirmPasswordController.text != passwordController.text) {
       setState(() {
         confirmPasswordError = "Password mismatch";
       });
-      return 0;
+      return false;
     }
-    int emailValidated = isEmailValid(emailController.text);
-    if (emailValidated == 0) {
+    if (!isEmailValid(emailController.text)) {
       setState(() {
         emailError = "Please enter valid email";
       });
-      return 0;
+      return false;
     }
     if (passwordController.text.length < 6) {
       setState(() {
         passwordError = "password length must be equal or greater than 6";
       });
-      return 0;
+      return false;
     }
-    return 1;
+    return true;
   }
 
   Future<dynamic> addUser() async {
@@ -78,20 +84,20 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
         email: emailController.text,
         password: passwordController.text,
       );
-      return 1;
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         setState(() {
           emailError = "The account already exists for that email.";
         });
-        return 0;
+        return false;
       }
     } catch (e) {
       SnackBar snackBar = SnackBar(
         content: Text(e.toString()),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      return 0;
+      return false;
     }
   }
 
@@ -146,12 +152,15 @@ class _FieldsAndButtonsState extends State<FieldsAndButtons> {
                 nameError =
                     emailError = passwordError = confirmPasswordError = null;
               });
-              int fieldValidated = ensureFieldIsNotEmpty();
-              if (fieldValidated == 1) {
+              bool validFields = signupFieldsValidation();
+              print(nameError);
+              if (validFields) {
                 circleProgressDialog(context);
-                int valueValidated = await addUser();
-                if (valueValidated == 1) {
-                  await saveName(emailController.text, nameController.text);
+                bool isSignupSuccessfully = await addUser();
+                if (isSignupSuccessfully) {
+                  await saveName(
+                      documentID: emailController.text,
+                      name: nameController.text);
                   await saveAsActiveUser(
                       emailController.text, nameController.text);
                   Navigator.pop(context);
