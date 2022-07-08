@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 circleProgressDialog(BuildContext context) {
   FocusScope.of(context).unfocus();
-  return showDialog(
+
+  showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {

@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/welcome/welcome.dart';
 
 class Home extends StatefulWidget {
@@ -12,11 +14,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   logout() async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.remove("activeEmail");
-    prefs.remove("activeName");
+    removeActiveUser();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const Welcome()),
         (route) => false);
@@ -34,6 +33,7 @@ class _HomeState extends State<Home> {
           ElevatedButton(
               onPressed: () {
                 logout();
+                FirebaseAuth.instance.signOut();
               },
               child: Text("Log out"))
         ],

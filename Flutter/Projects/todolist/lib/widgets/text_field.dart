@@ -6,6 +6,7 @@ Widget textFieldWidget(
     required String labelText,
     required TextInputType keyboardtype,
     validator,
+    onFieldSubmitted,
     String? errorText,
     TextInputAction textInputAction = TextInputAction.next,
     Color cursorColor = Colors.black,

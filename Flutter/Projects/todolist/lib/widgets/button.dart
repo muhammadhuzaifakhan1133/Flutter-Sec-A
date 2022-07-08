@@ -4,6 +4,7 @@ Widget buttonWidget(
     {required Size size,
     required String text,
     required onpressed,
+    bool enable = true,
     double topPadding = 15,
     Color textColor = Colors.white,
     double textSize = 18,
@@ -14,7 +15,7 @@ Widget buttonWidget(
   return Padding(
     padding: EdgeInsets.only(top: topPadding),
     child: ElevatedButton(
-        onPressed: onpressed,
+        onPressed: enable ? onpressed : null,
         child: Text(
           text,
           style: TextStyle(

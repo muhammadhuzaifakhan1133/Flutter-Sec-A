@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/screens/email_verify/email_verify.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/widgets/button.dart';
@@ -30,25 +31,36 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
 
   bool isFieldNotEmpty() {
     String error = "This field is required";
+    bool fieldsNotEmpty = true;
     if (nameController.text.isEmpty) {
       setState(() {
         nameError = error;
       });
-      return false;
+      fieldsNotEmpty = false;
     }
     if (emailController.text.isEmpty) {
       setState(() {
         emailError = error;
       });
-      return false;
+      fieldsNotEmpty = false;
     }
     if (passwordController.text.isEmpty) {
       setState(() {
         passwordError = error;
       });
+      fieldsNotEmpty = false;
+    }
+    if (confirmPasswordController.text.isEmpty) {
+      setState(() {
+        confirmPasswordError = error;
+      });
+      fieldsNotEmpty = false;
+    }
+    if (fieldsNotEmpty) {
+      return true;
+    } else {
       return false;
     }
-    return true;
   }
 
   bool signupFieldsValidation() {
@@ -93,10 +105,8 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
         return false;
       }
     } catch (e) {
-      SnackBar snackBar = SnackBar(
-        content: Text(e.toString()),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
       return false;
     }
   }
@@ -157,22 +167,20 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
               if (validFields) {
                 circleProgressDialog(context);
                 bool isSignupSuccessfully = await addUser();
-                if (isSignupSuccessfully) {
-                  await saveName(
-                      documentID: emailController.text,
-                      name: nameController.text);
+                bool emailSent = await sendVerificationEmail(context);
+                if (isSignupSuccessfully && emailSent) {
                   await saveAsActiveUser(
                       emailController.text, nameController.text);
-                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).pop();
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (context) => Home(
+                          builder: (context) => EmailVerification(
                                 name: nameController.text,
                                 email: emailController.text,
                               )),
                       (route) => false);
                 } else {
-                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).pop();
                 }
               }
             })

@@ -30,23 +30,29 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
 
   bool isFieldNotEmpty() {
     String error = "This field is required";
+    bool fieldsNotEmpty = true;
     if (emailController.text.isEmpty) {
       setState(() {
         emailError = error;
       });
-      return false;
+      fieldsNotEmpty = false;
     }
     if (passwordController.text.isEmpty) {
       setState(() {
         passwordError = error;
       });
+      fieldsNotEmpty = false;
+    }
+    if (fieldsNotEmpty) {
+      return true;
+    } else {
       return false;
     }
-    return true;
   }
 
   loginFieldsValidation() {
     bool validFields = isFieldNotEmpty();
+    bool areFieldsValid = true;
     if (!validFields) {
       return false;
     }
@@ -119,7 +125,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
                 if (isLoginSuccessfully) {
                   name = await getUserName(documentID: emailController.text);
                   await saveAsActiveUser(emailController.text, name!);
-                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).pop();
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
@@ -127,7 +133,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
                               Home(name: name, email: emailController.text)),
                       (route) => false);
                 } else {
-                  Navigator.pop(context); // close loading dialog
+                  Navigator.of(context, rootNavigator: true).pop();
                 }
               }
             })
