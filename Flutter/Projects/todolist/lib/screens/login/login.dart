@@ -22,6 +22,8 @@ class _LoginState extends State<Login> {
               titleWithImage(
                   size: size,
                   topPaddingPercent: 0.08,
+                  imgHeight: size.height * 0.35,
+                  imgWidth: double.infinity,
                   theme: theme,
                   title: "Log in",
                   imgPath: "assets/images/login.png",

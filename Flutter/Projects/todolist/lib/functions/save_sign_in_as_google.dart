@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-Future<void> removeActiveUser() async {
+Future<void> setSignInAsGoogleOrNot(bool value) async {
   final SharedPreferences prefs = await _prefs;
-  prefs.remove("activeName");
+  prefs.setBool("isSignInWithGoogle", value);
 }

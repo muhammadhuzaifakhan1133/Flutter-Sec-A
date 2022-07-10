@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/save_sign_in_as_google.dart';
 import 'package:todolist/screens/email_verify/text_for_change_email.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/widgets/button.dart';
+import 'package:todolist/widgets/loading_widget.dart';
 
 class EmailVerification extends StatefulWidget {
-  EmailVerification({required this.name, required this.email, Key? key})
-      : super(key: key);
+  EmailVerification({required this.name, Key? key}) : super(key: key);
   String? name;
-  String? email;
 
   @override
   State<EmailVerification> createState() => _EmailVerificationState();
@@ -50,13 +50,15 @@ class _EmailVerificationState extends State<EmailVerification> {
   UserClickEmaiLinkOrNot() async {
     bool emailVerified = await checkEmailVerified();
     if (emailVerified) {
+      circleProgressDialog(context);
       timer.cancel();
-      await saveName(documentID: (widget.email)!, name: (widget.name)!);
+      await saveName(documentID: (user?.email)!, name: (widget.name)!);
+      await setSignInAsGoogleOrNot(false);
+      Navigator.of(context, rootNavigator: true)
+          .pop(); // cancel progress dialog
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  Home(name: widget.name, email: widget.email)),
+          MaterialPageRoute(builder: (context) => Home(name: widget.name)),
           (route) => false);
     }
   }
@@ -103,7 +105,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                       image:
                           AssetImage("assets/images/email_verification.png"))),
               Text(
-                "An email has been sent to ${widget.email}\nplease verify",
+                "An email has been sent to ${user?.email}\nplease verify",
                 style: TextStyle(fontSize: 18),
                 textAlign: TextAlign.center,
               ),

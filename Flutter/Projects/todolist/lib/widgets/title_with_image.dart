@@ -6,6 +6,8 @@ Column titleWithImage(
     required String title,
     required String imgPath,
     required String subTitle,
+    double? imgWidth,
+    double? imgHeight,
     double topPaddingPercent = 0.05,
     double afterTitlePaddingPercent = 0.0}) {
   return Column(
@@ -22,7 +24,11 @@ Column titleWithImage(
       Stack(
         alignment: Alignment.center,
         children: [
-          Image(image: AssetImage(imgPath)),
+          Image(
+            image: AssetImage(imgPath),
+            width: imgWidth,
+            height: imgHeight,
+          ),
           Positioned(
             bottom: 0,
             child: Text(

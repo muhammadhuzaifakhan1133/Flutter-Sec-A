@@ -1,9 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/save_sign_in_as_google.dart';
 import 'package:todolist/functions/save_user_as_active.dart';
+import 'package:todolist/provider/google_sign_in.dart';
 import 'package:todolist/screens/home/home.dart';
+import 'package:todolist/screens/login/horizontal_line.dart';
 import 'package:todolist/widgets/button.dart';
 import 'package:todolist/functions/is_email_valid.dart';
 import 'package:todolist/widgets/loading_widget.dart';
@@ -84,6 +91,39 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
     }
   }
 
+  completeLoginProcess() async {
+    Fluttertoast.cancel();
+    if (await InternetConnectionChecker().hasConnection) {
+      setState(() {
+        emailError = passwordError = null;
+      });
+      bool fieldValidated = loginFieldsValidation();
+      if (fieldValidated) {
+        circleProgressDialog(context);
+        bool isLoginSuccessfully = await logIn();
+        if (isLoginSuccessfully) {
+          try {
+            name = await getUserName(documentID: emailController.text);
+          } catch (e) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(e.toString())));
+          }
+          await saveAsActiveUser(name!);
+          await setSignInAsGoogleOrNot(false);
+          Navigator.of(context, rootNavigator: true).pop();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Home(name: name)),
+              (route) => false);
+        } else {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      }
+    } else {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -115,28 +155,32 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
             size: size,
             text: "Log in",
             onpressed: () async {
-              setState(() {
-                emailError = passwordError = null;
-              });
-              bool fieldValidated = loginFieldsValidation();
-              if (fieldValidated) {
-                circleProgressDialog(context);
-                bool isLoginSuccessfully = await logIn();
-                if (isLoginSuccessfully) {
-                  name = await getUserName(documentID: emailController.text);
-                  await saveAsActiveUser(emailController.text, name!);
-                  Navigator.of(context, rootNavigator: true).pop();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              Home(name: name, email: emailController.text)),
-                      (route) => false);
-                } else {
-                  Navigator.of(context, rootNavigator: true).pop();
-                }
-              }
-            })
+              await completeLoginProcess();
+            }),
+        SizedBox(height: 15),
+        horizontalLine(),
+        Stack(
+          children: [
+            buttonWidget(
+                buttonColor: Colors.grey,
+                size: size,
+                text: "Sign Up with Google",
+                onpressed: () async {
+                  final provider =
+                      Provider.of<GoogleSignInProvider>(context, listen: false);
+                  try {
+                    provider.googleLogin(context);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(e.toString())));
+                  }
+                }),
+            Positioned(
+                top: 27,
+                left: 40,
+                child: FaIcon(FontAwesomeIcons.google, color: Colors.red))
+          ],
+        )
       ],
     );
   }

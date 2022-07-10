@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/email_verify/email_verify.dart';
-import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/widgets/button.dart';
 import 'package:todolist/functions/is_email_valid.dart';
@@ -111,6 +112,35 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
     }
   }
 
+  signUp() async {
+    Fluttertoast.cancel();
+    if (await InternetConnectionChecker().hasConnection) {
+      setState(() {
+        nameError = emailError = passwordError = confirmPasswordError = null;
+      });
+      bool validFields = signupFieldsValidation();
+      if (validFields) {
+        circleProgressDialog(context);
+        bool isSignupSuccessfully = await addUser();
+        bool emailSent = await sendVerificationEmail(context);
+        if (isSignupSuccessfully && emailSent) {
+          await saveAsActiveUser(nameController.text);
+          Navigator.of(context, rootNavigator: true)
+              .pop(); // cancel circle progress dialog
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) =>
+                      EmailVerification(name: nameController.text)),
+              (route) => false);
+        } else {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      }
+    } else {
+      Fluttertoast.showToast(msg: "No Internet Connection");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -158,31 +188,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
             size: size,
             text: "Sign up",
             onpressed: () async {
-              setState(() {
-                nameError =
-                    emailError = passwordError = confirmPasswordError = null;
-              });
-              bool validFields = signupFieldsValidation();
-              print(nameError);
-              if (validFields) {
-                circleProgressDialog(context);
-                bool isSignupSuccessfully = await addUser();
-                bool emailSent = await sendVerificationEmail(context);
-                if (isSignupSuccessfully && emailSent) {
-                  await saveAsActiveUser(
-                      emailController.text, nameController.text);
-                  Navigator.of(context, rootNavigator: true).pop();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => EmailVerification(
-                                name: nameController.text,
-                                email: emailController.text,
-                              )),
-                      (route) => false);
-                } else {
-                  Navigator.of(context, rootNavigator: true).pop();
-                }
-              }
+              await signUp();
             })
       ],
     );
