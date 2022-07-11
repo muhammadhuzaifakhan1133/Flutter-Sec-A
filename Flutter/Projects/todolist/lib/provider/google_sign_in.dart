@@ -6,6 +6,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/save_sign_in_as_google.dart';
 import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/screens/home/home.dart';
+import 'package:todolist/screens/push_with_internet_checking/push_with_intenet_checking.dart';
 import 'package:todolist/widgets/loading_widget.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
@@ -34,7 +35,8 @@ class GoogleSignInProvider extends ChangeNotifier {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-              builder: (context) => Home(name: _user!.displayName)),
+              builder: (context) => PushWithCheckingInternet(
+                  destination: Home(name: _user!.displayName))),
           (route) => false);
     } else {
       Fluttertoast.showToast(msg: "No Internet Connection");

@@ -30,22 +30,32 @@ class _WelcomeState extends State<Welcome> {
                   imgPath: "assets/images/welcome.jpg",
                   subTitle: "Maintain your day to day tasks"),
               SizedBox(height: size.height * 0.05),
-              buttonWidget(
-                  size: size,
-                  text: "Login",
-                  onpressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => const Login())));
-                  }),
-              buttonWidget(
-                  size: size,
-                  text: "Sign up",
-                  onpressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignUp()));
-                  })
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    buttonWidget(
+                        size: size,
+                        text: "Login",
+                        onpressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => const Login())));
+                        }),
+                    buttonWidget(
+                        size: size,
+                        text: "Sign up",
+                        onpressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignUp()));
+                        }),
+                    SizedBox(height: size.height * 0.04)
+                  ],
+                ),
+              )
             ],
           ),
         ),

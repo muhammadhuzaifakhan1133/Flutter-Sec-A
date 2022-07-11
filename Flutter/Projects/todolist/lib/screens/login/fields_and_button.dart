@@ -11,6 +11,7 @@ import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/provider/google_sign_in.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/screens/login/horizontal_line.dart';
+import 'package:todolist/screens/push_with_internet_checking/push_with_intenet_checking.dart';
 import 'package:todolist/widgets/button.dart';
 import 'package:todolist/functions/is_email_valid.dart';
 import 'package:todolist/widgets/loading_widget.dart';
@@ -92,36 +93,41 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
   }
 
   completeLoginProcess() async {
+    setState(() {
+      emailError = passwordError = null;
+    });
     Fluttertoast.cancel();
-    if (await InternetConnectionChecker().hasConnection) {
-      setState(() {
-        emailError = passwordError = null;
-      });
-      bool fieldValidated = loginFieldsValidation();
-      if (fieldValidated) {
-        circleProgressDialog(context);
-        bool isLoginSuccessfully = await logIn();
-        if (isLoginSuccessfully) {
-          try {
-            name = await getUserName(documentID: emailController.text);
-          } catch (e) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(e.toString())));
-          }
-          await saveAsActiveUser(name!);
-          await setSignInAsGoogleOrNot(false);
-          Navigator.of(context, rootNavigator: true).pop();
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Home(name: name)),
-              (route) => false);
-        } else {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      }
-    } else {
-      Fluttertoast.showToast(msg: "No Internet Connection");
+    bool fieldValidated = loginFieldsValidation();
+    if (!fieldValidated) {
+      return;
     }
+    circleProgressDialog(context);
+    if (!(await InternetConnectionChecker().hasConnection)) {
+      Navigator.of(context, rootNavigator: true).pop();
+      Fluttertoast.showToast(msg: "No Internet Connection");
+      return;
+    }
+    bool isLoginSuccess = await logIn();
+    if (!isLoginSuccess) {
+      Navigator.of(context, rootNavigator: true).pop();
+      return;
+    }
+    try {
+      name = await getUserName(email: emailController.text);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+      return;
+    }
+    await saveAsActiveUser(name!);
+    await setSignInAsGoogleOrNot(false);
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                PushWithCheckingInternet(destination: Home(name: name))),
+        (route) => false);
   }
 
   @override

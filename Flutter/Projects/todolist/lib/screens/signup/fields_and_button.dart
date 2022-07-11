@@ -114,31 +114,34 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
 
   signUp() async {
     Fluttertoast.cancel();
-    if (await InternetConnectionChecker().hasConnection) {
-      setState(() {
-        nameError = emailError = passwordError = confirmPasswordError = null;
-      });
-      bool validFields = signupFieldsValidation();
-      if (validFields) {
-        circleProgressDialog(context);
-        bool isSignupSuccessfully = await addUser();
-        bool emailSent = await sendVerificationEmail(context);
-        if (isSignupSuccessfully && emailSent) {
-          await saveAsActiveUser(nameController.text);
-          Navigator.of(context, rootNavigator: true)
-              .pop(); // cancel circle progress dialog
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      EmailVerification(name: nameController.text)),
-              (route) => false);
-        } else {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-      }
-    } else {
+    setState(() {
+      nameError = emailError = passwordError = confirmPasswordError = null;
+    });
+    bool validFields = signupFieldsValidation();
+    if (!validFields) {
+      return;
+    }
+    circleProgressDialog(context);
+    if (!(await InternetConnectionChecker().hasConnection)) {
+      Navigator.of(context, rootNavigator: true).pop();
       Fluttertoast.showToast(msg: "No Internet Connection");
     }
+    bool isSignUpSuccess = await addUser();
+    if (!isSignUpSuccess) {
+      Navigator.of(context, rootNavigator: true).pop();
+      return;
+    }
+    bool emailSent = await sendVerificationEmail(context);
+    if (!emailSent) {
+      Navigator.of(context, rootNavigator: true).pop();
+      return;
+    }
+    await saveAsActiveUser(nameController.text);
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (context) => EmailVerification(name: nameController.text)),
+        (route) => false);
   }
 
   @override

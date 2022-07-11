@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/functions/save_sign_in_as_google.dart';
 import 'package:todolist/screens/email_verify/text_for_change_email.dart';
@@ -52,7 +54,7 @@ class _EmailVerificationState extends State<EmailVerification> {
     if (emailVerified) {
       circleProgressDialog(context);
       timer.cancel();
-      await saveName(documentID: (user?.email)!, name: (widget.name)!);
+      await saveUserName(documentID: (user?.email)!, name: (widget.name)!);
       await setSignInAsGoogleOrNot(false);
       Navigator.of(context, rootNavigator: true)
           .pop(); // cancel progress dialog
@@ -120,7 +122,16 @@ class _EmailVerificationState extends State<EmailVerification> {
                   enable: canResendEmail,
                   text: "Resend Link",
                   onpressed: () async {
-                    await resendEmailLink();
+                    Fluttertoast.cancel();
+                    circleProgressDialog(context);
+                    if (await InternetConnectionChecker().hasConnection) {
+                      await resendEmailLink();
+                      Navigator.of(context, rootNavigator: true).pop();
+                      Fluttertoast.showToast(msg: "Verification link sent");
+                    } else {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      Fluttertoast.showToast(msg: "No Internet Connection");
+                    }
                   }),
               Text(
                 canResendEmail
