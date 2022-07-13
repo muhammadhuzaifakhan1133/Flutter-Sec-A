@@ -11,6 +11,8 @@ import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/provider/google_sign_in.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/screens/login/horizontal_line.dart';
+import 'package:todolist/screens/login/login_process.dart';
+import 'package:todolist/screens/login/login_text_fields_errors.dart';
 import 'package:todolist/screens/push_with_internet_checking/push_with_intenet_checking.dart';
 import 'package:todolist/widgets/button.dart';
 import 'package:todolist/functions/is_email_valid.dart';
@@ -29,106 +31,10 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  String? emailError;
-  String? passwordError;
-  String? name;
+  LogInTextFieldErrors errors = LogInTextFieldErrors();
   bool obscureText = true;
   dynamic data;
   bool isLoading = true;
-
-  bool isFieldNotEmpty() {
-    String error = "This field is required";
-    bool fieldsNotEmpty = true;
-    if (emailController.text.isEmpty) {
-      setState(() {
-        emailError = error;
-      });
-      fieldsNotEmpty = false;
-    }
-    if (passwordController.text.isEmpty) {
-      setState(() {
-        passwordError = error;
-      });
-      fieldsNotEmpty = false;
-    }
-    if (fieldsNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  loginFieldsValidation() {
-    bool validFields = isFieldNotEmpty();
-    bool areFieldsValid = true;
-    if (!validFields) {
-      return false;
-    }
-    if (!isEmailValid(emailController.text)) {
-      setState(() {
-        emailError = "Please enter valid email";
-      });
-      return false;
-    }
-    return true;
-  }
-
-  Future<bool> logIn() async {
-    try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-      return true;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        setState(() {
-          emailError = 'No user found for that email.';
-        });
-      } else if (e.code == 'wrong-password') {
-        setState(() {
-          passwordError = 'Wrong password provided for that user.';
-        });
-      }
-      return false;
-    }
-  }
-
-  completeLoginProcess() async {
-    setState(() {
-      emailError = passwordError = null;
-    });
-    Fluttertoast.cancel();
-    bool fieldValidated = loginFieldsValidation();
-    if (!fieldValidated) {
-      return;
-    }
-    circleProgressDialog(context);
-    if (!(await InternetConnectionChecker().hasConnection)) {
-      Navigator.of(context, rootNavigator: true).pop();
-      Fluttertoast.showToast(msg: "No Internet Connection");
-      return;
-    }
-    bool isLoginSuccess = await logIn();
-    if (!isLoginSuccess) {
-      Navigator.of(context, rootNavigator: true).pop();
-      return;
-    }
-    try {
-      name = await getUserName(email: emailController.text);
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
-      return;
-    }
-    await saveAsActiveUser(name!);
-    await setSignInAsGoogleOrNot(false);
-    Navigator.of(context, rootNavigator: true).pop();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                PushWithCheckingInternet(destination: Home(name: name))),
-        (route) => false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,13 +44,13 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
         SizedBox(height: size.height * 0.04),
         textFieldWidget(
             size: size,
-            errorText: emailError,
+            errorText: errors.emailError,
             controller: emailController,
             labelText: "Enter your email",
             keyboardtype: TextInputType.emailAddress),
         textFieldWidget(
           size: size,
-          errorText: passwordError,
+          errorText: errors.passwordError,
           obscureText: obscureText,
           controller: passwordController,
           labelText: "Enter your password",
@@ -161,7 +67,12 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
             size: size,
             text: "Log in",
             onpressed: () async {
-              await completeLoginProcess();
+              await completeLoginProcess(
+                  setState: setState,
+                  context: context,
+                  email: emailController.text,
+                  password: passwordController.text,
+                  errors: errors);
             }),
         SizedBox(height: 15),
         horizontalLine(),
@@ -182,8 +93,8 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
                   }
                 }),
             Positioned(
-                top: 27,
-                left: 40,
+                top: size.height * 0.037,
+                left: size.width * 0.09,
                 child: FaIcon(FontAwesomeIcons.google, color: Colors.red))
           ],
         )

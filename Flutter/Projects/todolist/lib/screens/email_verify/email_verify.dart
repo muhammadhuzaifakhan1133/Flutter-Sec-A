@@ -69,12 +69,7 @@ class _EmailVerificationState extends State<EmailVerification> {
   void initState() {
     super.initState();
     timer = Timer.periodic(Duration(seconds: 3), (timer) async {
-      try {
-        await UserClickEmaiLinkOrNot();
-      } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
+      await UserClickEmaiLinkOrNot();
     });
   }
 

@@ -15,17 +15,12 @@ Row textForChangeEmail(BuildContext context,
     InkWell(
         onTap: () async {
           circleProgressDialog(context);
-          User? user = FirebaseAuth.instance.currentUser;
-          try {
-            await FirebaseAuth.instance.signOut();
-            removeActiveUser();
-            await user?.delete();
-          } catch (e) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(e.toString())));
-            return;
-          }
           timer.cancel();
+          User? user = FirebaseAuth.instance.currentUser;
+
+          await user?.delete();
+          await FirebaseAuth.instance.signOut();
+          removeActiveUser();
           if (!canResendEmail) {
             resendtimer?.cancel();
           }

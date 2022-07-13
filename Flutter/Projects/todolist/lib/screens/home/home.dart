@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/home/bottom_app_bar.dart';
+import 'package:todolist/screens/home/create_new_list.dart';
 import 'package:todolist/screens/list_main_screen/list_main_screen.dart';
 import 'package:todolist/widgets/create_rename_list_dialog.dart';
 import 'package:todolist/screens/home/profile_tile.dart';
@@ -25,17 +26,14 @@ class _HomeState extends State<Home> {
   void initState() {
     (() async {
       User? user = FirebaseAuth.instance.currentUser;
-      try {
-        Map<String, List<String>> data =
-            await getListIdsAndNames(email: (user?.email)!);
-        setState(() {
-          listIds = data["listIds"]!;
-          listNames = data["listNames"]!;
-        });
-      } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
+
+      Map<String, List<String>> data =
+          await getListIdsAndNames(email: (user?.email)!);
+      setState(() {
+        print(data["listIds"]);
+        listIds = data["listIds"];
+        listNames = data["listNames"];
+      });
     })();
     super.initState();
   }
@@ -50,39 +48,13 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.only(right: 8.0, left: 8.0),
               child: bottomNavigationBar(
                   onNewPressed: () {
-                    createOrRenameListDialog(
+                    createNewList(
+                        setState: setState,
                         context: context,
                         controller: controller,
-                        title: "New list",
-                        hintText: "Enter list tile",
-                        finalButtonText: "CREATE LIST",
-                        onPressedFinalButton: () async {
-                          circleProgressDialog(context);
-                          try {
-                            String newListId = await saveListName(
-                                email: (user?.email)!,
-                                newList: controller.text,
-                                existListIds: listIds!);
-                            listIds?.add(newListId);
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())));
-                            Navigator.of(context, rootNavigator: true).pop();
-                            return;
-                          }
-                          setState(() {
-                            listNames?.add(controller.text);
-                            controller.text = "";
-                          });
-                          Navigator.of(context, rootNavigator: true).pop();
-                          Navigator.of(context, rootNavigator: true).pop();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListMainScreen(
-                                      listId: listIds!.last,
-                                      listName: listNames!.last)));
-                        });
+                        email: (user?.email)!,
+                        existListIds: listIds!,
+                        listNames: listNames!);
                   },
                   onFolderPressed: () {}),
             )

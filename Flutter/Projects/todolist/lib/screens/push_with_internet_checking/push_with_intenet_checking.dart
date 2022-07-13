@@ -34,11 +34,13 @@ class _PushWithCheckingInternetState extends State<PushWithCheckingInternet> {
         });
       }
     });
+    print(isDeviceConnected);
   }
 
   @override
   void initState() {
     CheckInternetConnectivity();
+
     super.initState();
   }
 

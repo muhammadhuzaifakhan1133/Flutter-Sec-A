@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/login/login.dart';
 import 'package:todolist/screens/signup/signup.dart';
 import 'package:todolist/widgets/button.dart';
@@ -34,6 +35,12 @@ class _WelcomeState extends State<Welcome> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    // ElevatedButton(
+                    //     onPressed: () {
+                    //       checkIfEmailInUse(
+                    //           "muhammadhuzaifakhan2003@gmail.com", context);
+                    //     },
+                    //     child: Text("Get Providers")),
                     buttonWidget(
                         size: size,
                         text: "Login",

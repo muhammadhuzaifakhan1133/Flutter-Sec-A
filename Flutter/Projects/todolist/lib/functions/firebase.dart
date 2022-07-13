@@ -2,13 +2,65 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:todolist/screens/login/login_text_fields_errors.dart';
+import 'package:todolist/screens/signup/signup_text_fields_errors.dart';
+
+Future<dynamic> addUser(
+    {required BuildContext context,
+    required setState,
+    required String email,
+    required String password,
+    required SignUpTextFieldErrors errors}) async {
+  try {
+    final credential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return true;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'email-already-in-use') {
+      setState(() {
+        errors.emailError = "The account already exists for that email.";
+      });
+      return false;
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(e.toString())));
+    return false;
+  }
+}
+
+Future<bool> logIn(
+    {required setState,
+    required String email,
+    required String password,
+    required LogInTextFieldErrors errors}) async {
+  try {
+    final credential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+    return true;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      setState(() {
+        errors.emailError = 'No user found for that email.';
+      });
+    } else if (e.code == 'wrong-password') {
+      setState(() {
+        errors.passwordError = 'Wrong password provided for that user.';
+      });
+    }
+    return false;
+  }
+}
 
 Future<void> saveUserName(
     {required String documentID, required String name}) async {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   await users.doc(documentID).set({
     'name': name,
-  });
+  }, SetOptions(merge: true));
 }
 
 Future<String> getUserName({required String email}) async {
@@ -86,4 +138,17 @@ Future<Map<String, List<String>>> getListIdsAndNames(
     listNames.add(data["name"] as String);
   }
   return {"listIds": listIds, "listNames": listNames};
+}
+
+Future<List<String>> getEmailProviders(String emailAddress, context) async {
+  try {
+    // Fetch sign-in methods for the email address
+    final list =
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailAddress);
+    return list;
+  } catch (error) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(error.toString())));
+  }
+  return [];
 }
