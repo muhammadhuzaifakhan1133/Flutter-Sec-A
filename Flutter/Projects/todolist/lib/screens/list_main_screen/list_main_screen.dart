@@ -15,6 +15,12 @@ class _ListMainScreenState extends State<ListMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          elevation: 0,
+          leading: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          )),
       backgroundColor: Colors.blue,
       body: Center(
         child: Column(
