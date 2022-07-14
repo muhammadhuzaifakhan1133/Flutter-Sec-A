@@ -8,7 +8,7 @@ BottomAppBar bottomNavigationBar(
       InkWell(
         onTap: onNewPressed,
         child: Row(
-          children: [
+          children: const [
             Icon(Icons.add, color: Colors.blue),
             Text(
               "New list",
@@ -19,7 +19,7 @@ BottomAppBar bottomNavigationBar(
       ),
       IconButton(
           onPressed: onFolderPressed,
-          icon: Icon(Icons.add_card_sharp, color: Colors.blue))
+          icon: const Icon(Icons.add_card_sharp, color: Colors.blue))
     ]),
   );
 }

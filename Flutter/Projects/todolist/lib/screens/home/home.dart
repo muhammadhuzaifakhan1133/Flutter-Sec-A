@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/home/bottom_app_bar.dart';
 import 'package:todolist/screens/home/create_new_list.dart';
-import 'package:todolist/screens/list_main_screen/list_main_screen.dart';
-import 'package:todolist/widgets/create_rename_list_dialog.dart';
 import 'package:todolist/screens/home/profile_tile.dart';
 import 'package:todolist/screens/profile.dart/profile.dart';
-import 'package:todolist/widgets/loading_widget.dart';
 
+// ignore: must_be_immutable
 class Home extends StatefulWidget {
   Home({required this.name, Key? key}) : super(key: key);
   String? name;
@@ -30,7 +28,6 @@ class _HomeState extends State<Home> {
       Map<String, List<String>> data =
           await getListIdsAndNames(email: (user?.email)!);
       setState(() {
-        print(data["listIds"]);
         listIds = data["listIds"];
         listNames = data["listNames"];
       });
@@ -80,7 +77,7 @@ class _HomeState extends State<Home> {
                     itemCount: listNames?.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                          leading: Icon(
+                          leading: const Icon(
                             Icons.format_list_bulleted_outlined,
                             color: Color.fromARGB(255, 132, 92, 139),
                           ),
@@ -92,7 +89,7 @@ class _HomeState extends State<Home> {
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [CircularProgressIndicator()],
+                      children: const [CircularProgressIndicator()],
                     ),
                   ),
                 )

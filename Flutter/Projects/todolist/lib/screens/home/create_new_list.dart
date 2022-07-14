@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:todolist/functions/close_dialog.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/list_main_screen/list_main_screen.dart';
 import 'package:todolist/widgets/create_rename_list_dialog.dart';
@@ -34,15 +35,18 @@ createNewList(
         } catch (e) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(e.toString())));
-          Navigator.of(context, rootNavigator: true).pop();
+          closeDialog(context);
           return;
         }
         setState(() {
           listNames.add(controller.text);
           controller.text = "";
         });
-        Navigator.of(context, rootNavigator: true).pop();
-        Navigator.of(context, rootNavigator: true).pop();
+        // ignore: use_build_context_synchronously
+        closeDialog(context);
+        // ignore: use_build_context_synchronously
+        closeDialog(context);
+        // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(

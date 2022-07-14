@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist/functions/close_dialog.dart';
 import 'package:todolist/functions/firebase.dart';
 
 isRightProvider(
@@ -8,11 +9,12 @@ isRightProvider(
   List<String> provider = await getEmailProviders(email, context);
   String oppositeProvider = loginWithgoogle ? "password" : "google.com";
   if ((provider.isNotEmpty) && (provider[0] == oppositeProvider)) {
-    Navigator.of(context, rootNavigator: true).pop();
+    // ignore: use_build_context_synchronously
+    closeDialog(context);
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text("Provider Exist"),
+              title: const Text("Provider Exist"),
               content: Text(loginWithgoogle
                   ? "Email is already sign up with email and password. Try Login with email and password"
                   : "Email is already sign up with google. Try Login with google"),
@@ -21,7 +23,7 @@ isRightProvider(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("CANCEL"))
+                    child: const Text("CANCEL"))
               ],
             ));
     return false;

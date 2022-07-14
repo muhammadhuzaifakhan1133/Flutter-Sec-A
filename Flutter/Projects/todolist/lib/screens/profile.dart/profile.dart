@@ -1,15 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/firebase.dart';
-import 'package:todolist/functions/is_sign_in_with_google.dart';
-import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/profile.dart/avatar_with_cross.dart';
-import 'package:todolist/screens/welcome/welcome.dart';
-import 'package:todolist/widgets/loading_widget.dart';
 
+// ignore: must_be_immutable
 class Profile extends StatefulWidget {
   Profile({required this.name, Key? key}) : super(key: key);
   String? name;
@@ -47,28 +41,29 @@ class _ProfileState extends State<Profile> {
                           "${widget.name}",
                           style: Theme.of(context).textTheme.headline6,
                         ),
-                        Icon(Icons.keyboard_arrow_up)
+                        const Icon(Icons.keyboard_arrow_up)
                       ],
                     ),
                   ),
-                  Text("${user.email}", style: TextStyle(fontSize: 18)),
+                  Text("${user.email}", style: const TextStyle(fontSize: 18)),
                 ],
               ),
             ),
-            Divider(thickness: 2),
+            const Divider(thickness: 2),
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text("Logout"),
-              onTap: () {
-                logout(context: context);
+              leading: const Icon(Icons.logout),
+              title: const Text("Logout"),
+              onTap: () async {
+                await logout(context: context);
               },
             ),
             ListTile(
-              leading: Icon(Icons.delete, color: Colors.red),
-              title:
-                  Text("Delete Account", style: TextStyle(color: Colors.red)),
-              onTap: () {
-                deleteAccount(context: context, documentID: (user.email)!);
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text("Delete Account",
+                  style: TextStyle(color: Colors.red)),
+              onTap: () async {
+                await deleteAccount(
+                    context: context, documentID: (user.email)!);
               },
             )
           ],

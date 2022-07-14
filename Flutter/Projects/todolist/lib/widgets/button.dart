@@ -16,19 +16,19 @@ Widget buttonWidget(
     padding: EdgeInsets.only(top: topPadding),
     child: ElevatedButton(
         onPressed: enable ? onpressed : null,
-        child: Text(
-          text,
-          style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: textSize),
-        ),
         style: ElevatedButton.styleFrom(
             minimumSize:
                 Size(size.width * widthPercent, size.height * heightPercent),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(radius)),
             elevation: 10,
-            primary: buttonColor)),
+            primary: buttonColor),
+        child: Text(
+          text,
+          style: TextStyle(
+              color: textColor,
+              fontWeight: FontWeight.bold,
+              fontSize: textSize),
+        )),
   );
 }

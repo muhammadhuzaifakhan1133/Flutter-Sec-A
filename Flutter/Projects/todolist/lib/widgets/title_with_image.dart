@@ -15,7 +15,7 @@ Column titleWithImage(
       Padding(
         padding: EdgeInsets.only(top: size.height * topPaddingPercent),
         child: Text(title,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 30)),

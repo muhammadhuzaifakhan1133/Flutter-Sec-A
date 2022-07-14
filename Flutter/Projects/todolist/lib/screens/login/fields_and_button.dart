@@ -1,22 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todolist/functions/firebase.dart';
-import 'package:todolist/functions/save_sign_in_as_google.dart';
-import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/provider/google_sign_in.dart';
-import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/screens/login/horizontal_line.dart';
 import 'package:todolist/screens/login/login_process.dart';
 import 'package:todolist/screens/login/login_text_fields_errors.dart';
-import 'package:todolist/screens/push_with_internet_checking/push_with_intenet_checking.dart';
 import 'package:todolist/widgets/button.dart';
-import 'package:todolist/functions/is_email_valid.dart';
-import 'package:todolist/widgets/loading_widget.dart';
 import 'package:todolist/widgets/password_suffix_icon.dart';
 import 'package:todolist/widgets/text_field.dart';
 
@@ -28,7 +17,6 @@ class FieldsAndButton extends StatefulWidget {
 }
 
 class _FieldsAndButtonState extends State<FieldsAndButton> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   LogInTextFieldErrors errors = LogInTextFieldErrors();
@@ -74,7 +62,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
                   password: passwordController.text,
                   errors: errors);
             }),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         horizontalLine(),
         Stack(
           children: [
@@ -95,7 +83,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
             Positioned(
                 top: size.height * 0.037,
                 left: size.width * 0.09,
-                child: FaIcon(FontAwesomeIcons.google, color: Colors.red))
+                child: const FaIcon(FontAwesomeIcons.google, color: Colors.red))
           ],
         )
       ],

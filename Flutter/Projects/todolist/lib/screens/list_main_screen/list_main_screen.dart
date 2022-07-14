@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
+// ignore: must_be_immutable
 class ListMainScreen extends StatefulWidget {
   ListMainScreen({required this.listId, required this.listName, Key? key})
       : super(key: key);
@@ -17,7 +16,7 @@ class _ListMainScreenState extends State<ListMainScreen> {
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
-          leading: Icon(
+          leading: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           )),

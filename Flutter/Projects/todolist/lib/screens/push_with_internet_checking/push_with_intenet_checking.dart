@@ -19,7 +19,7 @@ class _PushWithCheckingInternetState extends State<PushWithCheckingInternet> {
   bool? isDeviceConnected;
   late StreamSubscription<ConnectivityResult> subscription;
 
-  CheckInternetConnectivity() {
+  checkInternetConnectivity() {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
@@ -34,12 +34,11 @@ class _PushWithCheckingInternetState extends State<PushWithCheckingInternet> {
         });
       }
     });
-    print(isDeviceConnected);
   }
 
   @override
   void initState() {
-    CheckInternetConnectivity();
+    checkInternetConnectivity();
 
     super.initState();
   }
@@ -48,10 +47,10 @@ class _PushWithCheckingInternetState extends State<PushWithCheckingInternet> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: (isDeviceConnected == null)
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : (isDeviceConnected == false)
                 ? InternetNotConnected(onpressed: () {
-                    CheckInternetConnectivity();
+                    checkInternetConnectivity();
                   })
                 : widget.destination);
   }

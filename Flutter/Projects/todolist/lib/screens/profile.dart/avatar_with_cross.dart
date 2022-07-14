@@ -16,7 +16,7 @@ Row avatarWithCrossIcon(
       Padding(
         padding: const EdgeInsets.only(right: 6.0),
         child: IconButton(
-          icon: Icon(Icons.close, color: Colors.blue, size: 30),
+          icon: const Icon(Icons.close, color: Colors.blue, size: 30),
           onPressed: () {
             Navigator.pop(context);
           },

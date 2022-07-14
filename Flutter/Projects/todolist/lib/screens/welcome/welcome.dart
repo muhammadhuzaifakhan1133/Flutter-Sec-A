@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/login/login.dart';
 import 'package:todolist/screens/signup/signup.dart';
 import 'package:todolist/widgets/button.dart';

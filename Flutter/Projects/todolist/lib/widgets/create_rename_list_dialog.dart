@@ -35,7 +35,7 @@ createOrRenameListDialog(
                     isButtonEnable = false;
                     controller.text = "";
                   },
-                  child: Text("CANCEL"),
+                  child: const Text("CANCEL"),
                 ),
                 ElevatedButton(
                     onPressed: isButtonEnable ? onPressedFinalButton : null,

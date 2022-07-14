@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todolist/functions/close_dialog.dart';
+import 'package:todolist/functions/push_and_remove_until.dart';
 import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/signup/signup.dart';
 import 'package:todolist/widgets/loading_widget.dart';
@@ -7,7 +9,7 @@ import 'package:todolist/widgets/loading_widget.dart';
 Row textForChangeEmail(BuildContext context,
     {timer, resendtimer, canResendEmail}) {
   return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-    Text(
+    const Text(
       "Not you?",
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 15),
@@ -24,11 +26,10 @@ Row textForChangeEmail(BuildContext context,
           if (!canResendEmail) {
             resendtimer?.cancel();
           }
-          Navigator.of(context, rootNavigator: true).pop();
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => SignUp()),
-              (route) => false);
+          // ignore: use_build_context_synchronously
+          closeDialog(context);
+          // ignore: use_build_context_synchronously
+          pushAndRemoveUntil(context, const SignUp());
         },
         child: const Text(
           "  change email",

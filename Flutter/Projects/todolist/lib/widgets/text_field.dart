@@ -17,7 +17,7 @@ Widget textFieldWidget(
     IconData? suffixIcon}) {
   return Padding(
     padding: const EdgeInsets.only(top: 8.0),
-    child: Container(
+    child: SizedBox(
       width: size.width * 0.8,
       child: TextFormField(
         validator: validator,

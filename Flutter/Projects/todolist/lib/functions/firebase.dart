@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:todolist/functions/close_dialog.dart';
 import 'package:todolist/functions/is_sign_in_with_google.dart';
+import 'package:todolist/functions/push_and_remove_until.dart';
 import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/login/login_text_fields_errors.dart';
 import 'package:todolist/screens/signup/signup_text_fields_errors.dart';
@@ -18,6 +20,7 @@ Future<dynamic> addUser(
     required String password,
     required SignUpTextFieldErrors errors}) async {
   try {
+    // ignore: unused_local_variable
     final credential =
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
@@ -44,6 +47,7 @@ Future<bool> logIn(
     required String password,
     required LogInTextFieldErrors errors}) async {
   try {
+    // ignore: unused_local_variable
     final credential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
     return true;
@@ -116,8 +120,8 @@ deleteAccount(
     Fluttertoast.showToast(msg: "No Internet Connection");
     return;
   }
-  logout(context: context, deleteAccount: true);
-  deleteDocument(collectionID: "users", documentID: documentID);
+  await logout(context: context, deleteAccount: true);
+  await deleteDocument(collectionID: "users", documentID: documentID);
 }
 
 Future<void> deleteDocument(
@@ -130,7 +134,7 @@ Future<void> deleteDocument(
 logout({required BuildContext context, bool deleteAccount = false}) async {
   circleProgressDialog(context);
   if (!(await InternetConnectionChecker().hasConnection)) {
-    Navigator.of(context, rootNavigator: true).pop();
+    closeDialog(context);
     Fluttertoast.showToast(msg: "No Internet Connection");
     return;
   }
@@ -144,10 +148,10 @@ logout({required BuildContext context, bool deleteAccount = false}) async {
     FirebaseAuth.instance.signOut();
   }
   await removeActiveUser();
-  Navigator.of(context, rootNavigator: true).pop();
-  Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const Welcome()),
-      (route) => false);
+  // ignore: use_build_context_synchronously
+  closeDialog(context);
+  // ignore: use_build_context_synchronously
+  pushAndRemoveUntil(context, const Welcome());
 }
 
 Future<String> saveListName(

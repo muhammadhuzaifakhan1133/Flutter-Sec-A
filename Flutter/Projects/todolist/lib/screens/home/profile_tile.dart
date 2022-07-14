@@ -8,8 +8,8 @@ ListTile profileTile({String? photoUrl, String? email, String? name}) {
         tag: "profileAvatar",
         child: profileAvatar(photoUrl: photoUrl, name: name)),
     title: profileTitle(name),
-    subtitle: Text("${email}"),
-    trailing: Icon(
+    subtitle: Text("$email"),
+    trailing: const Icon(
       Icons.search,
       size: 40,
       color: Colors.blue,
