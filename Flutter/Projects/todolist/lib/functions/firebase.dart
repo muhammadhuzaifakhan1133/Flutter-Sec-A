@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:todolist/functions/is_sign_in_with_google.dart';
+import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/login/login_text_fields_errors.dart';
 import 'package:todolist/screens/signup/signup_text_fields_errors.dart';
+import 'package:todolist/screens/welcome/welcome.dart';
+import 'package:todolist/widgets/loading_widget.dart';
 
 Future<dynamic> addUser(
     {required BuildContext context,
@@ -58,9 +64,10 @@ Future<bool> logIn(
 Future<void> saveUserName(
     {required String documentID, required String name}) async {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  await users.doc(documentID).set({
+  DocumentReference doc = users.doc(documentID);
+  doc.set({
     'name': name,
-  }, SetOptions(merge: true));
+  });
 }
 
 Future<String> getUserName({required String email}) async {
@@ -87,12 +94,60 @@ Future<bool> sendVerificationEmail(context) async {
   User? user = auth.currentUser;
   try {
     await user?.sendEmailVerification();
+    Fluttertoast.showToast(msg: "Verification link sent");
     return true;
   } catch (e) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(e.toString())));
     return false;
   }
+}
+
+Future<bool> checkIfDocExist({required String documentID}) async {
+  CollectionReference collectionReference =
+      FirebaseFirestore.instance.collection("users");
+  DocumentSnapshot doc = await collectionReference.doc(documentID).get();
+  return doc.exists;
+}
+
+deleteAccount(
+    {required BuildContext context, required String documentID}) async {
+  if (!(await InternetConnectionChecker().hasConnection)) {
+    Fluttertoast.showToast(msg: "No Internet Connection");
+    return;
+  }
+  logout(context: context, deleteAccount: true);
+  deleteDocument(collectionID: "users", documentID: documentID);
+}
+
+Future<void> deleteDocument(
+    {required String collectionID, required String documentID}) async {
+  DocumentReference doc =
+      FirebaseFirestore.instance.collection(collectionID).doc(documentID);
+  await doc.delete();
+}
+
+logout({required BuildContext context, bool deleteAccount = false}) async {
+  circleProgressDialog(context);
+  if (!(await InternetConnectionChecker().hasConnection)) {
+    Navigator.of(context, rootNavigator: true).pop();
+    Fluttertoast.showToast(msg: "No Internet Connection");
+    return;
+  }
+  if (await isSignInWithGoogle()) {
+    await GoogleSignIn().disconnect();
+  }
+  if (deleteAccount) {
+    User? user = FirebaseAuth.instance.currentUser;
+    user!.delete();
+  } else {
+    FirebaseAuth.instance.signOut();
+  }
+  await removeActiveUser();
+  Navigator.of(context, rootNavigator: true).pop();
+  Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const Welcome()),
+      (route) => false);
 }
 
 Future<String> saveListName(

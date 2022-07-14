@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/functions/is_sign_in_with_google.dart';
 import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/profile.dart/avatar_with_cross.dart';
@@ -17,25 +18,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  bool? isDeviceConnected;
-  logout() async {
-    circleProgressDialog(context);
-    if (!(await InternetConnectionChecker().hasConnection)) {
-      Navigator.of(context, rootNavigator: true).pop();
-      Fluttertoast.showToast(msg: "No Internet Connection");
-      return;
-    }
-    if (await isSignInWithGoogle()) {
-      await GoogleSignIn().disconnect();
-    }
-    FirebaseAuth.instance.signOut();
-    await removeActiveUser();
-    Navigator.of(context, rootNavigator: true).pop();
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const Welcome()),
-        (route) => false);
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -78,7 +60,15 @@ class _ProfileState extends State<Profile> {
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: () {
-                logout();
+                logout(context: context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.delete, color: Colors.red),
+              title:
+                  Text("Delete Account", style: TextStyle(color: Colors.red)),
+              onTap: () {
+                deleteAccount(context: context, documentID: (user.email)!);
               },
             )
           ],

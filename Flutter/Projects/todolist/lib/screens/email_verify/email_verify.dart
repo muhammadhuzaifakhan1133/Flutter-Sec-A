@@ -54,7 +54,17 @@ class _EmailVerificationState extends State<EmailVerification> {
     if (emailVerified) {
       circleProgressDialog(context);
       timer.cancel();
-      await saveUserName(documentID: (user?.email)!, name: (widget.name)!);
+      bool ifDocExist;
+      try {
+        ifDocExist = await checkIfDocExist(documentID: (user?.email)!);
+      } catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+        return;
+      }
+      if (!(ifDocExist)) {
+        await saveUserName(documentID: (user?.email)!, name: (widget.name)!);
+      }
       await setSignInAsGoogleOrNot(false);
       Navigator.of(context, rootNavigator: true)
           .pop(); // cancel progress dialog
@@ -122,7 +132,6 @@ class _EmailVerificationState extends State<EmailVerification> {
                     if (await InternetConnectionChecker().hasConnection) {
                       await resendEmailLink();
                       Navigator.of(context, rootNavigator: true).pop();
-                      Fluttertoast.showToast(msg: "Verification link sent");
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
                       Fluttertoast.showToast(msg: "No Internet Connection");
