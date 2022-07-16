@@ -10,7 +10,6 @@ import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/screens/login/login_fields_validation.dart';
 import 'package:todolist/screens/login/login_text_fields_errors.dart';
-import 'package:todolist/screens/push_with_internet_checking/push_with_intenet_checking.dart';
 import 'package:todolist/widgets/loading_widget.dart';
 
 completeLoginProcess(
@@ -59,6 +58,5 @@ completeLoginProcess(
   // ignore: use_build_context_synchronously
   closeDialog(context);
   // ignore: use_build_context_synchronously
-  pushAndRemoveUntil(
-      context, PushWithCheckingInternet(destination: Home(name: name)));
+  pushAndRemoveUntil(context, Home(name: name));
 }

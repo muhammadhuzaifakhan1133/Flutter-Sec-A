@@ -58,18 +58,9 @@ class _EmailVerificationState extends State<EmailVerification> {
       // ignore: use_build_context_synchronously
       circleProgressDialog(context);
       timer.cancel();
-      bool ifDocExist;
-      try {
-        ifDocExist = await checkIfDocExist(documentID: (user?.email)!);
-      } catch (e) {
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-        return;
-      }
-      if (!(ifDocExist)) {
-        await saveUserName(documentID: (user?.email)!, name: (widget.name)!);
-      }
+
+      await saveUserName(documentID: (user?.email)!, name: (widget.name)!);
+
       await setSignInAsGoogleOrNot(false);
       // ignore: use_build_context_synchronously
       closeDialog(context);

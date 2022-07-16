@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
-CircleAvatar profileAvatar({String? photoUrl, String? name, double? radius}) {
+CircleAvatar profileAvatar(
+    {String? photoUrl, String? name, double? radius, bool? isDeviceConnected}) {
   return CircleAvatar(
     radius: radius,
-    backgroundImage: (photoUrl != null) ? NetworkImage(photoUrl) : null,
+    backgroundImage: ((photoUrl != null) && (isDeviceConnected == true))
+        ? NetworkImage(photoUrl)
+        : null,
     backgroundColor: Colors.blue,
-    child: (photoUrl == null) ? Text(name![0]) : null,
+    child: ((photoUrl == null) ||
+            (isDeviceConnected == null) ||
+            (isDeviceConnected == false))
+        ? Text(name![0])
+        : null,
   );
 }

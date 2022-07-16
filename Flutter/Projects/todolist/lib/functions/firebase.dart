@@ -155,48 +155,12 @@ logout({required BuildContext context, bool deleteAccount = false}) async {
 }
 
 Future<String> saveListName(
-    {required String email,
-    required String newList,
-    required List<String> existListIds}) async {
-  CollectionReference lists = FirebaseFirestore.instance.collection("lists");
-  DocumentReference doc = await lists.add({"name": newList});
+    {required String email, required String newListName}) async {
+  CollectionReference lists =
+      FirebaseFirestore.instance.collection("users/$email/lists");
+  DocumentReference doc = await lists.add({"name": newListName});
   String newListId = doc.id;
-  existListIds.add(newListId);
-
-  // if this is the first list of user
-  if (existListIds.length == 1) {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(email)
-        .set({"lists": existListIds}, SetOptions(merge: true));
-  } else {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(email)
-        .update({"lists": existListIds});
-  }
   return newListId;
-}
-
-Future<Map<String, List<String>>> getListIdsAndNames(
-    {required String email}) async {
-  List<String> listIds = [];
-  List<String> listNames = [];
-  DocumentReference user =
-      FirebaseFirestore.instance.collection("users").doc(email);
-  DocumentSnapshot data = await user.get();
-  Map<String, dynamic> values = data.data() as Map<String, dynamic>;
-  List<dynamic> ids = values["lists"] ?? [];
-  listIds = ids.map((e) => e.toString()).toList();
-  for (var i = 0; i < listIds.length; i++) {
-    DocumentSnapshot lists = await FirebaseFirestore.instance
-        .collection("lists")
-        .doc(listIds[i])
-        .get();
-    Map<String, dynamic> data = lists.data() as Map<String, dynamic>;
-    listNames.add(data["name"] as String);
-  }
-  return {"listIds": listIds, "listNames": listNames};
 }
 
 Future<List<String>> getEmailProviders(String emailAddress, context) async {
@@ -210,4 +174,39 @@ Future<List<String>> getEmailProviders(String emailAddress, context) async {
         .showSnackBar(SnackBar(content: Text(error.toString())));
   }
   return [];
+}
+
+Future<void> renameList(
+    {required String listID,
+    required String email,
+    required String newName}) async {
+  CollectionReference lists =
+      FirebaseFirestore.instance.collection("users/$email/lists/");
+  lists.doc(listID).update({"name": newName});
+}
+
+Future<void> deleteList({required String listID, required String email}) async {
+  CollectionReference lists =
+      FirebaseFirestore.instance.collection("users/$email/lists/");
+  lists.doc(listID).delete();
+}
+
+Future<void> changeTaskImportancy(
+    {required String email,
+    required String listID,
+    required String taskID,
+    required bool value}) async {
+  CollectionReference tasks =
+      FirebaseFirestore.instance.collection("users/$email/lists/$listID/tasks");
+  tasks.doc(taskID).update({"important": value});
+}
+
+Future<void> changeTaskCompletency(
+    {required String email,
+    required String listID,
+    required String taskID,
+    required bool value}) async {
+  CollectionReference tasks =
+      FirebaseFirestore.instance.collection("users/$email/lists/$listID/tasks");
+  tasks.doc(taskID).update({"complete": value});
 }

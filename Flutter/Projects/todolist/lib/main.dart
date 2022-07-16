@@ -5,7 +5,6 @@ import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/provider/google_sign_in.dart';
 import 'package:todolist/screens/email_verify/email_verify.dart';
 import 'package:todolist/screens/home/home.dart';
-import 'package:todolist/screens/push_with_internet_checking/push_with_intenet_checking.dart';
 import 'package:todolist/screens/splash/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -20,7 +19,7 @@ void main() async {
     home = const SplashScreen();
   } else {
     if (await checkEmailVerified()) {
-      home = PushWithCheckingInternet(destination: Home(name: name));
+      home = Home(name: name);
     } else {
       home = EmailVerification(name: name);
     }
@@ -29,4 +28,20 @@ void main() async {
     create: (context) => GoogleSignInProvider(),
     child: MaterialApp(debugShowCheckedModeBanner: false, home: home),
   ));
+}
+
+class MyApp extends StatelessWidget {
+  final Widget home;
+  const MyApp({required this.home, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => GoogleSignInProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: home,
+      ),
+    );
+  }
 }

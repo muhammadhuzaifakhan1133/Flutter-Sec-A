@@ -7,13 +7,12 @@ import 'package:todolist/screens/list_main_screen/list_main_screen.dart';
 import 'package:todolist/widgets/create_rename_list_dialog.dart';
 import 'package:todolist/widgets/loading_widget.dart';
 
-createNewList(
-    {required setState,
-    required BuildContext context,
-    required TextEditingController controller,
-    required String email,
-    required List<String> existListIds,
-    required List<String> listNames}) {
+createNewList({
+  required setState,
+  required BuildContext context,
+  required TextEditingController controller,
+  required String email,
+}) {
   return createOrRenameListDialog(
       context: context,
       controller: controller,
@@ -26,22 +25,16 @@ createNewList(
           Fluttertoast.showToast(msg: "No Internet Connection");
           return;
         }
+        String newListId;
         try {
-          String newListId = await saveListName(
-              email: email,
-              newList: controller.text,
-              existListIds: existListIds);
-          existListIds.add(newListId);
+          newListId =
+              await saveListName(email: email, newListName: controller.text);
         } catch (e) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(e.toString())));
           closeDialog(context);
           return;
         }
-        setState(() {
-          listNames.add(controller.text);
-          controller.text = "";
-        });
         // ignore: use_build_context_synchronously
         closeDialog(context);
         // ignore: use_build_context_synchronously
@@ -51,6 +44,8 @@ createNewList(
             context,
             MaterialPageRoute(
                 builder: (context) => ListMainScreen(
-                    listId: existListIds.last, listName: listNames.last)));
+                    listId: newListId, listName: controller.text))).then((_) {
+          setState();
+        });
       });
 }

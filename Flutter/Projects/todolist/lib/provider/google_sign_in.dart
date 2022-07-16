@@ -10,7 +10,6 @@ import 'package:todolist/functions/push_and_remove_until.dart';
 import 'package:todolist/functions/save_sign_in_as_google.dart';
 import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/screens/home/home.dart';
-import 'package:todolist/screens/push_with_internet_checking/push_with_intenet_checking.dart';
 import 'package:todolist/widgets/loading_widget.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
@@ -69,7 +68,6 @@ class GoogleSignInProvider extends ChangeNotifier {
     // ignore: use_build_context_synchronously
     closeDialog(context);
     // ignore: use_build_context_synchronously
-    pushAndRemoveUntil(context,
-        PushWithCheckingInternet(destination: Home(name: _user!.displayName)));
+    pushAndRemoveUntil(context, Home(name: _user!.displayName));
   }
 }
