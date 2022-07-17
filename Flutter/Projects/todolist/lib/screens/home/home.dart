@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:todolist/screens/complete_tasks/complete_tasks.dart';
 import 'package:todolist/screens/home/bottom_app_bar.dart';
 import 'package:todolist/screens/home/create_new_list.dart';
+import 'package:todolist/screens/home/list_list_view.dart';
 import 'package:todolist/screens/home/profile_tile.dart';
-import 'package:todolist/screens/list_main_screen/list_main_screen.dart';
 import 'package:todolist/screens/profile.dart/profile.dart';
 
 // ignore: must_be_immutable
@@ -46,7 +47,6 @@ class _HomeState extends State<Home> {
           child: bottomNavigationBar(
               onNewPressed: () {
                 createNewList(
-                    setState: setState,
                     context: context,
                     controller: controller,
                     email: (user!.email)!);
@@ -69,10 +69,30 @@ class _HomeState extends State<Home> {
                   email: user.email,
                   isDeviceConnected: isDeviceConnected),
             ),
+            ListTile(
+                leading: Icon(Icons.check_circle, color: Colors.blue),
+                title: Text("Completed Tasks"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              FilterTasks(filterKey: "complete")));
+                }),
+            ListTile(
+                leading: Icon(Icons.star, color: Colors.blue),
+                title: Text("Important Tasks"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              FilterTasks(filterKey: "important")));
+                }),
             Expanded(
               child: Center(
-                child: FutureBuilder<QuerySnapshot>(
-                  future: lists.get(),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: lists.snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return const Center(
@@ -83,30 +103,7 @@ class _HomeState extends State<Home> {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    return ListView(
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data() as Map<String, dynamic>;
-                        return ListTile(
-                          leading: const Icon(
-                            Icons.format_list_bulleted_outlined,
-                            color: Color.fromARGB(255, 132, 92, 139),
-                          ),
-                          title: Text(data["name"]),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListMainScreen(
-                                        listId: document.id,
-                                        listName: data["name"]))).then((_) {
-                              setState(() {});
-                            });
-                          },
-                        );
-                      }).toList(),
-                    );
+                    return listListView(snapshot, context);
                   },
                 ),
               ),

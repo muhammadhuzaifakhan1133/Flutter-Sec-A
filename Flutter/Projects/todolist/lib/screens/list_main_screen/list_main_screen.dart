@@ -5,6 +5,7 @@ import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/list_main_screen/back_button.dart';
 import 'package:todolist/screens/list_main_screen/rename_list_dialog.dart';
 import 'package:todolist/screens/list_main_screen/screen_title.dart';
+import 'package:todolist/screens/list_main_screen/task_list_view.dart';
 import 'package:todolist/widgets/create_rename_list_dialog.dart';
 import 'package:todolist/widgets/popup_menu_button.dart';
 
@@ -63,8 +64,8 @@ class _ListMainScreenState extends State<ListMainScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: FutureBuilder<QuerySnapshot>(
-                    future: tasks.get(),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: tasks.snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Center(
@@ -77,54 +78,10 @@ class _ListMainScreenState extends State<ListMainScreen> {
                                 CircularProgressIndicator(color: Colors.white));
                       }
                       return ListView(
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot document) {
-                          Map<String, dynamic> data =
-                              document.data() as Map<String, dynamic>;
-                          return ListTile(
-                              tileColor: Colors.white,
-                              leading: IconButton(
-                                  onPressed: () {
-                                    changeTaskCompletency(
-                                            email: (user?.email)!,
-                                            listID: widget.listId,
-                                            taskID: document.id,
-                                            value: !(data["complete"]))
-                                        .then((_) {
-                                      setState(() {});
-                                    });
-                                  },
-                                  icon: data["complete"]
-                                      ? Icon(
-                                          Icons.check_circle,
-                                          color: Colors.blue,
-                                        )
-                                      : Icon(Icons.circle_outlined)),
-                              title: Text(data["name"]),
-                              subtitle: Row(children: [
-                                Text(data["time"]),
-                                SizedBox(width: 5),
-                                Text(data["date"]),
-                              ]),
-                              trailing: IconButton(
-                                  onPressed: () {
-                                    changeTaskImportancy(
-                                            email: (user?.email)!,
-                                            listID: widget.listId,
-                                            taskID: document.id,
-                                            value: !(data["important"]))
-                                        .then((_) {
-                                      setState(() {});
-                                    });
-                                  },
-                                  icon: data["important"]
-                                      ? Icon(
-                                          Icons.star,
-                                          color: Colors.blue,
-                                        )
-                                      : Icon(Icons.star_border)));
-                        }).toList(),
-                      );
+                          children: taskListView(
+                              snapshot: snapshot,
+                              user: user,
+                              listId: widget.listId));
                     },
                   ),
                 ),

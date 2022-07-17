@@ -8,7 +8,6 @@ import 'package:todolist/widgets/create_rename_list_dialog.dart';
 import 'package:todolist/widgets/loading_widget.dart';
 
 createNewList({
-  required setState,
   required BuildContext context,
   required TextEditingController controller,
   required String email,
@@ -44,8 +43,6 @@ createNewList({
             context,
             MaterialPageRoute(
                 builder: (context) => ListMainScreen(
-                    listId: newListId, listName: controller.text))).then((_) {
-          setState();
-        });
+                    listId: newListId, listName: controller.text)));
       });
 }
