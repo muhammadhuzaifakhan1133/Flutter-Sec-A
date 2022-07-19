@@ -11,8 +11,6 @@ class FilterTasks extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser;
     CollectionReference lists =
         FirebaseFirestore.instance.collection("users/${user?.email}/lists");
-    // CollectionReference tasks = FirebaseFirestore.instance.collection("users/${user?.email}/")
-    // DocumentReference complete =
     return Scaffold(
         appBar: AppBar(title: Text("Completed Tasks")),
         body: StreamBuilder<QuerySnapshot>(
@@ -44,15 +42,24 @@ class FilterTasks extends StatelessWidget {
                           ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       }
+
+                      // List data -- > {"name":listname}
                       Map<String, dynamic> data =
                           document.data() as Map<String, dynamic>;
+
                       List<Column> tasksOfList = taskListView(
                           snapshot: snapshot2, listId: document.id, user: user);
                       if (tasksOfList.isNotEmpty) {
                         return ExpansionTile(
                             initiallyExpanded: true,
                             controlAffinity: ListTileControlAffinity.leading,
-                            title: Text(data["name"]),
+                            iconColor: Colors.black,
+                            title: Text(
+                              data["name"],
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
                             children: tasksOfList);
                       }
                       return SizedBox();
