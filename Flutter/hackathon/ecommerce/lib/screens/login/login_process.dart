@@ -2,10 +2,9 @@ import 'package:ecommerce/functions/close_dialog.dart';
 import 'package:ecommerce/functions/firebase.dart';
 import 'package:ecommerce/functions/is_right_provider.dart';
 import 'package:ecommerce/functions/sharedprefences.dart';
-import 'package:ecommerce/screens/Home/home_screen.dart';
+import 'package:ecommerce/screens/bottom_bar_controller/bottom_bar_controller.dart';
 import 'package:ecommerce/screens/login/feild_errors.dart';
 import 'package:ecommerce/screens/login/login_fields_validation.dart';
-import 'package:ecommerce/screens/tabs/tabs.dart';
 import 'package:ecommerce/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -58,5 +57,5 @@ completeLoginProcess(
   closeDialog(context);
   // ignore: use_build_context_synchronously
   Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => TabBarController()));
+      context, MaterialPageRoute(builder: (context) => BottomBarController()));
 }

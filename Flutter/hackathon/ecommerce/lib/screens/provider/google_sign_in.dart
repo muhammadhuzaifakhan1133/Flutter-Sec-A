@@ -3,6 +3,7 @@ import 'package:ecommerce/functions/firebase.dart';
 import 'package:ecommerce/functions/is_right_provider.dart';
 import 'package:ecommerce/functions/sharedprefences.dart';
 import 'package:ecommerce/screens/Home/home_screen.dart';
+import 'package:ecommerce/screens/bottom_bar_controller/bottom_bar_controller.dart';
 import 'package:ecommerce/widgets/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class GoogleSignInProvider extends ChangeNotifier {
     // ignore: use_build_context_synchronously
     closeDialog(context);
     // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => BottomBarController()));
   }
 }

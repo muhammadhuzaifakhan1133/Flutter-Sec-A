@@ -1,11 +1,13 @@
 import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/screens/login/feild_errors.dart';
 import 'package:ecommerce/screens/login/login_process.dart';
+import 'package:ecommerce/screens/provider/google_sign_in.dart';
 import 'package:ecommerce/screens/register/register_screen.dart';
 import 'package:ecommerce/widgets/button_widget.dart';
 import 'package:ecommerce/widgets/email_and_password_fields.dart';
 import 'package:ecommerce/widgets/or_divider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginFieldsAndButtons extends StatefulWidget {
   const LoginFieldsAndButtons({Key? key}) : super(key: key);
@@ -62,7 +64,16 @@ class _LoginFieldsAndButtonsState extends State<LoginFieldsAndButtons> {
                   heightPercent: 0.06,
                   text: "Login with Google",
                   buttonColor: themeColor,
-                  onpressed: () {}),
+                  onpressed: () async {
+                    final provider = Provider.of<GoogleSignInProvider>(context,
+                        listen: false);
+                    try {
+                      await provider.googleLogin(context);
+                    } catch (e) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
+                  }),
               GestureDetector(
                 onTap: () {
                   Navigator.push(

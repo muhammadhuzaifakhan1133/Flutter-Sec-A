@@ -5,14 +5,14 @@ import 'package:ecommerce/screens/bag/bag_screen.dart';
 import 'package:ecommerce/screens/setting/setting_screen.dart';
 import 'package:flutter/material.dart';
 
-class TabBarController extends StatefulWidget {
-  const TabBarController({Key? key}) : super(key: key);
+class BottomBarController extends StatefulWidget {
+  const BottomBarController({Key? key}) : super(key: key);
 
   @override
-  State<TabBarController> createState() => _TabBarControllerState();
+  State<BottomBarController> createState() => _BottomBarControllerState();
 }
 
-class _TabBarControllerState extends State<TabBarController> {
+class _BottomBarControllerState extends State<BottomBarController> {
   int index = 0;
   List<Widget> screens = [
     HomeScreen(),
@@ -33,7 +33,7 @@ class _TabBarControllerState extends State<TabBarController> {
             index = currentIndex;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.card_travel), label: "bag"),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: "setting"),

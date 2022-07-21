@@ -74,7 +74,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
                   final provider =
                       Provider.of<GoogleSignInProvider>(context, listen: false);
                   try {
-                    provider.googleLogin(context);
+                    await provider.googleLogin(context);
                   } catch (e) {
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text(e.toString())));

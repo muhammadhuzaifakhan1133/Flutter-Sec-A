@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/functions/close_dialog.dart';
 import 'package:ecommerce/functions/firebase.dart';
 import 'package:ecommerce/functions/sharedprefences.dart';
-import 'package:ecommerce/screens/Home/home_screen.dart';
+import 'package:ecommerce/screens/bottom_bar_controller/bottom_bar_controller.dart';
 import 'package:ecommerce/screens/email_verify/text_for_change_email.dart';
-import 'package:ecommerce/screens/tabs/tabs.dart';
 import 'package:ecommerce/widgets/button_widget.dart';
 import 'package:ecommerce/widgets/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -66,8 +66,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       // ignore: use_build_context_synchronously
       closeDialog(context);
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => TabBarController()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => BottomBarController()));
     }
   }
 
@@ -91,6 +91,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: themeColor,
         centerTitle: true,
         title: const Text("Email Verification"),
       ),
@@ -119,6 +120,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               buttonWidget(
                   size: size,
                   topPadding: 30,
+                  buttonColor: themeColor,
                   enable: canResendEmail,
                   text: "Resend Link",
                   onpressed: () async {

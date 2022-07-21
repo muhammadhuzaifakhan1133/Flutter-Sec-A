@@ -17,6 +17,7 @@ Widget textFieldWidget(
     double labelTextSize = 12,
     bool obscureText = false,
     onPressedSuffixIcon,
+    onPressedPrefixIcon,
     Color? bgColor,
     IconData? suffixIcon,
     IconData? prefixIcon}) {
@@ -40,7 +41,10 @@ Widget textFieldWidget(
             border: OutlineInputBorder(
                 borderSide: BorderSide(color: borderColor),
                 borderRadius: BorderRadius.circular(radius)),
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+            prefixIcon: prefixIcon != null
+                ? IconButton(
+                    onPressed: onPressedPrefixIcon, icon: Icon(prefixIcon))
+                : null,
             suffixIcon: suffixIcon != null
                 ? IconButton(
                     onPressed: onPressedSuffixIcon, icon: Icon(suffixIcon))
