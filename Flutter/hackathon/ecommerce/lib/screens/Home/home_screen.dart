@@ -1,5 +1,7 @@
-import 'package:ecommerce/constants/colors.dart';
-import 'package:ecommerce/widgets/textfield_widget.dart';
+import 'package:ecommerce/screens/Home/search_text_field.dart';
+import 'package:ecommerce/screens/Home/tab_bar.dart';
+import 'package:ecommerce/screens/Home/tab_bar_views.dart';
+import 'package:ecommerce/widgets/profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,50 +17,22 @@ class HomeScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: textFieldWidget(
-              height: size.height * 0.06,
-              width: size.width * 0.7,
-              prefixIcon: Icons.search,
-              suffixIcon: Icons.close,
-              size: size,
-              controller: searchController,
-              labelText: "Search",
-              keyboardtype: TextInputType.text,
-              textInputAction: TextInputAction.search),
+          title:
+              searchTextFeild(screenSize: size, controller: searchController),
           actions: [
             Padding(
               padding: EdgeInsets.only(right: size.width * 0.07),
-              child: CircleAvatar(
-                backgroundImage: NetworkImage((user?.photoURL)!),
-              ),
+              child: profileAvatar(
+                  userName: (user?.displayName)!, userPhotoUrl: user?.photoURL),
             )
           ],
           backgroundColor: Colors.white,
-          bottom: TabBar(
-            indicatorColor: themeColor,
-            indicatorWeight: 4,
-            unselectedLabelColor: Colors.grey,
-            labelColor: Colors.black,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            tabs: const [
-              Tab(text: "Women"),
-              Tab(text: "Men"),
-              Tab(text: "Children"),
-            ],
-          ),
+          bottom: PreferredSize(
+              preferredSize: Size.fromHeight(80), child: tabBar()),
         ),
-        body: TabBarView(
-          children: [
-            Center(
-              child: Text("Women Collection"),
-            ),
-            Center(
-              child: Text("Men Collection"),
-            ),
-            Center(
-              child: Text("Children Collection"),
-            ),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: tabBarView(),
         ),
       ),
     );

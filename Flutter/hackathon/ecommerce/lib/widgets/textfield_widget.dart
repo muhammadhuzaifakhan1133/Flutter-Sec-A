@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 Widget textFieldWidget(
-    {required Size size,
-    required TextEditingController controller,
+    {required TextEditingController controller,
     required String labelText,
     required TextInputType keyboardtype,
     double? width,
     double? height,
+    double? cursorHeight,
     validator,
     onFieldSubmitted,
     String? errorText,
@@ -29,11 +29,13 @@ Widget textFieldWidget(
       height: height,
       child: TextFormField(
         validator: validator,
+        onFieldSubmitted: onFieldSubmitted,
         obscureText: obscureText,
         controller: controller,
         keyboardType: keyboardtype,
         textInputAction: textInputAction,
         cursorColor: cursorColor,
+        cursorHeight: cursorHeight,
         decoration: InputDecoration(
             errorText: errorText,
             labelText: labelText,

@@ -37,7 +37,6 @@ class _RegisterFieldsAndButtonsState extends State<RegisterFieldsAndButtons> {
           padding: EdgeInsets.all(15),
           child: Column(children: [
             textFieldWidget(
-                size: size,
                 errorText: errors.nameError,
                 controller: nameController,
                 labelText: "Enter your name",
@@ -48,7 +47,6 @@ class _RegisterFieldsAndButtonsState extends State<RegisterFieldsAndButtons> {
               errors: errors,
             ),
             textFieldWidget(
-                size: size,
                 errorText: errors.confrimPasswordError,
                 prefixIcon: Icons.lock,
                 obscureText: confirmPasswordObscureText,

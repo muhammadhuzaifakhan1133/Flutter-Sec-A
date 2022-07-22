@@ -24,7 +24,6 @@ class _EmailAndPasswordFieldsState extends State<EmailAndPasswordFields> {
     return Column(
       children: [
         textFieldWidget(
-            size: size,
             errorText: widget.errors.emailError,
             prefixIcon: Icons.person,
             labelTextSize: 12,
@@ -32,7 +31,6 @@ class _EmailAndPasswordFieldsState extends State<EmailAndPasswordFields> {
             labelText: "Your mail",
             keyboardtype: TextInputType.emailAddress),
         textFieldWidget(
-            size: size,
             errorText: widget.errors.passwordError,
             labelTextSize: 12,
             prefixIcon: Icons.lock,

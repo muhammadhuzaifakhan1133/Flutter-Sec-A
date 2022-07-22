@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 List<Widget> tabNames() {
   return <Widget>[
-    Tab(
+    const Tab(
       child: Text(
         "Home",
         style: TextStyle(fontSize: 16.7, fontWeight: FontWeight.bold),
       ),
     ),
-    Tab(
+    const Tab(
       child: Text(
         "Contact",
         style: TextStyle(fontSize: 16.7, fontWeight: FontWeight.bold),
