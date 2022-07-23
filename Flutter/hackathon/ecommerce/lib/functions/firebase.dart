@@ -137,7 +137,7 @@ logout({required BuildContext context, bool deleteAccount = false}) async {
     return;
   }
   if (await isSignInWithGoogle()) {
-    await GoogleSignIn().disconnect();
+    await GoogleSignIn().signOut();
   }
   if (deleteAccount) {
     User? user = FirebaseAuth.instance.currentUser;

@@ -1,3 +1,4 @@
+import 'package:ecommerce/screens/Home/men_collection/men_collection.dart';
 import 'package:ecommerce/screens/Home/women_collection/women_collection.dart';
 import 'package:flutter/material.dart';
 
@@ -6,9 +7,7 @@ TabBarView tabBarView() {
     physics: BouncingScrollPhysics(),
     children: [
       WomenCollection(),
-      Center(
-        child: Text("Men Collection"),
-      ),
+      MenCollection(),
       Center(
         child: Text("Children Collection"),
       ),
