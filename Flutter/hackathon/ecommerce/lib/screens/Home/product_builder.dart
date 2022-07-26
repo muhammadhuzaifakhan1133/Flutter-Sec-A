@@ -73,7 +73,10 @@ class _ProductBuilderState extends State<ProductBuilder> {
                             description: data["info"]["description"],
                             imgPaths: data["imgPaths"],
                             keywords: data["keywords"],
-                            shareCount: data["shareCount"]);
+                            shareCount: data["shareCount"],
+                            materialsInfo: data["info"]["materials"],
+                            washInstruction: data["info"]["washInstructions"],
+                            price: data["price"]);
                       },
                     );
                   }).toList());

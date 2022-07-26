@@ -17,23 +17,30 @@ Widget productCard(
     required bool isUserWishListProduct,
     required int wishlistCount,
     required String description,
+    required String materialsInfo,
+    required String washInstruction,
+    required double price,
     required List<dynamic> imgPaths,
     required List<dynamic> keywords,
     required int shareCount}) {
   User? user = FirebaseAuth.instance.currentUser;
-  return InkWell(
-    onTap: () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductScreen(
-                  email: (user?.email)!,
-                  imgPaths: imgPaths,
-                  isUserWishListProduct: isUserWishListProduct,
-                  productID: productID)));
-    },
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductScreen(
+                      email: (user?.email)!,
+                      imgPaths: imgPaths,
+                      isUserWishListProduct: isUserWishListProduct,
+                      productID: productID,
+                      materialsInfo: materialsInfo,
+                      washInstruction: washInstruction,
+                      price: price,
+                    )));
+      },
       child: Card(
         color: Colors.white,
         elevation: 10,

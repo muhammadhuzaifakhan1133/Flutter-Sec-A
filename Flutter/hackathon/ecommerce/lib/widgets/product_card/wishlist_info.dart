@@ -1,5 +1,6 @@
 import 'package:ecommerce/functions/convert_to_k_m_b_units.dart';
 import 'package:ecommerce/functions/firebase.dart';
+import 'package:ecommerce/widgets/custom_favorite_icon.dart';
 import 'package:flutter/material.dart';
 
 Widget isProductUserWishList(
@@ -9,11 +10,8 @@ Widget isProductUserWishList(
     required String productID}) {
   return Row(
     children: [
-      IconButton(
-          icon: Icon(
-            isUserWishListProduct ? Icons.favorite : Icons.favorite_border,
-            color: isUserWishListProduct ? Colors.red : Colors.black,
-          ),
+      customFavoriteIcon(
+          isUserWishListProduct: isUserWishListProduct,
           onPressed: () {
             if (isUserWishListProduct) {
               removeFromUserWishList(email: email, productID: productID);
