@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-List<Widget> arrangementOfPics(List<String> imgPaths) {
+List<Widget> arrangementOfPics(List<dynamic> imgPaths) {
   if (imgPaths.length == 0) return [];
   List<Widget> widgets = [];
   int noOfImages = imgPaths.length;

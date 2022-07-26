@@ -1,7 +1,7 @@
 import 'package:ecommerce/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-Widget productKeywords(List<String> keywords) {
+Widget productKeywords(List<dynamic> keywords) {
   List<Widget> keywordTags = [];
   for (var i = 0; i < keywords.length; i++) {
     keywordTags.add(Container(

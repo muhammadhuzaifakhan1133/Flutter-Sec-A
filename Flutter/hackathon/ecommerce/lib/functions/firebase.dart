@@ -165,3 +165,90 @@ Future<List<String>> getEmailProviders(String emailAddress, context) async {
   }
   return [];
 }
+
+addProduct(context) async {
+  CollectionReference products =
+      FirebaseFirestore.instance.collection("products");
+  bool isUserWishList = true;
+  DocumentReference prodDoc = await products.add({
+    "collection": "women",
+    "designer": "OhCzdXt1ZaKFeRlDzEBI",
+    "favoriteCount": 9123,
+    "imgPaths": [
+      "assets/images/image8_1.png",
+    ],
+    "info": {
+      "description":
+          "If you are looking for the latest and the most stylish Pakistan lawn collection 2018 with chiffon dupatta, you have come at the right place as Alkaram has brought fully embroidered lawn suits with chiffon and sleeves in its wide range of stitched and unstitched lawn suits.",
+      "materials":
+          "AS SEEN IN REDBOOK! You'll be primed and ready in the Perfect Situation Purple Long Sleeve Shift Dress when everything starts falling into place! This woven poly dress has a casual shift shape, accented by a rounded neckline.",
+      "washInstructions":
+          "AS SEEN IN REDBOOK! You'll be primed and ready in the Perfect Situation Purple Long Sleeve Shift Dress when everything starts falling into place! This woven poly dress has a casual shift shape, accented by a rounded neckline."
+    },
+    "keywords": ["tops"],
+    "price": 22.00,
+    "shareCount": 5551
+  });
+  if (isUserWishList) {
+    DocumentReference wishlist = FirebaseFirestore.instance
+        .collection("wishlist")
+        .doc("huzaifaacademy11@gmail.com");
+    DocumentSnapshot data = await wishlist.get();
+    Map<String, dynamic> wishlistData = data.data() as Map<String, dynamic>;
+    wishlistData["productID"].add(prodDoc.id);
+    wishlist.update({"productID": wishlistData});
+  }
+}
+
+addDesigner(context) async {
+  CollectionReference products =
+      FirebaseFirestore.instance.collection("designers");
+  try {
+    products.add({
+      "name": "Kyle",
+      "status": "Tailor",
+      "imgPath": "assets/images/designer8.png"
+    });
+  } catch (e) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(e.toString())));
+  }
+}
+
+Future<List<dynamic>> getWishList({required String email}) async {
+  DocumentSnapshot wishlist =
+      await FirebaseFirestore.instance.collection("wishlist").doc(email).get();
+  Map<String, dynamic> wishlistData = wishlist.data() as Map<String, dynamic>;
+  return wishlistData["productID"];
+}
+
+getDesignerData({required String documentID}) async {
+  DocumentSnapshot data = await FirebaseFirestore.instance
+      .collection("designers")
+      .doc(documentID)
+      .get();
+  Map<String, dynamic> designerData = data.data() as Map<String, dynamic>;
+  return designerData;
+}
+
+Future addToUserWishList(
+    {required String email, required String productID}) async {
+  DocumentReference wishlist =
+      FirebaseFirestore.instance.collection("wishlist").doc(email);
+  DocumentSnapshot wishListData = await wishlist.get();
+  Map<String, dynamic> data = wishListData.data() as Map<String, dynamic>;
+  List<dynamic> productIds = data["productID"];
+  productIds.add(productID);
+  await wishlist.update({"productID": productIds});
+}
+
+Future removeFromUserWishList(
+    {required String email, required String productID}) async {
+  DocumentReference wishlist =
+      FirebaseFirestore.instance.collection("wishlist").doc(email);
+  DocumentSnapshot wishListData = await wishlist.get();
+  Map<String, dynamic> data = wishListData.data() as Map<String, dynamic>;
+  List<dynamic> productIds = data["productID"];
+  productIds.remove(productID);
+  await wishlist.update({"productID": productIds});
+}
