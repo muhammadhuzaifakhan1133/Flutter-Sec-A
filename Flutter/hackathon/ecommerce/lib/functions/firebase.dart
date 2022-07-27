@@ -66,10 +66,14 @@ Future<bool> logIn(
 Future<void> saveUserName(
     {required String documentID, required String name}) async {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  DocumentReference doc = users.doc(documentID);
-  doc.set({
+  DocumentReference usersDoc = users.doc(documentID);
+  await usersDoc.set({
     'name': name,
   });
+  CollectionReference wishlist =
+      FirebaseFirestore.instance.collection("wishlist");
+  DocumentReference wishlistDoc = wishlist.doc(documentID);
+  await wishlistDoc.set({"productID": []});
 }
 
 Future<String> getUserName({required String email}) async {

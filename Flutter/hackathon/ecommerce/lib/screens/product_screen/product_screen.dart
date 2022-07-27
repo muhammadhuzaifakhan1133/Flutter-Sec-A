@@ -2,14 +2,14 @@ import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/functions/firebase.dart';
 import 'package:ecommerce/screens/product_screen/image_slider.dart';
 import 'package:ecommerce/screens/product_screen/info.dart';
-import 'package:ecommerce/screens/product_screen/render_slide_img.dart';
+import 'package:ecommerce/screens/product_screen/measurements.dart';
 import 'package:ecommerce/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intro_slider/intro_slider.dart';
 
 class ProductScreen extends StatefulWidget {
   ProductScreen(
-      {required this.imgPaths,
+      {required this.name,
+      required this.imgPaths,
       required this.isUserWishListProduct,
       required this.email,
       required this.productID,
@@ -18,6 +18,7 @@ class ProductScreen extends StatefulWidget {
       required this.price,
       Key? key})
       : super(key: key);
+  String name;
   List<dynamic> imgPaths;
   String email;
   String productID;
@@ -51,6 +52,7 @@ class _ProductScreenState extends State<ProductScreen>
           heightPercent: 0.08,
           widthPercent: 0.5),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           imageSlider(
               context: context,
@@ -71,6 +73,16 @@ class _ProductScreenState extends State<ProductScreen>
                   });
                 }
               }),
+          Padding(
+            padding: const EdgeInsets.only(top: 15.0, left: 10),
+            child: Text(widget.name,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 10),
+            child: Text("\$ ${widget.price}",
+                style: TextStyle(color: themeColor, fontSize: 14)),
+          ),
           TabBar(
             controller: _tabController,
             indicatorColor: themeColor,
@@ -90,9 +102,7 @@ class _ProductScreenState extends State<ProductScreen>
                 ProductInfo(
                     materialInfo: widget.materialsInfo,
                     washInstruction: widget.washInstruction),
-                const Center(
-                  child: Text("Measuremens"),
-                )
+                ProductMeasurements()
               ],
             ),
           )

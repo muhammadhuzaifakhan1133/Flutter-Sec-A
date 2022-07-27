@@ -63,6 +63,7 @@ class _ProductBuilderState extends State<ProductBuilder> {
                             snapshot2.data!.data() as Map<String, dynamic>;
                         return productCard(
                             context: context,
+                            name: data["name"],
                             productID: document.id,
                             designerImgPath: designerData["imgPath"],
                             designerName: designerData["name"],

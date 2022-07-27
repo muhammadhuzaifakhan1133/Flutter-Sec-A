@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 Widget productCard(
     {required BuildContext context,
+    required String name,
     required String productID,
     required String designerImgPath,
     required String designerName,
@@ -32,6 +33,7 @@ Widget productCard(
             context,
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
+                      name: name,
                       email: (user?.email)!,
                       imgPaths: imgPaths,
                       isUserWishListProduct: isUserWishListProduct,

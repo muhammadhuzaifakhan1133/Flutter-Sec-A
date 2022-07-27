@@ -20,6 +20,7 @@ imageSlider(
           showPrevBtn: false,
           showSkipBtn: false,
           showDotIndicator: true,
+          autoScroll: false,
           colorDot: Colors.grey,
           colorActiveDot: themeColor,
           sizeDot: 10,
