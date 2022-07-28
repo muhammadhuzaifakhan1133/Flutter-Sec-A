@@ -18,6 +18,7 @@ Widget textFieldWidget(
     bool obscureText = false,
     onPressedSuffixIcon,
     onPressedPrefixIcon,
+    onChanged,
     Color? bgColor,
     IconData? suffixIcon,
     IconData? prefixIcon}) {
@@ -30,6 +31,7 @@ Widget textFieldWidget(
       child: TextFormField(
         validator: validator,
         onFieldSubmitted: onFieldSubmitted,
+        onChanged: onChanged,
         obscureText: obscureText,
         controller: controller,
         keyboardType: keyboardtype,

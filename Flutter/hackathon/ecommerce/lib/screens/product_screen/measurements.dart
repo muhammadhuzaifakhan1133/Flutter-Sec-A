@@ -1,13 +1,13 @@
 import 'package:counter/counter.dart';
 import 'package:ecommerce/constants/colors.dart';
-import 'package:ecommerce/screens/product_screen/cloth_size.dart';
+import 'package:ecommerce/screens/product_screen/cloth_measurements.dart';
 import 'package:ecommerce/screens/product_screen/cloth_size_counters.dart';
 import 'package:ecommerce/screens/product_screen/color_list_builder.dart';
 import 'package:flutter/material.dart';
 
 class ProductMeasurements extends StatefulWidget {
-  ProductMeasurements({Key? key}) : super(key: key);
-
+  ProductMeasurements({required this.price, Key? key}) : super(key: key);
+  final price;
   @override
   State<ProductMeasurements> createState() => _ProductMeasurementsState();
 }
@@ -25,7 +25,7 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
   ];
   String dropDownValue = "Lace";
   late List<bool> _colorsListSelected;
-  ClothSize clothSize = ClothSize();
+  ClothMeasurements clothMeasurements = ClothMeasurements();
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20),
-                  clothSizeCounters(clothSize: clothSize),
+                  clothSizeCounters(clothMeasurements: clothMeasurements),
                   const Padding(
                     padding: const EdgeInsets.only(top: 15.0, left: 30),
                     child: Text(
@@ -64,12 +64,23 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
                     padding: const EdgeInsets.only(top: 15.0, left: 30),
                     child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 50.0),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 50.0),
                           child:
                               Text("Quantity", style: TextStyle(fontSize: 18)),
                         ),
-                        Counter(min: 1, max: 10000000),
+                        Counter(
+                          min: 1,
+                          max: 10000000,
+                          initial: 1,
+                          onValueChanged: (num value) {
+                            Future.delayed(Duration.zero, () {
+                              setState(() {
+                                clothMeasurements.qty = value.toInt();
+                              });
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -100,11 +111,26 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
                       ],
                     ),
                   ),
-                  SizedBox(height: size.height * 0.1),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 32.0, top: 30, bottom: 30),
+                    child: Row(
+                      children: [
+                        Text("Total:", style: TextStyle(fontSize: 18)),
+                        Text(
+                          " \$ ${clothMeasurements.qty * widget.price}",
+                          style: TextStyle(
+                              color: themeColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }

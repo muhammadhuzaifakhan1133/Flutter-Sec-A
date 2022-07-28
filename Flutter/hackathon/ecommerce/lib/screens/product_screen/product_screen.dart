@@ -102,7 +102,9 @@ class _ProductScreenState extends State<ProductScreen>
                 ProductInfo(
                     materialInfo: widget.materialsInfo,
                     washInstruction: widget.washInstruction),
-                ProductMeasurements()
+                ProductMeasurements(
+                  price: widget.price,
+                )
               ],
             ),
           )

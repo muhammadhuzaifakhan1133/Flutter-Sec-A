@@ -1,8 +1,8 @@
 import 'package:counter/counter.dart';
-import 'package:ecommerce/screens/product_screen/cloth_size.dart';
+import 'package:ecommerce/screens/product_screen/cloth_measurements.dart';
 import 'package:flutter/material.dart';
 
-Row clothSizeCounters({required ClothSize clothSize}) {
+Row clothSizeCounters({required ClothMeasurements clothMeasurements}) {
   TextStyle counterLabelStyle =
       const TextStyle(fontWeight: FontWeight.bold, fontSize: 11);
   return Row(
@@ -17,7 +17,7 @@ Row clothSizeCounters({required ClothSize clothSize}) {
             max: 1000,
             initial: 43,
             onValueChanged: (num value) {
-              clothSize.waist = value.toInt();
+              clothMeasurements.waist = value.toInt();
             },
           ),
         ],
@@ -31,7 +31,7 @@ Row clothSizeCounters({required ClothSize clothSize}) {
             max: 1000,
             initial: 34,
             onValueChanged: (num value) {
-              clothSize.length = value.toInt();
+              clothMeasurements.length = value.toInt();
             },
           ),
         ],
@@ -45,7 +45,7 @@ Row clothSizeCounters({required ClothSize clothSize}) {
             max: 1000,
             initial: 76,
             onValueChanged: (num value) {
-              clothSize.breadth = value.toInt();
+              clothMeasurements.breadth = value.toInt();
             },
           ),
         ],

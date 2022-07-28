@@ -15,6 +15,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
+  List<String> keywords = [
+    "tops",
+    "frocks",
+    "red",
+    "blue",
+    "topi",
+    "frog",
+    "reddish",
+    "bluish"
+  ];
   String? username;
   @override
   void initState() {
@@ -33,30 +43,39 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     Size size = MediaQuery.of(context).size;
-    return username != null
-        ? DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                title: searchTextFeild(
-                    screenSize: size, controller: searchController),
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(right: size.width * 0.07),
-                    child: profileAvatar(
-                        userName: username!, userPhotoUrl: user?.photoURL),
-                  )
-                ],
-                backgroundColor: Colors.white,
-                bottom: PreferredSize(
-                    preferredSize: Size.fromHeight(80), child: tabBar()),
-              ),
-              body: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: tabBarView(),
-              ),
-            ),
-          )
-        : Center(child: CircularProgressIndicator());
+    if (username != null) {
+      return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: searchTextFeild(
+                screenSize: size,
+                controller: searchController,
+                onChanged: (String value) {
+                  List<String> suggestions = keywords
+                      .where((element) => element.contains(value))
+                      .toList();
+                  print(suggestions);
+                }),
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: size.width * 0.07),
+                child: profileAvatar(
+                    userName: username!, userPhotoUrl: user?.photoURL),
+              )
+            ],
+            backgroundColor: Colors.white,
+            bottom: PreferredSize(
+                preferredSize: Size.fromHeight(80), child: tabBar()),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: tabBarView(),
+          ),
+        ),
+      );
+    } else {
+      return const Center(child: CircularProgressIndicator());
+    }
   }
 }
