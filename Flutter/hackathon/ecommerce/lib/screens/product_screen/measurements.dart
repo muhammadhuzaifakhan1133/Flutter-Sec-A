@@ -1,3 +1,4 @@
+import 'package:counter/counter.dart';
 import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/screens/product_screen/cloth_size.dart';
 import 'package:ecommerce/screens/product_screen/cloth_size_counters.dart';
@@ -13,7 +14,16 @@ class ProductMeasurements extends StatefulWidget {
 
 class _ProductMeasurementsState extends State<ProductMeasurements> {
   Color dressColor = Colors.red;
-
+  List<String> materials = [
+    "Lace",
+    "Ankara",
+    "Guinea",
+    "Linen",
+    "Silk",
+    "Wool",
+    "Cotten"
+  ];
+  String dropDownValue = "Lace";
   late List<bool> _colorsListSelected;
   ClothSize clothSize = ClothSize();
 
@@ -51,6 +61,19 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
                       colorsListSelected: _colorsListSelected),
                   SizedBox(height: 20),
                   Padding(
+                    padding: const EdgeInsets.only(top: 15.0, left: 30),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 50.0),
+                          child:
+                              Text("Quantity", style: TextStyle(fontSize: 18)),
+                        ),
+                        Counter(min: 1, max: 10000000),
+                      ],
+                    ),
+                  ),
+                  Padding(
                     padding: const EdgeInsets.only(top: 15.0),
                     child: Row(
                       children: [
@@ -61,21 +84,19 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
-                        Container(
-                          height: 40,
-                          width: 200,
-                          decoration: BoxDecoration(border: Border.all()),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Text("Leather"),
-                              ),
-                              Icon(Icons.arrow_drop_down_sharp)
-                            ],
-                          ),
-                        )
+                        DropdownButton(
+                          value: dropDownValue,
+                          icon: const Icon(Icons.arrow_drop_down_sharp),
+                          items: materials.map((String material) {
+                            return DropdownMenuItem(
+                                child: Text(material), value: material);
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropDownValue = value!;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
