@@ -17,7 +17,10 @@ Padding colorsListBuilder(
           return InkWell(
             onTap: () {
               setState(() {
-                colorsListSelected[colorsListSelected.indexOf(true)] = false;
+                int trueIndex = colorsListSelected.indexOf(true);
+                if (trueIndex != -1) {
+                  colorsListSelected[trueIndex] = false;
+                }
                 colorsListSelected[index] = true;
               });
             },

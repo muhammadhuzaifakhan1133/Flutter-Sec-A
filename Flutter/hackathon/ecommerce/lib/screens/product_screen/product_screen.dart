@@ -1,10 +1,13 @@
 import 'package:ecommerce/constants/colors.dart';
+import 'package:ecommerce/constants/values.dart';
 import 'package:ecommerce/functions/firebase.dart';
 import 'package:ecommerce/screens/product_screen/image_slider.dart';
-import 'package:ecommerce/screens/product_screen/info.dart';
-import 'package:ecommerce/screens/product_screen/measurements.dart';
+import 'package:ecommerce/screens/product_screen/info/info.dart';
+import 'package:ecommerce/screens/product_screen/measurements/cloth_measurements.dart';
+import 'package:ecommerce/screens/product_screen/measurements/measurements.dart';
 import 'package:ecommerce/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProductScreen extends StatefulWidget {
   ProductScreen(
@@ -33,10 +36,13 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  late List<bool> _colorsListSelected;
+  ClothMeasurements clothMeasurements = ClothMeasurements();
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _colorsListSelected = List.generate(colorsList.length, (index) => false);
   }
 
   @override
@@ -47,7 +53,12 @@ class _ProductScreenState extends State<ProductScreen>
           buttonColor: themeColor,
           size: size,
           text: "Add to Bag",
-          onpressed: () {},
+          onpressed: () {
+            if (!(_colorsListSelected.contains(true))) {
+              Fluttertoast.showToast(msg: "Select Color of dress");
+              return;
+            }
+          },
           radius: 5,
           heightPercent: 0.08,
           widthPercent: 0.5),
@@ -90,9 +101,7 @@ class _ProductScreenState extends State<ProductScreen>
             unselectedLabelColor: Colors.grey,
             tabs: const [
               Tab(text: "INFO"),
-              Tab(
-                text: "MEASUREMENTS",
-              )
+              Tab(text: "MEASUREMENTS"),
             ],
           ),
           Expanded(
@@ -104,6 +113,8 @@ class _ProductScreenState extends State<ProductScreen>
                     washInstruction: widget.washInstruction),
                 ProductMeasurements(
                   price: widget.price,
+                  colorsListSelected: _colorsListSelected,
+                  clothMeasurements: clothMeasurements,
                 )
               ],
             ),

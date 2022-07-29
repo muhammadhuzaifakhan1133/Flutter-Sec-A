@@ -70,12 +70,27 @@ Future<void> saveUserName(
   await usersDoc.set({
     'name': name,
   });
-  CollectionReference wishlist =
+  // add wishlist collection
+  CollectionReference collection =
       FirebaseFirestore.instance.collection("wishlist");
-  DocumentReference wishlistDoc = wishlist.doc(documentID);
-  await wishlistDoc.set({"productID": []});
+  DocumentReference document = collection.doc(documentID);
+  await document.set({"productID": []});
+  // add bag collection
+  CollectionReference collection2 =
+      FirebaseFirestore.instance.collection("bag");
+  DocumentReference document2 = collection2.doc(documentID);
+  await document2.set({
+    "productID": [],
+    "length": [],
+    "breadth": [],
+    "waist": [],
+    "qty": [],
+    "color": [],
+    "material": []
+  });
 }
 
+// add bag
 Future<String> getUserName({required String email}) async {
   DocumentReference user =
       FirebaseFirestore.instance.collection("users").doc(email);
