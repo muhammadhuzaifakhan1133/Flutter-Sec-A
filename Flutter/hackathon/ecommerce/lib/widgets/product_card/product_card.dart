@@ -21,6 +21,7 @@ Widget productCard(
     required String materialsInfo,
     required String washInstruction,
     required double price,
+    required List<String> availableColors,
     required List<dynamic> imgPaths,
     required List<dynamic> keywords,
     required int shareCount}) {
@@ -34,6 +35,7 @@ Widget productCard(
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
                       name: name,
+                      availableColors: availableColors,
                       email: (user?.email)!,
                       imgPaths: imgPaths,
                       isUserWishListProduct: isUserWishListProduct,

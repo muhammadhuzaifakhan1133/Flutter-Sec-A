@@ -271,3 +271,38 @@ Future removeFromUserWishList(
   productIds.remove(productID);
   await wishlist.update({"productID": productIds});
 }
+
+Future<void> addProductToBag(
+    {required BuildContext context,
+    required String email,
+    required String productID,
+    required int breadth,
+    required int waist,
+    required int length,
+    required String color,
+    required String material,
+    required int qty}) async {
+  DocumentReference bag =
+      FirebaseFirestore.instance.collection("bag").doc(email);
+  bag.update({
+    "breadth": FieldValue.arrayUnion([breadth]),
+    "waist": FieldValue.arrayUnion([waist]),
+    "length": FieldValue.arrayUnion([length]),
+    "color": FieldValue.arrayUnion([color]),
+    "material": FieldValue.arrayUnion([material]),
+    "qty": FieldValue.arrayUnion([qty]),
+    "productID": FieldValue.arrayUnion([productID]),
+  });
+  showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: Text("Your Product is added to your bag"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Ok"))
+            ],
+          ));
+}

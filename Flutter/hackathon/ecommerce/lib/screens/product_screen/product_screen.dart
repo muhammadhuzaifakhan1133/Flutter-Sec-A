@@ -19,6 +19,7 @@ class ProductScreen extends StatefulWidget {
       required this.materialsInfo,
       required this.washInstruction,
       required this.price,
+      required this.availableColors,
       Key? key})
       : super(key: key);
   String name;
@@ -29,6 +30,7 @@ class ProductScreen extends StatefulWidget {
   String materialsInfo;
   String washInstruction;
   double price;
+  List<String> availableColors;
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
@@ -42,7 +44,8 @@ class _ProductScreenState extends State<ProductScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _colorsListSelected = List.generate(colorsList.length, (index) => false);
+    _colorsListSelected =
+        List.generate(widget.availableColors.length, (index) => false);
   }
 
   @override
@@ -53,11 +56,22 @@ class _ProductScreenState extends State<ProductScreen>
           buttonColor: themeColor,
           size: size,
           text: "Add to Bag",
-          onpressed: () {
+          onpressed: () async {
             if (!(_colorsListSelected.contains(true))) {
               Fluttertoast.showToast(msg: "Select Color of dress");
               return;
             }
+            await addProductToBag(
+                context: context,
+                email: widget.email,
+                productID: widget.productID,
+                breadth: clothMeasurements.breadth,
+                waist: clothMeasurements.waist,
+                length: clothMeasurements.length,
+                color:
+                    widget.availableColors[_colorsListSelected.indexOf(true)],
+                material: clothMeasurements.material,
+                qty: clothMeasurements.qty);
           },
           radius: 5,
           heightPercent: 0.08,
@@ -113,6 +127,7 @@ class _ProductScreenState extends State<ProductScreen>
                     washInstruction: widget.washInstruction),
                 ProductMeasurements(
                   price: widget.price,
+                  availableColors: widget.availableColors,
                   colorsListSelected: _colorsListSelected,
                   clothMeasurements: clothMeasurements,
                 )

@@ -12,11 +12,13 @@ class ProductMeasurements extends StatefulWidget {
       {required this.price,
       required this.clothMeasurements,
       required this.colorsListSelected,
+      required this.availableColors,
       Key? key})
       : super(key: key);
   double price;
   ClothMeasurements clothMeasurements;
   List<bool> colorsListSelected;
+  List<String> availableColors;
   @override
   State<ProductMeasurements> createState() => _ProductMeasurementsState();
 }
@@ -44,7 +46,7 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
             colorsListBuilder(
                 setState: setState,
                 size: size,
-                colorsList: colorsList,
+                availableColors: widget.availableColors,
                 colorsListSelected: widget.colorsListSelected),
             SizedBox(height: 20),
             quantityCounter(

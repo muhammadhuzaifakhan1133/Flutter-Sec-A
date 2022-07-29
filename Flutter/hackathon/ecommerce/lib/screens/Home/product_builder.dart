@@ -66,6 +66,8 @@ class _ProductBuilderState extends State<ProductBuilder> {
                             name: data["name"],
                             productID: document.id,
                             designerImgPath: designerData["imgPath"],
+                            availableColors:
+                                List<String>.from(data["availableColors"]),
                             designerName: designerData["name"],
                             designerStatus: designerData["status"],
                             isUserWishListProduct:

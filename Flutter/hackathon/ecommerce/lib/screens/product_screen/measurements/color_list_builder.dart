@@ -1,9 +1,10 @@
+import 'package:ecommerce/constants/values.dart';
 import 'package:flutter/material.dart';
 
 Padding colorsListBuilder(
     {required setState,
     required Size size,
-    required List<Color> colorsList,
+    required List<String> availableColors,
     required List<bool> colorsListSelected}) {
   return Padding(
     padding: const EdgeInsets.only(left: 30.0, right: 20),
@@ -12,7 +13,7 @@ Padding colorsListBuilder(
       width: size.width * 0.9,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: colorsList.length,
+        itemCount: availableColors.length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
@@ -26,7 +27,7 @@ Padding colorsListBuilder(
             },
             child: CircleAvatar(
               radius: 20,
-              backgroundColor: colorsList[index],
+              backgroundColor: colorsMap[availableColors[index]],
               child: Center(
                 child:
                     colorsListSelected[index] ? const Icon(Icons.check) : null,
