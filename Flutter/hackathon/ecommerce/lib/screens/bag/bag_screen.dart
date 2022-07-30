@@ -198,9 +198,10 @@ class _BagScreenState extends State<BagScreen> {
                                           style: TextStyle(fontSize: 14)),
                                       subtitle: Text(designerData["name"],
                                           style: TextStyle(
-                                              fontSize: 9, color: Colors.grey)),
+                                              fontSize: 13,
+                                              color: Colors.grey)),
                                       trailing: Text(
-                                        "\$ ${productData["price"] * bagData["qty"][index]}",
+                                        "\$ ${(productData["price"] * bagData["qty"][index]).toStringAsFixed(2)}",
                                         style: TextStyle(
                                             color: themeColor,
                                             fontSize: 14,
