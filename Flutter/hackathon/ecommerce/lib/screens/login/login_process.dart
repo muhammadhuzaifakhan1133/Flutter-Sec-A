@@ -52,7 +52,6 @@ completeLoginProcess(
     return;
   }
   await saveAsActiveUser(name);
-  await setSignInAsGoogleOrNot(false);
   // ignore: use_build_context_synchronously
   closeDialog(context);
   // ignore: use_build_context_synchronously

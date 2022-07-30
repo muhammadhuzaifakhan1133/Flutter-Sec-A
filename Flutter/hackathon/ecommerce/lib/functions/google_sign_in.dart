@@ -56,7 +56,6 @@ Future signInWithGoogle(BuildContext context) async {
         documentID: googleUser.email, name: (googleUser.displayName)!);
   }
   await saveAsActiveUser(googleUser.displayName!);
-  await setSignInAsGoogleOrNot(true);
   // ignore: use_build_context_synchronously
   closeDialog(context);
   // ignore: use_build_context_synchronously

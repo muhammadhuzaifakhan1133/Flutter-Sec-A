@@ -15,7 +15,7 @@ Row clothSizeCounters({required ClothMeasurements clothMeasurements}) {
           Counter(
             min: 5,
             max: 1000,
-            initial: 43,
+            initial: clothMeasurements.waist,
             onValueChanged: (num value) {
               clothMeasurements.waist = value.toInt();
             },
@@ -29,7 +29,7 @@ Row clothSizeCounters({required ClothMeasurements clothMeasurements}) {
           Counter(
             min: 5,
             max: 1000,
-            initial: 34,
+            initial: clothMeasurements.length,
             onValueChanged: (num value) {
               clothMeasurements.length = value.toInt();
             },
@@ -43,7 +43,7 @@ Row clothSizeCounters({required ClothMeasurements clothMeasurements}) {
           Counter(
             min: 5,
             max: 1000,
-            initial: 76,
+            initial: clothMeasurements.breadth,
             onValueChanged: (num value) {
               clothMeasurements.breadth = value.toInt();
             },

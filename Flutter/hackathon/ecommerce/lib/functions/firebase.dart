@@ -155,9 +155,8 @@ logout({required BuildContext context, bool deleteAccount = false}) async {
     Fluttertoast.showToast(msg: "No Internet Connection");
     return;
   }
-  if (await isSignInWithGoogle()) {
-    await GoogleSignIn().signOut();
-  }
+  await GoogleSignIn().signOut();
+
   if (deleteAccount) {
     User? user = FirebaseAuth.instance.currentUser;
     user!.delete();
@@ -273,8 +272,7 @@ Future removeFromUserWishList(
 }
 
 Future<void> addProductToBag(
-    {required BuildContext context,
-    required String email,
+    {required String email,
     required String productID,
     required int breadth,
     required int waist,
@@ -284,25 +282,99 @@ Future<void> addProductToBag(
     required int qty}) async {
   DocumentReference bag =
       FirebaseFirestore.instance.collection("bag").doc(email);
-  bag.update({
-    "breadth": FieldValue.arrayUnion([breadth]),
-    "waist": FieldValue.arrayUnion([waist]),
-    "length": FieldValue.arrayUnion([length]),
-    "color": FieldValue.arrayUnion([color]),
-    "material": FieldValue.arrayUnion([material]),
-    "qty": FieldValue.arrayUnion([qty]),
-    "productID": FieldValue.arrayUnion([productID]),
+  DocumentSnapshot bagSnapshot = await bag.get();
+  Map<String, dynamic> bagData = bagSnapshot.data() as Map<String, dynamic>;
+  bagData["breadth"].add(breadth);
+  bagData["waist"].add(waist);
+  bagData["length"].add(length);
+  bagData["color"].add(color);
+  bagData["material"].add(material);
+  bagData["qty"].add(qty);
+  bagData["productID"].add(productID);
+  await bag.update({
+    "breadth": bagData["breadth"],
+    "waist": bagData["waist"],
+    "length": bagData["length"],
+    "color": bagData["color"],
+    "material": bagData["material"],
+    "qty": bagData["qty"],
+    "productID": bagData["productID"],
   });
-  showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            content: Text("Your Product is added to your bag"),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Ok"))
-            ],
-          ));
+}
+
+Future<void> updateBagProduct(
+    {required String email,
+    required int index,
+    required String productID,
+    required int breadth,
+    required int waist,
+    required int length,
+    required String color,
+    required String material,
+    required int qty}) async {
+  DocumentReference bag =
+      FirebaseFirestore.instance.collection("bag").doc(email);
+  DocumentSnapshot bagSnapshot = await bag.get();
+  Map<String, dynamic> bagData = bagSnapshot.data() as Map<String, dynamic>;
+  bagData["breadth"][index] = breadth;
+  bagData["waist"][index] = waist;
+  bagData["length"][index] = length;
+  bagData["color"][index] = color;
+  bagData["material"][index] = material;
+  bagData["qty"][index] = qty;
+  bagData["productID"][index] = productID;
+  await bag.update({
+    "breadth": bagData["breadth"],
+    "waist": bagData["waist"],
+    "length": bagData["length"],
+    "color": bagData["color"],
+    "material": bagData["material"],
+    "qty": bagData["qty"],
+    "productID": bagData["productID"],
+  });
+}
+
+Future<void> removeProductFromBag(
+    {required BuildContext context,
+    required String email,
+    required int index}) async {
+  DocumentReference bag =
+      FirebaseFirestore.instance.collection("bag").doc(email);
+  DocumentSnapshot bagSnapshot = await bag.get();
+  Map<String, dynamic> bagData = bagSnapshot.data() as Map<String, dynamic>;
+  bagData["breadth"].removeAt(index);
+  bagData["waist"].removeAt(index);
+  bagData["length"].removeAt(index);
+  bagData["color"].removeAt(index);
+  bagData["material"].removeAt(index);
+  bagData["qty"].removeAt(index);
+  bagData["productID"].removeAt(index);
+  await bag.update({
+    "breadth": bagData["breadth"],
+    "waist": bagData["waist"],
+    "length": bagData["length"],
+    "color": bagData["color"],
+    "material": bagData["material"],
+    "qty": bagData["qty"],
+    "productID": bagData["productID"],
+  });
+}
+
+Future<double> getTotalPriceOfBagProducts({required String email}) async {
+  DocumentSnapshot bagDocument =
+      await FirebaseFirestore.instance.collection("bag").doc(email).get();
+  Map<String, dynamic> bagProductsData =
+      bagDocument.data() as Map<String, dynamic>;
+  List<String> bagProductIDs = List<String>.from(bagProductsData["productID"]);
+  List<int> qty = List<int>.from(bagProductsData["qty"]);
+  double totalPrice = 0;
+  for (var i = 0; i < bagProductIDs.length; i++) {
+    DocumentSnapshot productDocument = await FirebaseFirestore.instance
+        .collection("products")
+        .doc(bagProductIDs[i])
+        .get();
+    double price = productDocument["price"];
+    totalPrice += price * qty[i];
+  }
+  return totalPrice;
 }

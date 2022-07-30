@@ -1,11 +1,13 @@
 import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/constants/values.dart';
+import 'package:ecommerce/functions/close_dialog.dart';
 import 'package:ecommerce/functions/firebase.dart';
 import 'package:ecommerce/screens/product_screen/image_slider.dart';
 import 'package:ecommerce/screens/product_screen/info/info.dart';
 import 'package:ecommerce/screens/product_screen/measurements/cloth_measurements.dart';
 import 'package:ecommerce/screens/product_screen/measurements/measurements.dart';
 import 'package:ecommerce/widgets/button_widget.dart';
+import 'package:ecommerce/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -61,8 +63,8 @@ class _ProductScreenState extends State<ProductScreen>
               Fluttertoast.showToast(msg: "Select Color of dress");
               return;
             }
+            circleProgressDialog(context);
             await addProductToBag(
-                context: context,
                 email: widget.email,
                 productID: widget.productID,
                 breadth: clothMeasurements.breadth,
@@ -72,6 +74,19 @@ class _ProductScreenState extends State<ProductScreen>
                     widget.availableColors[_colorsListSelected.indexOf(true)],
                 material: clothMeasurements.material,
                 qty: clothMeasurements.qty);
+            closeDialog(context);
+            showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: Text("Your Product is added to your bag"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Ok"))
+            ],
+          ));
           },
           radius: 5,
           heightPercent: 0.08,

@@ -11,14 +11,3 @@ Future<void> removeActiveUser() async {
   final SharedPreferences prefs = await _prefs;
   prefs.remove("activeName");
 }
-
-Future<void> setSignInAsGoogleOrNot(bool value) async {
-  final SharedPreferences prefs = await _prefs;
-  prefs.setBool("isSignInWithGoogle", value);
-}
-
-Future<bool> isSignInWithGoogle() async {
-  final SharedPreferences prefs = await _prefs;
-  bool isSignInWithGoogle = prefs.getBool("isSignInWithGoogle")!;
-  return isSignInWithGoogle;
-}

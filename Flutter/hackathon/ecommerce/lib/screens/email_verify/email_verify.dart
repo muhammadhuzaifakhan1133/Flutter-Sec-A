@@ -62,7 +62,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
       await saveUserName(documentID: (user?.email)!, name: (widget.name)!);
 
-      await setSignInAsGoogleOrNot(false);
       // ignore: use_build_context_synchronously
       closeDialog(context);
       // ignore: use_build_context_synchronously

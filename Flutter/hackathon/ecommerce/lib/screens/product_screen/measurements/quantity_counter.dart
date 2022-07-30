@@ -15,7 +15,7 @@ Padding quantityCounter(
         Counter(
           min: 1,
           max: 10000000,
-          initial: 1,
+          initial: clothMeasurements.qty,
           onValueChanged: (num value) {
             Future.delayed(Duration.zero, () {
               setState(() {
