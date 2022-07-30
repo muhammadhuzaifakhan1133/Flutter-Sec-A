@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-customAppBar(context) {
+updateOrderSceenAppBar(context) {
   return AppBar(
     backgroundColor: Colors.white,
     leading: IconButton(

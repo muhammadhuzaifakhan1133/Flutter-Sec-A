@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 Widget textFieldWidget(
     {required TextEditingController controller,
-    required String labelText,
     required TextInputType keyboardtype,
+    String? labelText,
+    String? hintText,
     double? width,
     double? height,
-    double? cursorHeight,
     validator,
     onFieldSubmitted,
     String? errorText,
@@ -37,8 +37,8 @@ Widget textFieldWidget(
         keyboardType: keyboardtype,
         textInputAction: textInputAction,
         cursorColor: cursorColor,
-        cursorHeight: cursorHeight,
         decoration: InputDecoration(
+            hintText: hintText,
             errorText: errorText,
             labelText: labelText,
             labelStyle: TextStyle(fontSize: labelTextSize),

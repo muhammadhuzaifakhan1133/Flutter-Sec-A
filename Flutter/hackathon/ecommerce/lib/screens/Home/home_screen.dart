@@ -1,7 +1,7 @@
 import 'package:ecommerce/functions/firebase.dart';
-import 'package:ecommerce/screens/Home/search_text_field.dart';
 import 'package:ecommerce/screens/Home/tab_bar.dart';
 import 'package:ecommerce/screens/Home/tab_bar_views.dart';
+import 'package:ecommerce/screens/search_screen/search_screen.dart';
 import 'package:ecommerce/widgets/profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
-  List<String> keywords = [
-    "tops",
-    "frocks",
-    "red",
-    "blue",
-    "topi",
-    "frog",
-    "reddish",
-    "bluish"
-  ];
+
   String? username;
   @override
   void initState() {
@@ -48,18 +39,28 @@ class _HomeScreenState extends State<HomeScreen> {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            title: searchTextFeild(
-                screenSize: size,
-                controller: searchController,
-                onChanged: (String value) {
-                  List<String> suggestions = keywords
-                      .where((element) => element.contains(value))
-                      .toList();
-                  print(suggestions);
-                }),
+            title: const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: Text(
+                "Home",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
             actions: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchScreen()));
+                  },
+                  icon: const Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  )),
               Padding(
-                padding: EdgeInsets.only(right: size.width * 0.07),
+                padding: EdgeInsets.only(
+                    left: size.width * 0.05, right: size.width * 0.07),
                 child: profileAvatar(
                     userName: username!, userPhotoUrl: user?.photoURL),
               )

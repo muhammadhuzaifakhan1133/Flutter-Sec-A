@@ -1,13 +1,9 @@
-import 'package:ecommerce/constants/colors.dart';
-import 'package:ecommerce/functions/close_dialog.dart';
-import 'package:ecommerce/functions/firebase.dart';
 import 'package:ecommerce/screens/product_screen/measurements/cloth_measurements.dart';
 import 'package:ecommerce/screens/product_screen/measurements/measurements.dart';
 import 'package:ecommerce/screens/update_bag_data/app_bar.dart';
 import 'package:ecommerce/screens/update_bag_data/cancel_button.dart';
 import 'package:ecommerce/screens/update_bag_data/product_info.dart';
 import 'package:ecommerce/screens/update_bag_data/update_button.dart';
-import 'package:ecommerce/widgets/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +35,7 @@ class UpdateBagData extends StatelessWidget {
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-      appBar: customAppBar(context),
+      appBar: updateOrderSceenAppBar(context),
       body: Column(
         children: [
           productInformation(

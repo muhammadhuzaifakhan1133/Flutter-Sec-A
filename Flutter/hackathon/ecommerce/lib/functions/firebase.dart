@@ -378,3 +378,18 @@ Future<double> getTotalPriceOfBagProducts({required String email}) async {
   }
   return totalPrice;
 }
+
+Future<List<String>> getProductKeywords() async {
+  QuerySnapshot productsCollection =
+      await FirebaseFirestore.instance.collection("products").get();
+  List<String> keywords = [];
+  print(productsCollection.docs);
+  List<DocumentSnapshot> productDocuments = productsCollection.docs;
+  for (var i = 0; i < productDocuments.length; i++) {
+    Map<String, dynamic> data =
+        productDocuments[i].data() as Map<String, dynamic>;
+    List<String> productKeywords = List<String>.from(data["keywords"]);
+    keywords.addAll(productKeywords);
+  }
+  return keywords.toSet().toList();
+}

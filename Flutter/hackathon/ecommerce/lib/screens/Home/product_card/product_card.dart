@@ -1,10 +1,10 @@
+import 'package:ecommerce/screens/Home/product_card/description.dart';
+import 'package:ecommerce/screens/Home/product_card/designer_info.dart';
+import 'package:ecommerce/screens/Home/product_card/keywords.dart';
+import 'package:ecommerce/screens/Home/product_card/pics_arrangement.dart';
+import 'package:ecommerce/screens/Home/product_card/share_info.dart';
+import 'package:ecommerce/screens/Home/product_card/wishlist_info.dart';
 import 'package:ecommerce/screens/product_screen/product_screen.dart';
-import 'package:ecommerce/widgets/product_card/description.dart';
-import 'package:ecommerce/widgets/product_card/designer_info.dart';
-import 'package:ecommerce/widgets/product_card/wishlist_info.dart';
-import 'package:ecommerce/widgets/product_card/keywords.dart';
-import 'package:ecommerce/widgets/product_card/pics_arrangement.dart';
-import 'package:ecommerce/widgets/product_card/share_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +30,7 @@ Widget productCard(
     padding: const EdgeInsets.all(8.0),
     child: InkWell(
       onTap: () {
+        FocusScope.of(context).unfocus();
         Navigator.push(
             context,
             MaterialPageRoute(
