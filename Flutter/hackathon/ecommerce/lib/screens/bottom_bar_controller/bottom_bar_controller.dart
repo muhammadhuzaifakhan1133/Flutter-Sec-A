@@ -3,6 +3,7 @@ import 'package:ecommerce/screens/Home/home_screen.dart';
 import 'package:ecommerce/screens/add/add_screen.dart';
 import 'package:ecommerce/screens/bag/bag_screen.dart';
 import 'package:ecommerce/screens/setting/setting_screen.dart';
+import 'package:ecommerce/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 
 class BottomBarController extends StatefulWidget {
@@ -22,6 +23,7 @@ class _BottomBarControllerState extends State<BottomBarController> {
   ];
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
