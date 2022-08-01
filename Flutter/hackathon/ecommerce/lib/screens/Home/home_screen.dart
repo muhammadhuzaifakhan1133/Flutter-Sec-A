@@ -16,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
+  FocusNode _focusNode = FocusNode();
+  bool fieldactive = false;
   List<String> keywords = [];
   List<String> suggestions = [];
 
@@ -27,13 +29,19 @@ class _HomeScreenState extends State<HomeScreen> {
     String Username;
     (() async {
       Username = await getUserName(email: (user?.email)!);
-      List<String> Keywords = await getProductKeywords();
+      // List<String> Keywords = await getProductKeywords();
       setState(() {
         username = Username;
-        keywords = Keywords;
-        suggestions = keywords;
+        // keywords = Keywords;
+        // suggestions = keywords;
       });
     })();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
   }
 
   @override
@@ -50,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: textFieldWidget(
                     height: size.height * 0.06,
                     width: size.width * 0.8,
+                    focusNode: _focusNode,
                     radius: 10,
                     hintText: "Search Keyword",
                     prefixIcon: Icons.search,
@@ -93,12 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: tabBarView(),
               ),
             ),
-            Positioned(
-              child: Column(
-                children: [
-                  Expanded(
+            (_focusNode.hasFocus)
+                ? Positioned(
                     child: Container(
-                      height: 200,
                       color: Colors.white,
                       child: ListView.builder(
                         itemCount: suggestions.length,
@@ -107,10 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                  )
+                : Container()
           ],
         ),
       );

@@ -1,6 +1,6 @@
 import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/functions/close_dialog.dart';
-import 'package:ecommerce/functions/firebase.dart';
+import 'package:ecommerce/functions/sharedprefences.dart';
 import 'package:ecommerce/screens/product_screen/measurements/cloth_measurements.dart';
 import 'package:ecommerce/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +20,7 @@ updateButton(
         onPressed: () async {
           circleProgressDialog(context);
           await updateBagProduct(
-              email: email,
               index: index,
-              productID: productID,
               breadth: clothMeasurements.breadth,
               waist: clothMeasurements.waist,
               length: clothMeasurements.length,

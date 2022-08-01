@@ -2,6 +2,7 @@ import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/constants/values.dart';
 import 'package:ecommerce/functions/close_dialog.dart';
 import 'package:ecommerce/functions/firebase.dart';
+import 'package:ecommerce/functions/sharedprefences.dart';
 import 'package:ecommerce/screens/product_screen/image_slider.dart';
 import 'package:ecommerce/screens/product_screen/info/info.dart';
 import 'package:ecommerce/screens/product_screen/measurements/cloth_measurements.dart';
@@ -18,6 +19,7 @@ class ProductScreen extends StatefulWidget {
       required this.isUserWishListProduct,
       required this.email,
       required this.productID,
+      required this.productDesigner,
       required this.materialsInfo,
       required this.washInstruction,
       required this.price,
@@ -28,6 +30,7 @@ class ProductScreen extends StatefulWidget {
   List<dynamic> imgPaths;
   String email;
   String productID;
+  String productDesigner;
   bool isUserWishListProduct;
   String materialsInfo;
   String washInstruction;
@@ -65,8 +68,11 @@ class _ProductScreenState extends State<ProductScreen>
             }
             circleProgressDialog(context);
             await addProductToBag(
-                email: widget.email,
                 productID: widget.productID,
+                productName: widget.name,
+                productDesigner: widget.productDesigner,
+                productImage: widget.imgPaths[0],
+                price: widget.price,
                 breadth: clothMeasurements.breadth,
                 waist: clothMeasurements.waist,
                 length: clothMeasurements.length,
@@ -76,17 +82,17 @@ class _ProductScreenState extends State<ProductScreen>
                 qty: clothMeasurements.qty);
             closeDialog(context);
             showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            content: Text("Your Product is added to your bag"),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Ok"))
-            ],
-          ));
+                context: context,
+                builder: (context) => AlertDialog(
+                      content: Text("Your Product is added to your bag"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Ok"))
+                      ],
+                    ));
           },
           radius: 5,
           heightPercent: 0.08,

@@ -10,6 +10,7 @@ Widget textFieldWidget(
     validator,
     onFieldSubmitted,
     String? errorText,
+    FocusNode? focusNode,
     TextInputAction textInputAction = TextInputAction.next,
     Color cursorColor = Colors.black,
     Color borderColor = Colors.black,
@@ -29,6 +30,7 @@ Widget textFieldWidget(
       width: width,
       height: height,
       child: TextFormField(
+        focusNode: focusNode,
         validator: validator,
         onFieldSubmitted: onFieldSubmitted,
         onChanged: onChanged,

@@ -36,6 +36,7 @@ Widget productCard(
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
                       name: name,
+                      productDesigner: designerName,
                       availableColors: availableColors,
                       email: (user?.email)!,
                       imgPaths: imgPaths,

@@ -164,6 +164,7 @@ logout({required BuildContext context, bool deleteAccount = false}) async {
     FirebaseAuth.instance.signOut();
   }
   await removeActiveUser();
+  await removeBagProducts();
   // ignore: use_build_context_synchronously
   closeDialog(context);
   // ignore: use_build_context_synchronously
@@ -271,119 +272,24 @@ Future removeFromUserWishList(
   await wishlist.update({"productID": productIds});
 }
 
-Future<void> addProductToBag(
-    {required String email,
-    required String productID,
-    required int breadth,
-    required int waist,
-    required int length,
-    required String color,
-    required String material,
-    required int qty}) async {
-  DocumentReference bag =
-      FirebaseFirestore.instance.collection("bag").doc(email);
-  DocumentSnapshot bagSnapshot = await bag.get();
-  Map<String, dynamic> bagData = bagSnapshot.data() as Map<String, dynamic>;
-  bagData["breadth"].add(breadth);
-  bagData["waist"].add(waist);
-  bagData["length"].add(length);
-  bagData["color"].add(color);
-  bagData["material"].add(material);
-  bagData["qty"].add(qty);
-  bagData["productID"].add(productID);
-  await bag.update({
-    "breadth": bagData["breadth"],
-    "waist": bagData["waist"],
-    "length": bagData["length"],
-    "color": bagData["color"],
-    "material": bagData["material"],
-    "qty": bagData["qty"],
-    "productID": bagData["productID"],
+Future<List<String>> getAvailableColors(String productID) async {
+  DocumentReference documentReference =
+      FirebaseFirestore.instance.collection("products").doc(productID);
+  List<String> availableColors = [];
+  List<dynamic> values = [];
+  await documentReference.get().then((snapshot) {
+    values = snapshot.get("availableColors");
   });
-}
-
-Future<void> updateBagProduct(
-    {required String email,
-    required int index,
-    required String productID,
-    required int breadth,
-    required int waist,
-    required int length,
-    required String color,
-    required String material,
-    required int qty}) async {
-  DocumentReference bag =
-      FirebaseFirestore.instance.collection("bag").doc(email);
-  DocumentSnapshot bagSnapshot = await bag.get();
-  Map<String, dynamic> bagData = bagSnapshot.data() as Map<String, dynamic>;
-  bagData["breadth"][index] = breadth;
-  bagData["waist"][index] = waist;
-  bagData["length"][index] = length;
-  bagData["color"][index] = color;
-  bagData["material"][index] = material;
-  bagData["qty"][index] = qty;
-  bagData["productID"][index] = productID;
-  await bag.update({
-    "breadth": bagData["breadth"],
-    "waist": bagData["waist"],
-    "length": bagData["length"],
-    "color": bagData["color"],
-    "material": bagData["material"],
-    "qty": bagData["qty"],
-    "productID": bagData["productID"],
-  });
-}
-
-Future<void> removeProductFromBag(
-    {required BuildContext context,
-    required String email,
-    required int index}) async {
-  DocumentReference bag =
-      FirebaseFirestore.instance.collection("bag").doc(email);
-  DocumentSnapshot bagSnapshot = await bag.get();
-  Map<String, dynamic> bagData = bagSnapshot.data() as Map<String, dynamic>;
-  bagData["breadth"].removeAt(index);
-  bagData["waist"].removeAt(index);
-  bagData["length"].removeAt(index);
-  bagData["color"].removeAt(index);
-  bagData["material"].removeAt(index);
-  bagData["qty"].removeAt(index);
-  bagData["productID"].removeAt(index);
-  await bag.update({
-    "breadth": bagData["breadth"],
-    "waist": bagData["waist"],
-    "length": bagData["length"],
-    "color": bagData["color"],
-    "material": bagData["material"],
-    "qty": bagData["qty"],
-    "productID": bagData["productID"],
-  });
-}
-
-Future<double> getTotalPriceOfBagProducts({required String email}) async {
-  DocumentSnapshot bagDocument =
-      await FirebaseFirestore.instance.collection("bag").doc(email).get();
-  Map<String, dynamic> bagProductsData =
-      bagDocument.data() as Map<String, dynamic>;
-  List<String> bagProductIDs = List<String>.from(bagProductsData["productID"]);
-  List<int> qty = List<int>.from(bagProductsData["qty"]);
-  double totalPrice = 0;
-  for (var i = 0; i < bagProductIDs.length; i++) {
-    DocumentSnapshot productDocument = await FirebaseFirestore.instance
-        .collection("products")
-        .doc(bagProductIDs[i])
-        .get();
-    double price = productDocument["price"];
-    totalPrice += price * qty[i];
+  for (var i = 0; i < values.length; i++) {
+    availableColors.add("${values[i]}");
   }
-  return totalPrice;
+  return availableColors;
 }
 
 Future<List<String>> getProductKeywords() async {
   QuerySnapshot productsCollection =
       await FirebaseFirestore.instance.collection("products").get();
   List<String> keywords = [];
-  print(productsCollection.docs);
   List<DocumentSnapshot> productDocuments = productsCollection.docs;
   for (var i = 0; i < productDocuments.length; i++) {
     Map<String, dynamic> data =

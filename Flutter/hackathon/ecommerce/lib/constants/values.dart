@@ -48,3 +48,17 @@ Map<String, Color> colorsMap = {
   "tealAccent": Colors.tealAccent,
   "yellowAccent": Colors.yellowAccent,
 };
+
+List<String> bagProductKeys = [
+  "breadth",
+  "waist",
+  "length",
+  "color",
+  "material",
+  "price",
+  "qty",
+  "productID",
+  "productName",
+  "productDesigner",
+  "productImage"
+];
