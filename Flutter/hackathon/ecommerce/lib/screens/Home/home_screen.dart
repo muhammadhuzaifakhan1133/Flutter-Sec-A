@@ -8,7 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({this.query = "", Key? key}) : super(key: key);
+  String query;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -18,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> keywords = [];
   List<String> suggestions = [];
   String? username;
-  String query = "";
   @override
   void initState() {
     super.initState();
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            leading: query.isNotEmpty
+            leading: widget.query.isNotEmpty
                 ? IconButton(
                     icon: const Icon(
                       Icons.arrow_back,
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   )
                 : null,
-            title: query.isEmpty
+            title: widget.query.isEmpty
                 ? const Text(
                     "Home",
                     style: TextStyle(color: Colors.black),
@@ -63,12 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    initialValue: query,
+                    initialValue: widget.query,
                     height: size.height * 0.06,
                     width: size.width * 0.7,
                     radius: 0,
                   ),
-            actions: query.isEmpty
+            actions: widget.query.isEmpty
                 ? [
                     IconButton(
                         icon: const Icon(
@@ -76,21 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.black,
                         ),
                         onPressed: () async {
-                          var result = await Navigator.push(
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SearchScreen(
-                                      initialValue:
-                                          query.isNotEmpty ? query : null)));
-                          if (result != null) {
-                            setState(() {
-                              query = result;
-                            });
-                          } else {
-                            setState(() {
-                              query = "";
-                            });
-                          }
+                                  builder: (context) => SearchScreen()));
                         }),
                     Padding(
                       padding: EdgeInsets.only(
@@ -106,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: tabBarView(query: query),
+            child: tabBarView(query: widget.query),
           ),
         ),
       );

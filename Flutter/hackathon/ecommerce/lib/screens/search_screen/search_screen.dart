@@ -1,10 +1,10 @@
 import 'package:ecommerce/functions/firebase.dart';
+import 'package:ecommerce/screens/bottom_bar_controller/bottom_bar_controller.dart';
 import 'package:ecommerce/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
-  SearchScreen({this.initialValue, Key? key}) : super(key: key);
-  String? initialValue;
+  SearchScreen({Key? key}) : super(key: key);
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -47,7 +47,6 @@ class _SearchScreenState extends State<SearchScreen> {
               width: size.width * 0.8,
               radius: 0,
               autofocus: true,
-              initialValue: widget.initialValue,
               hintText: "Search Keyword",
               suffixIcon: searchController.text.isNotEmpty ? Icons.close : null,
               onPressedSuffixIcon: () {
@@ -77,8 +76,13 @@ class _SearchScreenState extends State<SearchScreen> {
           itemCount: suggestions.length,
           itemBuilder: (context, index) {
             return ListTile(
-                onTap: () {
-                  Navigator.pop(context, suggestions[index]);
+                onTap: () async {
+                  searchController.text = suggestions[index];
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              BottomBarController(query: suggestions[index])));
                 },
                 title: Text(suggestions[index]));
           },

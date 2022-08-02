@@ -17,7 +17,7 @@ void main() async {
     home = const SplashScreen();
   } else {
     if (await checkEmailVerified()) {
-      home = const BottomBarController();
+      home = BottomBarController();
     } else {
       home = EmailVerificationScreen(name: name);
     }

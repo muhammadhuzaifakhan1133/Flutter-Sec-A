@@ -3,11 +3,11 @@ import 'package:ecommerce/screens/Home/home_screen.dart';
 import 'package:ecommerce/screens/add/add_screen.dart';
 import 'package:ecommerce/screens/bag/bag_screen.dart';
 import 'package:ecommerce/screens/setting/setting_screen.dart';
-import 'package:ecommerce/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 
 class BottomBarController extends StatefulWidget {
-  const BottomBarController({Key? key}) : super(key: key);
+  BottomBarController({this.query = "", Key? key}) : super(key: key);
+  String query;
 
   @override
   State<BottomBarController> createState() => _BottomBarControllerState();
@@ -15,14 +15,14 @@ class BottomBarController extends StatefulWidget {
 
 class _BottomBarControllerState extends State<BottomBarController> {
   int index = 0;
-  List<Widget> screens = [
-    HomeScreen(),
-    BagScreen(),
-    SettingScreen(),
-    AddScreen()
-  ];
   @override
   Widget build(BuildContext context) {
+    List<Widget> screens = [
+      HomeScreen(query: widget.query),
+      BagScreen(),
+      SettingScreen(),
+      AddScreen()
+    ];
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
