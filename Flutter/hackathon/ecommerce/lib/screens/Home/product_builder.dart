@@ -4,8 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProductBuilder extends StatefulWidget {
-  ProductBuilder({required this.collection, Key? key}) : super(key: key);
+  ProductBuilder({required this.collection, required this.query, Key? key})
+      : super(key: key);
   String collection;
+  String query;
 
   @override
   State<ProductBuilder> createState() => _ProductBuilderState();
@@ -34,10 +36,16 @@ class _ProductBuilderState extends State<ProductBuilder> {
                   snapshot0.data!.data() as Map<String, dynamic>;
               List<dynamic> wishListProductIds = wishList["productID"];
               return StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("products")
-                    .where("collection", isEqualTo: widget.collection)
-                    .snapshots(),
+                stream: widget.query.isNotEmpty
+                    ? FirebaseFirestore.instance
+                        .collection("products")
+                        .where("collection", isEqualTo: widget.collection)
+                        .where("keywords", arrayContains: widget.query)
+                        .snapshots()
+                    : FirebaseFirestore.instance
+                        .collection("products")
+                        .where("collection", isEqualTo: widget.collection)
+                        .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot1) {
                   if (snapshot1.connectionState == ConnectionState.waiting) {

@@ -9,19 +9,16 @@ import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
-  FocusNode _focusNode = FocusNode();
-  bool fieldactive = false;
   List<String> keywords = [];
   List<String> suggestions = [];
-
   String? username;
+  String query = "";
   @override
   void initState() {
     super.initState();
@@ -29,19 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
     String Username;
     (() async {
       Username = await getUserName(email: (user?.email)!);
-      // List<String> Keywords = await getProductKeywords();
+      List<String> Keywords = await getProductKeywords();
       setState(() {
         username = Username;
-        // keywords = Keywords;
-        // suggestions = keywords;
+        keywords = Keywords;
       });
     })();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _focusNode.dispose();
   }
 
   @override
@@ -51,71 +41,73 @@ class _HomeScreenState extends State<HomeScreen> {
     if (username != null) {
       return DefaultTabController(
         length: 3,
-        child: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                title: textFieldWidget(
-                    height: size.height * 0.06,
-                    width: size.width * 0.8,
-                    focusNode: _focusNode,
-                    radius: 10,
-                    hintText: "Search Keyword",
-                    prefixIcon: Icons.search,
-                    suffixIcon:
-                        searchController.text.isNotEmpty ? Icons.close : null,
-                    onPressedSuffixIcon: () {
-                      searchController.text = "";
-                      setState(() {
-                        suggestions = keywords;
-                      });
-                    },
-                    controller: searchController,
-                    onChanged: (String value) {
-                      if (searchController.text.isNotEmpty) {
-                        setState(() {
-                          suggestions = keywords
-                              .where((element) => element.contains(value))
-                              .toList();
-                        });
-                      } else {
-                        setState(() {
-                          suggestions = keywords;
-                        });
-                      }
-                    },
-                    keyboardtype: TextInputType.text,
-                    textInputAction: TextInputAction.search),
-                actions: [
-                  Padding(
-                    padding: EdgeInsets.only(right: size.width * 0.07),
-                    child: profileAvatar(
-                        userName: username!, userPhotoUrl: user?.photoURL),
-                  )
-                ],
-                backgroundColor: Colors.white,
-                bottom: PreferredSize(
-                    preferredSize: Size.fromHeight(80), child: tabBar()),
-              ),
-              body: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: tabBarView(),
-              ),
-            ),
-            (_focusNode.hasFocus)
-                ? Positioned(
-                    child: Container(
-                      color: Colors.white,
-                      child: ListView.builder(
-                        itemCount: suggestions.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(title: Text(suggestions[index]));
-                        },
-                      ),
+        child: Scaffold(
+          appBar: AppBar(
+            leading: query.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.grey,
                     ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   )
-                : Container()
-          ],
+                : null,
+            title: query.isEmpty
+                ? const Text(
+                    "Home",
+                    style: TextStyle(color: Colors.black),
+                  )
+                : textFieldWidget(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    initialValue: query,
+                    height: size.height * 0.06,
+                    width: size.width * 0.7,
+                    radius: 0,
+                  ),
+            actions: query.isEmpty
+                ? [
+                    IconButton(
+                        icon: const Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                        onPressed: () async {
+                          var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchScreen(
+                                      initialValue:
+                                          query.isNotEmpty ? query : null)));
+                          if (result != null) {
+                            setState(() {
+                              query = result;
+                            });
+                          } else {
+                            setState(() {
+                              query = "";
+                            });
+                          }
+                        }),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: size.width * 0.05, right: size.width * 0.07),
+                      child: profileAvatar(
+                          userName: username!, userPhotoUrl: user?.photoURL),
+                    )
+                  ]
+                : null,
+            backgroundColor: Colors.white,
+            bottom: PreferredSize(
+                preferredSize: Size.fromHeight(80), child: tabBar()),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: tabBarView(query: query),
+          ),
         ),
       );
     } else {

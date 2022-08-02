@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 Widget textFieldWidget(
-    {required TextEditingController controller,
-    required TextInputType keyboardtype,
+    {TextEditingController? controller,
+    TextInputType? keyboardtype,
     String? labelText,
     String? hintText,
     double? width,
@@ -17,8 +17,11 @@ Widget textFieldWidget(
     double radius = 7,
     double labelTextSize = 12,
     bool obscureText = false,
+    bool autofocus = false,
+    String? initialValue,
     onPressedSuffixIcon,
     onPressedPrefixIcon,
+    onTap,
     onChanged,
     Color? bgColor,
     IconData? suffixIcon,
@@ -30,6 +33,9 @@ Widget textFieldWidget(
       width: width,
       height: height,
       child: TextFormField(
+        autofocus: autofocus,
+        onTap: onTap,
+        initialValue: initialValue,
         focusNode: focusNode,
         validator: validator,
         onFieldSubmitted: onFieldSubmitted,

@@ -3,8 +3,8 @@ import 'package:ecommerce/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
-
+  SearchScreen({this.initialValue, Key? key}) : super(key: key);
+  String? initialValue;
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -22,7 +22,6 @@ class _SearchScreenState extends State<SearchScreen> {
       Keywords = await getProductKeywords();
       setState(() {
         keywords = Keywords;
-        suggestions = keywords;
       });
     })();
   }
@@ -47,12 +46,14 @@ class _SearchScreenState extends State<SearchScreen> {
               height: size.height * 0.06,
               width: size.width * 0.8,
               radius: 0,
+              autofocus: true,
+              initialValue: widget.initialValue,
               hintText: "Search Keyword",
               suffixIcon: searchController.text.isNotEmpty ? Icons.close : null,
               onPressedSuffixIcon: () {
-                searchController.text = "";
+                searchController.clear();
                 setState(() {
-                  suggestions = keywords;
+                  suggestions = [];
                 });
               },
               controller: searchController,
@@ -65,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   });
                 } else {
                   setState(() {
-                    suggestions = keywords;
+                    suggestions = [];
                   });
                 }
               },
@@ -75,7 +76,11 @@ class _SearchScreenState extends State<SearchScreen> {
         body: ListView.builder(
           itemCount: suggestions.length,
           itemBuilder: (context, index) {
-            return ListTile(title: Text(suggestions[index]));
+            return ListTile(
+                onTap: () {
+                  Navigator.pop(context, suggestions[index]);
+                },
+                title: Text(suggestions[index]));
           },
         ),
       );
