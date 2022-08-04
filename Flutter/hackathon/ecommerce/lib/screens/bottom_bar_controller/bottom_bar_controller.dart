@@ -15,34 +15,50 @@ class BottomBarController extends StatefulWidget {
 
 class _BottomBarControllerState extends State<BottomBarController> {
   int index = 0;
+  Future<bool> onWillPop() async {
+    if (index != 0) {
+      setState(() {
+        index = 0;
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
       HomeScreen(query: widget.query),
-      BagScreen(),
-      SettingScreen(),
-      AddScreen()
+      const BagScreen(),
+      const SettingScreen(),
+      const AddScreen()
     ];
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: false,
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: themeColor,
-        currentIndex: index,
-        onTap: (currentIndex) {
-          setState(() {
-            index = currentIndex;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.card_travel), label: "bag"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "setting"),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: "add"),
-        ],
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          showSelectedLabels: false,
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: themeColor,
+          currentIndex: index,
+          onTap: (currentIndex) {
+            setState(() {
+              index = currentIndex;
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.card_travel), label: "bag"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), label: "setting"),
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: "add"),
+          ],
+        ),
+        body: screens[index],
       ),
-      body: screens[index],
     );
   }
 }

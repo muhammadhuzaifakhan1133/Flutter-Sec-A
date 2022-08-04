@@ -10,6 +10,7 @@ import 'package:ecommerce/screens/bag/dialog_to_remove_product.dart';
 import 'package:ecommerce/screens/bag/go_to_update_order_screen.dart';
 import 'package:ecommerce/screens/bag/product_card_for_bag.dart';
 import 'package:ecommerce/screens/bag/total_price_bag_products.dart';
+import 'package:ecommerce/screens/payment_successful/payment_successful.dart';
 import 'package:ecommerce/widgets/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +33,11 @@ class _BagScreenState extends State<BagScreen> {
     (() async {
       bagProducts.totalPrice = await getTotalPriceOfBagProducts();
       Username = await getUserName(email: (user?.email)!);
-      setState(() {
-        username = Username;
-      });
+      if (mounted) {
+        setState(() {
+          username = Username;
+        });
+      }
     })();
   }
 
@@ -45,8 +48,19 @@ class _BagScreenState extends State<BagScreen> {
       return Scaffold(
           appBar: bagScreenAppBar(
               username: username!, userPhotoUrl: user?.photoURL),
-          bottomNavigationBar:
-              bagScreenBottomBar(context: context, bagProducts: bagProducts),
+          bottomNavigationBar: bagScreenBottomBar(
+              context: context,
+              bagProducts: bagProducts,
+              onPressedPayNow: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PaymentSuccessful()));
+                setState(() {
+                  bagProducts.totalPrice = 0;
+                  removeBagProducts();
+                });
+              }),
           body: Padding(
               padding: const EdgeInsets.all(15.0),
               child: FutureBuilder(
@@ -69,7 +83,6 @@ class _BagScreenState extends State<BagScreen> {
                             child:
                                 productCardForBag(data: bagData, index: index),
                             onTap: () async {
-                              FocusScope.of(context).unfocus();
                               bool updateSuccess = await goToUpdateOrderScreen(
                                   context: context,
                                   data: bagData,

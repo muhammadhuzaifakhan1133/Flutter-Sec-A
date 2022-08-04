@@ -16,9 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
-  List<String> keywords = [];
   List<String> suggestions = [];
-  String? username;
+  String? _username;
   @override
   void initState() {
     super.initState();
@@ -26,11 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
     String Username;
     (() async {
       Username = await getUserName(email: (user?.email)!);
-      List<String> Keywords = await getProductKeywords();
-      setState(() {
-        username = Username;
-        keywords = Keywords;
-      });
+      if (mounted) {
+        setState(() {
+          _username = Username;
+        });
+      }
     })();
   }
 
@@ -38,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     Size size = MediaQuery.of(context).size;
-    if (username != null) {
+    if (_username != null) {
       return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -85,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: EdgeInsets.only(
                           left: size.width * 0.05, right: size.width * 0.07),
                       child: profileAvatar(
-                          userName: username!, userPhotoUrl: user?.photoURL),
+                          userName: _username!, userPhotoUrl: user?.photoURL),
                     )
                   ]
                 : null,

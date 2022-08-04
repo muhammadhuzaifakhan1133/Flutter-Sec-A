@@ -1,12 +1,14 @@
 import 'package:ecommerce/constants/colors.dart';
 import 'package:ecommerce/functions/sharedprefences.dart';
 import 'package:ecommerce/screens/bag/total_price_bag_products.dart';
+import 'package:ecommerce/screens/payment_successful/payment_successful.dart';
 import 'package:ecommerce/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 
 bagScreenBottomBar(
     {required BuildContext context,
-    required TotalPriceBagProducts bagProducts}) {
+    required TotalPriceBagProducts bagProducts,
+    required onPressedPayNow}) {
   return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
     RichText(
       textAlign: TextAlign.center,
@@ -26,8 +28,6 @@ bagScreenBottomBar(
         widthPercent: 0.5,
         radius: 5,
         heightPercent: 0.07,
-        onpressed: () {
-          removeBagProducts();
-        }),
+        onpressed: onPressedPayNow),
   ]);
 }
