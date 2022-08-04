@@ -1,6 +1,6 @@
 import 'package:ecommerce/constants/colors.dart';
+import 'package:ecommerce/screens/Home/product_card/favorite_icon.dart';
 import 'package:ecommerce/screens/product_screen/render_slide_img.dart';
-import 'package:ecommerce/widgets/custom_favorite_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 
@@ -8,7 +8,8 @@ imageSlider(
     {required BuildContext context,
     required List<dynamic> imgPaths,
     required bool isUserWishListProduct,
-    required onPressedFavoriteIcon}) {
+    required String email,
+    required String productID}) {
   return Stack(
     children: [
       Container(
@@ -29,7 +30,7 @@ imageSlider(
       ),
       Positioned(
         left: 0,
-        top: 10,
+        top: 25,
         child: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -40,13 +41,14 @@ imageSlider(
             }),
       ),
       Positioned(
-        top: 10,
+        top: 25,
         right: 0,
         child: Row(
           children: [
-            customFavoriteIcon(
-                isUserWishListProduct: isUserWishListProduct,
-                onPressed: onPressedFavoriteIcon),
+            FavoriteIcon(
+                isUserWishListProduct: [isUserWishListProduct],
+                productID: productID,
+                email: email),
             SizedBox(width: 20),
             Image(image: AssetImage("assets/images/forward_icon_black.png")),
             SizedBox(width: 10)

@@ -102,23 +102,10 @@ class _ProductScreenState extends State<ProductScreen>
         children: [
           imageSlider(
               context: context,
+              email: widget.email,
+              productID: widget.productID,
               imgPaths: widget.imgPaths,
-              isUserWishListProduct: widget.isUserWishListProduct,
-              onPressedFavoriteIcon: () {
-                if (widget.isUserWishListProduct) {
-                  removeFromUserWishList(
-                      email: widget.email, productID: widget.productID);
-                  setState(() {
-                    widget.isUserWishListProduct = false;
-                  });
-                } else {
-                  addToUserWishList(
-                      email: widget.email, productID: widget.productID);
-                  setState(() {
-                    widget.isUserWishListProduct = true;
-                  });
-                }
-              }),
+              isUserWishListProduct: widget.isUserWishListProduct),
           Padding(
             padding: const EdgeInsets.only(top: 15.0, left: 10),
             child: Text(widget.name,

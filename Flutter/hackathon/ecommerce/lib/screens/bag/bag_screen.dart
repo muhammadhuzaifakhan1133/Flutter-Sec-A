@@ -50,16 +50,19 @@ class _BagScreenState extends State<BagScreen> {
               username: username!, userPhotoUrl: user?.photoURL),
           bottomNavigationBar: bagScreenBottomBar(
               context: context,
+              enableButton: bagProducts.totalPrice == 0 ? false : true,
               bagProducts: bagProducts,
               onPressedPayNow: () async {
-                await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PaymentSuccessful()));
+                circleProgressDialog(context);
+                await removeBagProducts();
                 setState(() {
                   bagProducts.totalPrice = 0;
-                  removeBagProducts();
                 });
+                closeDialog(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PaymentSuccessful()));
               }),
           body: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -74,40 +77,61 @@ class _BagScreenState extends State<BagScreen> {
                   }
                   Map<String, dynamic> bagData =
                       snapshot.data as Map<String, dynamic>;
-                  return ListView.builder(
-                    itemCount: bagData["productID"].length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Stack(
-                        children: [
-                          InkWell(
-                            child:
-                                productCardForBag(data: bagData, index: index),
-                            onTap: () async {
-                              bool updateSuccess = await goToUpdateOrderScreen(
-                                  context: context,
-                                  data: bagData,
-                                  index: index);
-                              if (updateSuccess) {
-                                circleProgressDialog(context);
-                                double updateTotalPrice =
-                                    await getTotalPriceOfBagProducts();
-                                closeDialog(context);
-                                setState(() {
-                                  bagProducts.totalPrice = updateTotalPrice;
-                                });
-                              }
-                            },
-                          ),
-                          cardRemoveIcon(
-                              setState: setState,
-                              context: context,
-                              email: (user?.email)!,
-                              index: index,
-                              bagProducts: bagProducts)
-                        ],
-                      );
-                    },
-                  );
+                  if (bagData["productID"].length != 0) {
+                    return ListView.builder(
+                      itemCount: bagData["productID"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Stack(
+                          children: [
+                            InkWell(
+                              child: productCardForBag(
+                                  data: bagData, index: index),
+                              onTap: () async {
+                                bool updateSuccess =
+                                    await goToUpdateOrderScreen(
+                                        context: context,
+                                        data: bagData,
+                                        index: index);
+                                if (updateSuccess) {
+                                  circleProgressDialog(context);
+                                  double updateTotalPrice =
+                                      await getTotalPriceOfBagProducts();
+                                  closeDialog(context);
+                                  setState(() {
+                                    bagProducts.totalPrice = updateTotalPrice;
+                                  });
+                                }
+                              },
+                            ),
+                            cardRemoveIcon(
+                                setState: setState,
+                                context: context,
+                                email: (user?.email)!,
+                                index: index,
+                                bagProducts: bagProducts)
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: Container(
+                        height: 200,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: const [
+                            Image(
+                              image:
+                                  AssetImage("assets/images/trolleyIcon.png"),
+                              width: 100,
+                            ),
+                            Text("There is no items in this cart",
+                                style: TextStyle(fontSize: 18))
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                 },
               )));
     } else {

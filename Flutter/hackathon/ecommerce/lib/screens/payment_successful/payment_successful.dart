@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 class PaymentSuccessful extends StatelessWidget {
   const PaymentSuccessful({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -48,8 +47,11 @@ class PaymentSuccessful extends StatelessWidget {
                 widthPercent: 0.6,
                 heightPercent: 0.08,
                 onpressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BottomBarController()),
+                      (route) => false);
                 },
                 buttonColor: themeColor)
           ],

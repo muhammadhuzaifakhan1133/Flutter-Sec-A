@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 bagScreenBottomBar(
     {required BuildContext context,
     required TotalPriceBagProducts bagProducts,
+    required bool enableButton,
     required onPressedPayNow}) {
   return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
     RichText(
@@ -24,6 +25,7 @@ bagScreenBottomBar(
     buttonWidget(
         size: MediaQuery.of(context).size,
         text: "Pay Now",
+        enable: enableButton,
         buttonColor: themeColor,
         widthPercent: 0.5,
         radius: 5,

@@ -11,8 +11,7 @@ Widget productKeywords(List<dynamic> keywords) {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Center(
-              child: Text("#${keywords[i]}",
-                  style: TextStyle(color: Colors.white))),
+              child: Text(keywords[i], style: TextStyle(color: Colors.white))),
         ),
       ),
     ));

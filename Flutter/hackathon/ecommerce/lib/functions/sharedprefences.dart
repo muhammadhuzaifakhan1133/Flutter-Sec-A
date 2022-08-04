@@ -26,41 +26,26 @@ Future<void> addProductToBag(
     required String material,
     required int qty}) async {
   final SharedPreferences prefs = await _prefs;
-
-  List<String> breadthList = prefs.getStringList("breadth") ?? [];
-  List<String> waistList = prefs.getStringList("waist") ?? [];
-  List<String> lengthList = prefs.getStringList("length") ?? [];
-  List<String> colorList = prefs.getStringList("color") ?? [];
-  List<String> materialList = prefs.getStringList("material") ?? [];
-  List<String> priceList = prefs.getStringList("price") ?? [];
-  List<String> qtyList = prefs.getStringList("qty") ?? [];
-  List<String> productNameList = prefs.getStringList("productName") ?? [];
-  List<String> productIDList = prefs.getStringList("productID") ?? [];
-  List<String> productDesignerList =
-      prefs.getStringList("productDesigner") ?? [];
-  List<String> productImageList = prefs.getStringList("productImage") ?? [];
-  breadthList.add("$breadth");
-  productIDList.add(productID);
-  waistList.add("$waist");
-  lengthList.add("$length");
-  colorList.add(color);
-  materialList.add(material);
-  qtyList.add("$qty");
-  productNameList.add(productName);
-  productDesignerList.add(productDesigner);
-  productImageList.add(productImage);
-  priceList.add("$price");
-  prefs.setStringList("breadth", breadthList);
-  prefs.setStringList("waist", waistList);
-  prefs.setStringList("length", lengthList);
-  prefs.setStringList("color", colorList);
-  prefs.setStringList("material", materialList);
-  prefs.setStringList("qty", qtyList);
-  prefs.setStringList("productName", productNameList);
-  prefs.setStringList("productDesigner", productDesignerList);
-  prefs.setStringList("productImage", productImageList);
-  prefs.setStringList("price", priceList);
-  prefs.setStringList("productID", productIDList);
+  List<String> newProductValues = [
+    "$breadth",
+    "$waist",
+    "$length",
+    color,
+    material,
+    "$price",
+    "$qty",
+    productID,
+    productName,
+    productDesigner,
+    productImage
+  ];
+  ;
+  List<List<String>> values = [];
+  for (var i = 0; i < bagProductKeys.length; i++) {
+    values.add(prefs.getStringList(bagProductKeys[i]) ?? []);
+    values[i].add(newProductValues[i]);
+    prefs.setStringList(bagProductKeys[i], values[i]);
+  }
 }
 
 Future<double> getTotalPriceOfBagProducts() async {
@@ -68,7 +53,7 @@ Future<double> getTotalPriceOfBagProducts() async {
   List<String> priceList = prefs.getStringList("price") ?? [];
   List<String> qtyList = prefs.getStringList("qty") ?? [];
   double totalPrice = 0;
-  for (var i = 0; i < priceList.length; i++) {
+  for (var i = 0; i < qtyList.length; i++) {
     double total = double.parse(priceList[i]) * int.parse(qtyList[i]);
     totalPrice += total;
   }
@@ -99,19 +84,6 @@ Future<void> updateBagProduct(
     required String color,
     required String material,
     required int qty}) async {
-  final SharedPreferences prefs = await _prefs;
-  List<String> breadthList = prefs.getStringList("breadth")!;
-  List<String> waistList = prefs.getStringList("waist")!;
-  List<String> lengthList = prefs.getStringList("length")!;
-  List<String> colorList = prefs.getStringList("color")!;
-  List<String> materialList = prefs.getStringList("material")!;
-  List<String> qtyList = prefs.getStringList("qty")!;
-  breadthList[index] = "$breadth";
-  waistList[index] = "$waist";
-  lengthList[index] = "$length";
-  colorList[index] = color;
-  materialList[index] = material;
-  qtyList[index] = "$qty";
   List<String> keys = [
     "breadth",
     "waist",
@@ -120,50 +92,29 @@ Future<void> updateBagProduct(
     "material",
     "qty"
   ];
-  List<List<String>> values = [
-    breadthList,
-    waistList,
-    lengthList,
-    colorList,
-    materialList,
-    qtyList
+  final SharedPreferences prefs = await _prefs;
+  List<List<String>> values = [];
+  List<String> updatedProductValues = [
+    "$breadth",
+    "$waist",
+    "$length",
+    color,
+    material,
+    "$qty"
   ];
   for (var i = 0; i < keys.length; i++) {
+    values.add(prefs.getStringList(keys[i])!);
+    values[i][index] = updatedProductValues[i];
     prefs.setStringList(keys[i], values[i]);
   }
 }
 
 Future<void> removeProductFromBag({required int index}) async {
   final SharedPreferences prefs = await _prefs;
-  List<String> breadthList = prefs.getStringList("breadth")!;
-  List<String> waistList = prefs.getStringList("waist")!;
-  List<String> lengthList = prefs.getStringList("length")!;
-  List<String> colorList = prefs.getStringList("color")!;
-  List<String> materialList = prefs.getStringList("material")!;
-  List<String> qtyList = prefs.getStringList("qty")!;
-  breadthList.removeAt(index);
-  waistList.removeAt(index);
-  lengthList.removeAt(index);
-  colorList.removeAt(index);
-  materialList.removeAt(index);
-  qtyList.removeAt(index);
-  List<String> keys = [
-    "breadth",
-    "waist",
-    "length",
-    "color",
-    "material",
-    "qty"
-  ];
-  List<List<String>> values = [
-    breadthList,
-    waistList,
-    lengthList,
-    colorList,
-    materialList,
-    qtyList
-  ];
-  for (var i = 0; i < keys.length; i++) {
-    prefs.setStringList(keys[i], values[i]);
+  List<List<String>> values = [];
+  for (var i = 0; i < bagProductKeys.length; i++) {
+    values.add(prefs.getStringList(bagProductKeys[i])!);
+    values[i].removeAt(index);
+    prefs.setStringList(bagProductKeys[i], values[i]);
   }
 }
