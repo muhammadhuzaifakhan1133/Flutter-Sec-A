@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:helloapi/model/user_model.dart';
+import 'package:helloapi/screens/user_info.dart';
 import 'package:helloapi/services/services.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,6 +24,15 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text("${snapshot.data![index].name}"),
+                      subtitle: Text("${snapshot.data![index].email}"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserInfo(
+                                      user: snapshot.data![index],
+                                    )));
+                      },
                     );
                   },
                 );
