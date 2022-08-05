@@ -24,6 +24,7 @@ class ProductScreen extends StatefulWidget {
       required this.washInstruction,
       required this.price,
       required this.availableColors,
+      required this.onFavoriteChange,
       Key? key})
       : super(key: key);
   String name;
@@ -36,6 +37,7 @@ class ProductScreen extends StatefulWidget {
   String washInstruction;
   double price;
   List<String> availableColors;
+  var onFavoriteChange;
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
@@ -105,6 +107,7 @@ class _ProductScreenState extends State<ProductScreen>
               email: widget.email,
               productID: widget.productID,
               imgPaths: widget.imgPaths,
+              onFavoriteChange: widget.onFavoriteChange,
               isUserWishListProduct: widget.isUserWishListProduct),
           Padding(
             padding: const EdgeInsets.only(top: 15.0, left: 10),

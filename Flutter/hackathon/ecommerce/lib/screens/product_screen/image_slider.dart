@@ -9,7 +9,8 @@ imageSlider(
     required List<dynamic> imgPaths,
     required bool isUserWishListProduct,
     required String email,
-    required String productID}) {
+    required String productID,
+    required onFavoriteChange}) {
   return Stack(
     children: [
       Container(
@@ -48,6 +49,7 @@ imageSlider(
             FavoriteIcon(
                 isUserWishListProduct: [isUserWishListProduct],
                 productID: productID,
+                onFavoriteChange: onFavoriteChange,
                 email: email),
             SizedBox(width: 20),
             Image(image: AssetImage("assets/images/forward_icon_black.png")),

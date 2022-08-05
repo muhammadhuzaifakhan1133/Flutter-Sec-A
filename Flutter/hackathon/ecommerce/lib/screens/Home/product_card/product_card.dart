@@ -9,6 +9,7 @@ import 'package:ecommerce/screens/Home/product_card/wishlist_info.dart';
 import 'package:ecommerce/screens/product_screen/product_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductCard extends StatefulWidget {
   ProductCard(
@@ -52,6 +53,12 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  changeFavoriteInHome() {
+    setState(() {
+      widget.isUserWishListProduct[0] = !widget.isUserWishListProduct[0];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
@@ -71,8 +78,8 @@ class _ProductCardState extends State<ProductCard> {
                       materialsInfo: widget.materialsInfo,
                       washInstruction: widget.washInstruction,
                       price: widget.price,
+                      onFavoriteChange: changeFavoriteInHome,
                     )));
-        setState(() {});
       },
       child: Card(
         color: Colors.white,

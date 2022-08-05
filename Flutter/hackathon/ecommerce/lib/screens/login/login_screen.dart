@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             Image(
               image: AssetImage("assets/images/logo.png"),
-              height: size.height * 0.2,
+              height: size.height * 0.3,
               color: themeColor,
             ),
             SizedBox(height: size.height * 0.03),
