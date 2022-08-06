@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helloapi/model/user_model.dart';
-import 'package:helloapi/screens/user_info.dart';
+import 'package:helloapi/screens/users_info/user_info.dart';
 import 'package:helloapi/services/services.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +30,8 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => UserInfo(
-                                      user: snapshot.data![index],
+                                      users: snapshot.data!,
+                                      index: index,
                                     )));
                       },
                     );
