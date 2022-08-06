@@ -7,7 +7,7 @@ import 'package:ecommerce/screens/product_screen/measurements/quantity_counter.d
 import 'package:ecommerce/screens/product_screen/measurements/total_price_text.dart';
 import 'package:flutter/material.dart';
 
-class ProductMeasurements extends StatefulWidget {
+class ProductMeasurements extends StatelessWidget {
   ProductMeasurements(
       {required this.price,
       required this.clothMeasurements,
@@ -20,11 +20,6 @@ class ProductMeasurements extends StatefulWidget {
   List<bool> colorsListSelected;
   List<String> availableColors;
   @override
-  State<ProductMeasurements> createState() => _ProductMeasurementsState();
-}
-
-class _ProductMeasurementsState extends State<ProductMeasurements> {
-  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -34,7 +29,7 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            clothSizeCounters(clothMeasurements: widget.clothMeasurements),
+            clothSizeCounters(clothMeasurements: clothMeasurements),
             const Padding(
               padding: const EdgeInsets.only(top: 15.0, left: 30),
               child: Text(
@@ -43,26 +38,15 @@ class _ProductMeasurementsState extends State<ProductMeasurements> {
               ),
             ),
             SizedBox(height: 10),
-            colorsListBuilder(
-                setState: setState,
+            ColorListBuilder(
                 size: size,
-                availableColors: widget.availableColors,
-                colorsListSelected: widget.colorsListSelected),
+                availableColors: availableColors,
+                colorsListSelected: colorsListSelected),
             SizedBox(height: 20),
-            quantityCounter(
-                setState: setState,
-                clothMeasurements: widget.clothMeasurements),
-            materialDropDown(
-                dropDownValue: widget.clothMeasurements.material,
-                materials: materials,
-                onChanged: (String? value) {
-                  setState(() {
-                    widget.clothMeasurements.material = value!;
-                  });
-                }),
-            totalPriceText(
-                clothMeasurements: widget.clothMeasurements,
-                price: widget.price),
+            QuantityCounter(clothMeasurements: clothMeasurements),
+            MaterialDropDown(
+                clothMeasurements: clothMeasurements, materials: materials),
+            totalPriceText(clothMeasurements: clothMeasurements, price: price),
           ],
         ),
       ),
