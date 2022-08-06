@@ -19,16 +19,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController controller = TextEditingController();
-  late CollectionReference lists;
   User? user;
   bool? isDeviceConnected;
   @override
   void initState() {
-    (() async {
-      User? user = FirebaseAuth.instance.currentUser;
-      lists =
-          FirebaseFirestore.instance.collection("users/${user?.email}/lists");
-    })();
     setState(() {
       (() async {
         isDeviceConnected = await InternetConnectionChecker().hasConnection;
@@ -70,29 +64,31 @@ class _HomeState extends State<Home> {
                   isDeviceConnected: isDeviceConnected),
             ),
             ListTile(
-                leading: Icon(Icons.check_circle, color: Colors.blue),
-                title: Text("Completed Tasks"),
+                leading: const Icon(Icons.check_circle, color: Colors.blue),
+                title: const Text("Completed Tasks"),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              FilterTasks(filterKey: "complete")));
+                              const FilterTasks(filterKey: "complete")));
                 }),
             ListTile(
-                leading: Icon(Icons.star, color: Colors.blue),
-                title: Text("Important Tasks"),
+                leading: const Icon(Icons.star, color: Colors.blue),
+                title: const Text("Important Tasks"),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              FilterTasks(filterKey: "important")));
+                              const FilterTasks(filterKey: "important")));
                 }),
             Expanded(
               child: Center(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: lists.snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection("lists")
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return const Center(

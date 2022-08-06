@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:todolist/provider/google_sign_in.dart';
+import 'package:todolist/screens/login/google_sign_in.dart';
 import 'package:todolist/screens/login/horizontal_line.dart';
 import 'package:todolist/screens/login/login_process.dart';
 import 'package:todolist/screens/login/login_text_fields_errors.dart';
@@ -55,6 +54,7 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
             size: size,
             text: "Log in",
             onpressed: () async {
+              FocusScope.of(context).unfocus();
               await completeLoginProcess(
                   setState: setState,
                   context: context,
@@ -71,10 +71,8 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
                 size: size,
                 text: "Sign Up with Google",
                 onpressed: () async {
-                  final provider =
-                      Provider.of<GoogleSignInProvider>(context, listen: false);
                   try {
-                    await provider.googleLogin(context);
+                    signInWithGoogle(context);
                   } catch (e) {
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text(e.toString())));

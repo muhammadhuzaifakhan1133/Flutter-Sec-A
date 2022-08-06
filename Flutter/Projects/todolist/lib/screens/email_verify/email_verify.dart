@@ -6,7 +6,6 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/close_dialog.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/functions/push_and_remove_until.dart';
-import 'package:todolist/functions/save_sign_in_as_google.dart';
 import 'package:todolist/screens/email_verify/text_for_change_email.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/widgets/button.dart';
@@ -61,7 +60,6 @@ class _EmailVerificationState extends State<EmailVerification> {
 
       await saveUserName(documentID: (user?.email)!, name: (widget.name)!);
 
-      await setSignInAsGoogleOrNot(false);
       // ignore: use_build_context_synchronously
       closeDialog(context);
       // ignore: use_build_context_synchronously

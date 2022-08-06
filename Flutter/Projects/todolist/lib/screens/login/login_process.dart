@@ -5,7 +5,6 @@ import 'package:todolist/functions/close_dialog.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/functions/is_right_provider.dart';
 import 'package:todolist/functions/push_and_remove_until.dart';
-import 'package:todolist/functions/save_sign_in_as_google.dart';
 import 'package:todolist/functions/save_user_as_active.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/screens/login/login_fields_validation.dart';
@@ -54,7 +53,6 @@ completeLoginProcess(
     return;
   }
   await saveAsActiveUser(name);
-  await setSignInAsGoogleOrNot(false);
   // ignore: use_build_context_synchronously
   closeDialog(context);
   // ignore: use_build_context_synchronously

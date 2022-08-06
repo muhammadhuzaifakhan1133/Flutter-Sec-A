@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/close_dialog.dart';
-import 'package:todolist/functions/is_sign_in_with_google.dart';
 import 'package:todolist/functions/push_and_remove_until.dart';
 import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/login/login_text_fields_errors.dart';
@@ -26,6 +25,8 @@ Future<dynamic> addUser(
       email: email,
       password: password,
     );
+    CollectionReference lists = FirebaseFirestore.instance.collection("lists");
+    await lists.doc(email).set({});
     return true;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'email-already-in-use') {
@@ -138,9 +139,9 @@ logout({required BuildContext context, bool deleteAccount = false}) async {
     Fluttertoast.showToast(msg: "No Internet Connection");
     return;
   }
-  if (await isSignInWithGoogle()) {
-    await GoogleSignIn().disconnect();
-  }
+
+  await GoogleSignIn().signOut();
+
   if (deleteAccount) {
     User? user = FirebaseAuth.instance.currentUser;
     user!.delete();

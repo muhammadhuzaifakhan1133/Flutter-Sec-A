@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/functions/firebase.dart';
-import 'package:todolist/provider/google_sign_in.dart';
+import 'package:todolist/screens/login/google_sign_in.dart';
 import 'package:todolist/screens/email_verify/email_verify.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/screens/splash/splash.dart';
@@ -24,24 +23,18 @@ void main() async {
       home = EmailVerification(name: name);
     }
   }
-  runApp(ChangeNotifierProvider(
-    create: (context) => GoogleSignInProvider(),
-    child: MaterialApp(debugShowCheckedModeBanner: false, home: home),
-  ));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: home));
 }
 
 class MyApp extends StatelessWidget {
   final Widget home;
-  const MyApp({required this.home, Key? key}) : super(key: key);
+  const MyApp({this.home = const Scaffold(), Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => GoogleSignInProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: home,
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: home,
     );
   }
 }
