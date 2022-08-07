@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/list_main_screen/rename_list_dialog.dart';
-import 'package:todolist/widgets/create_rename_list_dialog.dart';
 
 popupMenuButton(
     {required setState,
     required TextEditingController renameController,
-    required widget,
-    required String email}) {
+    required widget}) {
   return PopupMenuButton(
       itemBuilder: (context) => [
             PopupMenuItem(
@@ -25,7 +23,6 @@ popupMenuButton(
                     context: context,
                     renameController: renameController,
                     widget: widget,
-                    email: email,
                     setState: setState);
               },
             ),
@@ -39,7 +36,7 @@ popupMenuButton(
                 ],
               ),
               onTap: () {
-                deleteList(listID: widget.listID, email: email);
+                deleteList(listID: widget.listID);
                 Navigator.pop(context);
               },
             )

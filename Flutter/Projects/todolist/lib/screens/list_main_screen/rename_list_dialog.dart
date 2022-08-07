@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/widgets/create_rename_list_dialog.dart';
 
-renameListDialog({context, renameController, widget, email, setState}) {
+renameListDialog({context, renameController, widget, setState}) {
   Future.delayed(const Duration(seconds: 0), () {
     createOrRenameListDialog(
         context: context,
@@ -12,9 +12,7 @@ renameListDialog({context, renameController, widget, email, setState}) {
         controller: renameController,
         onPressedFinalButton: () async {
           await renameList(
-              listID: widget.listId,
-              email: email,
-              newName: renameController.text);
+              listID: widget.listId, newName: renameController.text);
           setState(() {
             widget.listName = renameController.text;
           });

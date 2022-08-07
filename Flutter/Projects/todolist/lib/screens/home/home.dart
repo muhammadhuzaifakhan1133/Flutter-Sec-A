@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:todolist/screens/complete_tasks/complete_tasks.dart';
+import 'package:todolist/screens/complete_or_important_tasks/complete_or_important_tasks.dart';
 import 'package:todolist/screens/home/bottom_app_bar.dart';
 import 'package:todolist/screens/home/create_new_list.dart';
 import 'package:todolist/screens/home/list_list_view.dart';
@@ -19,7 +19,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController controller = TextEditingController();
-  User? user;
   bool? isDeviceConnected;
   @override
   void initState() {
@@ -70,24 +69,25 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const FilterTasks(filterKey: "complete")));
+                          builder: (context) => const CompleteOrImportantTasks(
+                              filterKey: "complete")));
                 }),
             ListTile(
-                leading: const Icon(Icons.star, color: Colors.blue),
+                leading: const Icon(Icons.star_border),
                 title: const Text("Important Tasks"),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const FilterTasks(filterKey: "important")));
+                          builder: (context) => const CompleteOrImportantTasks(
+                              filterKey: "important")));
                 }),
             Expanded(
               child: Center(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection("lists")
+                      .where("email", isEqualTo: user.email)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {

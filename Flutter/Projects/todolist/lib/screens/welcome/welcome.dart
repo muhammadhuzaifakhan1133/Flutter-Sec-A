@@ -34,12 +34,6 @@ class _WelcomeState extends State<Welcome> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       checkIfEmailInUse(
-                    //           "muhammadhuzaifakhan2003@gmail.com", context);
-                    //     },
-                    //     child: Text("Get Providers")),
                     buttonWidget(
                         size: size,
                         text: "Login",

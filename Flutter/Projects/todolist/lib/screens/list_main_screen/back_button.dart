@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-backButton(context) {
+backButton(context, Color color) {
   return IconButton(
     icon: Icon(
       Icons.arrow_back,
-      color: Colors.white,
+      color: color,
     ),
     onPressed: () {
       Navigator.pop(context);

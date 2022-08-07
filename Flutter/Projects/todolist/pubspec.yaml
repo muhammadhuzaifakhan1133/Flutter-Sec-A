@@ -44,6 +44,7 @@ dependencies:
   internet_connection_checker: ^0.0.1+4
   fluttertoast: ^8.0.9
   connectivity_plus: ^2.3.5
+  datetime_picker_formfield: ^2.0.1
 
 dev_dependencies:
   flutter_test:

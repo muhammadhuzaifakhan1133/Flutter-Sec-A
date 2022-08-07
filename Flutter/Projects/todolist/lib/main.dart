@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/remove_active_user.dart';
 import 'package:todolist/screens/login/google_sign_in.dart';
 import 'package:todolist/screens/email_verify/email_verify.dart';
 import 'package:todolist/screens/home/home.dart';
@@ -23,7 +24,7 @@ void main() async {
       home = EmailVerification(name: name);
     }
   }
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: home));
+  runApp(MyApp(home: home));
 }
 
 class MyApp extends StatelessWidget {

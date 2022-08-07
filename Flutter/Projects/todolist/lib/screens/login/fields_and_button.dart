@@ -20,8 +20,6 @@ class _FieldsAndButtonState extends State<FieldsAndButton> {
   TextEditingController passwordController = TextEditingController();
   LogInTextFieldErrors errors = LogInTextFieldErrors();
   bool obscureText = true;
-  dynamic data;
-  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
