@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:todolist/screens/complete_or_important_tasks/complete_or_important_tasks.dart';
+import 'package:todolist/screens/filter_tasks/filter_tasks.dart';
 import 'package:todolist/screens/home/bottom_app_bar.dart';
 import 'package:todolist/screens/home/create_new_list.dart';
 import 'package:todolist/screens/home/list_list_view.dart';
 import 'package:todolist/screens/home/profile_tile.dart';
+import 'package:todolist/screens/planned_tasks/planned_tasks.dart';
 import 'package:todolist/screens/profile.dart/profile.dart';
 
 // ignore: must_be_immutable
@@ -19,16 +20,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController controller = TextEditingController();
-  bool? isDeviceConnected;
-  @override
-  void initState() {
-    setState(() {
-      (() async {
-        isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      })();
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +50,7 @@ class _HomeState extends State<Home> {
               child: profileTile(
                   photoUrl: user!.photoURL,
                   name: widget.name,
-                  email: user.email,
-                  isDeviceConnected: isDeviceConnected),
+                  email: user.email),
             ),
             ListTile(
                 leading: const Icon(Icons.check_circle, color: Colors.blue),
@@ -69,18 +59,49 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CompleteOrImportantTasks(
-                              filterKey: "complete")));
+                          builder: (context) => FilterTask(
+                                filterKey: "complete",
+                                appBarTitle: "Completed Tasks",
+                              )));
                 }),
             ListTile(
-                leading: const Icon(Icons.star_border),
+                leading: const Icon(
+                  Icons.star_border,
+                  color: Colors.pink,
+                ),
                 title: const Text("Important Tasks"),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CompleteOrImportantTasks(
-                              filterKey: "important")));
+                          builder: (context) => FilterTask(
+                              filterKey: "important",
+                              appBarTitle: "Important Tasks")));
+                }),
+            ListTile(
+                leading: const Icon(
+                  Icons.calendar_month,
+                  color: Colors.blue,
+                ),
+                title: const Text("Planned Tasks"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PlannedTasks()));
+                }),
+            ListTile(
+                leading: const Icon(Icons.pending, color: Colors.red),
+                title: const Text("Unplanned Tasks"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FilterTask(
+                                appBarTitle: "Unplanned Tasks",
+                                filterKey: "date",
+                                screen: "unplanned",
+                              )));
                 }),
             Expanded(
               child: Center(

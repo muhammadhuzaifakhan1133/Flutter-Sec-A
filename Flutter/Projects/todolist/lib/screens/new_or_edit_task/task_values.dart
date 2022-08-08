@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class TaskValues {
-  String? name;
+  TextEditingController? name;
   bool? complete;
   bool? important;
   DateTime? date;

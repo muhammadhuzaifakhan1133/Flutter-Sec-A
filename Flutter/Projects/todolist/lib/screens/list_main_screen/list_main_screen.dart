@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/list_main_screen/back_button.dart';
-import 'package:todolist/screens/list_main_screen/rename_list_dialog.dart';
 import 'package:todolist/screens/list_main_screen/screen_title.dart';
 import 'package:todolist/screens/list_main_screen/task_list_view.dart';
 import 'package:todolist/screens/new_or_edit_task/new_or_edit_task.dart';
-import 'package:todolist/widgets/create_rename_list_dialog.dart';
 import 'package:todolist/widgets/popup_menu_button.dart';
 
 // ignore: must_be_immutable
@@ -34,7 +30,12 @@ class _ListMainScreenState extends State<ListMainScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => NewOrEditTask(listID: widget.listId)));
+                  builder: (context) => NewOrEditTask(
+                        listID: widget.listId,
+                        name: TextEditingController(),
+                        appBarText: "New Task",
+                        buttonText: "CREATE",
+                      )));
         },
       ),
       appBar: AppBar(
@@ -80,7 +81,9 @@ class _ListMainScreenState extends State<ListMainScreen> {
                       }
                       return ListView(
                           children: taskListView(
-                              snapshot: snapshot, listID: widget.listId));
+                        snapshot: snapshot,
+                        context: context,
+                      ));
                     },
                   ),
                 ),

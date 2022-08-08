@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/list_main_screen/rename_list_dialog.dart';
 
@@ -28,15 +30,19 @@ popupMenuButton(
             ),
             PopupMenuItem(
               child: Row(
-                children: [
+                children: const [
                   Icon(Icons.delete, color: Colors.black),
                   Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: Text("Delete list"))
                 ],
               ),
-              onTap: () {
-                deleteList(listID: widget.listID);
+              onTap: () async {
+                if (!(await InternetConnectionChecker().hasConnection)) {
+                  Fluttertoast.showToast(msg: "No Internet Connection");
+                  return;
+                }
+                await deleteList(listID: widget.listId);
                 Navigator.pop(context);
               },
             )

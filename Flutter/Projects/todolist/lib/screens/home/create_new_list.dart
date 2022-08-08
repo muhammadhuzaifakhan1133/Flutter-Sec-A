@@ -44,5 +44,6 @@ createNewList({
             MaterialPageRoute(
                 builder: (context) => ListMainScreen(
                     listId: newListId, listName: controller.text)));
+        controller.text = "";
       });
 }

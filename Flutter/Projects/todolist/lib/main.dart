@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/functions/firebase.dart';
-import 'package:todolist/functions/remove_active_user.dart';
-import 'package:todolist/screens/login/google_sign_in.dart';
 import 'package:todolist/screens/email_verify/email_verify.dart';
 import 'package:todolist/screens/home/home.dart';
+import 'package:todolist/screens/no_internet_screen/no_internet_screen.dart';
 import 'package:todolist/screens/splash/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -14,12 +14,17 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = await SharedPreferences.getInstance();
   String? name = prefs.getString("activeName");
+  bool connection = await InternetConnectionChecker().hasConnection;
   late Widget home;
   if (name == null) {
     home = const SplashScreen();
   } else {
     if (await checkEmailVerified()) {
-      home = Home(name: name);
+      if (connection) {
+        home = Home(name: name);
+      } else {
+        home = NoInternetConnection(name: name);
+      }
     } else {
       home = EmailVerification(name: name);
     }

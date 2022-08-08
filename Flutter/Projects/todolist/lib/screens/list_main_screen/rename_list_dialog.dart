@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/widgets/create_rename_list_dialog.dart';
 
@@ -11,6 +13,10 @@ renameListDialog({context, renameController, widget, setState}) {
         finalButtonText: "Save",
         controller: renameController,
         onPressedFinalButton: () async {
+          if (!(await InternetConnectionChecker().hasConnection)) {
+            Fluttertoast.showToast(msg: "No Internet Connection");
+            return;
+          }
           await renameList(
               listID: widget.listId, newName: renameController.text);
           setState(() {

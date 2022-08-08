@@ -209,10 +209,28 @@ Future<void> addTask({
   CollectionReference tasks = FirebaseFirestore.instance.collection("tasks");
   tasks.add({
     "listID": listID,
-    "name": taskValues.name,
+    "name": taskValues.name!.text,
     "complete": taskValues.complete,
     "important": taskValues.important,
-    "date": taskValues.date,
+    "date": taskValues.date != null
+        ? taskValues.date.toString().split(" ")[0]
+        : null,
+    "time": taskValues.time
+  });
+}
+
+Future<void> updateTask({
+  required String taskID,
+  required TaskValues taskValues,
+}) async {
+  CollectionReference tasks = FirebaseFirestore.instance.collection("tasks");
+  tasks.doc(taskID).update({
+    "name": taskValues.name!.text,
+    "complete": taskValues.complete,
+    "important": taskValues.important,
+    "date": taskValues.date != null
+        ? taskValues.date.toString().split(" ")[0]
+        : null,
     "time": taskValues.time
   });
 }

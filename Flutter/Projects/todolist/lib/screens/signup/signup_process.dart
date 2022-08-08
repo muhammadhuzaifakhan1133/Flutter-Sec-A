@@ -36,6 +36,7 @@ signUp(
   if (!(await InternetConnectionChecker().hasConnection)) {
     closeDialog(context);
     Fluttertoast.showToast(msg: "No Internet Connection");
+    return;
   }
   bool isSignUpSuccess = await addUser(
       context: context,

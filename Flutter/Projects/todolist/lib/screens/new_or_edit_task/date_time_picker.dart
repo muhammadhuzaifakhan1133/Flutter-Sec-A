@@ -12,6 +12,17 @@ class CustomDateTimePicker extends StatefulWidget {
 }
 
 class _CustomDateTimePickerState extends State<CustomDateTimePicker> {
+  bool canInpuTime = false;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.taskValues.date != null) {
+      setState(() {
+        canInpuTime = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,29 +45,39 @@ class _CustomDateTimePickerState extends State<CustomDateTimePicker> {
                 padding: const EdgeInsets.only(left: 8),
                 decoration: BoxDecoration(border: Border.all()),
                 child: DateTimeField(
+                  initialValue: widget.taskValues.date,
                   onChanged: (date) {
+                    if (date != null) {
+                      setState(() {
+                        canInpuTime = true;
+                      });
+                    } else {
+                      setState(() {
+                        canInpuTime = false;
+                      });
+                    }
                     setState(() {
                       widget.taskValues.date = date;
                     });
                   },
-                  format: DateFormat("yyyy-MM-dd"),
+                  format: DateFormat("MMMM dd, yyyy"),
                   onShowPicker: (context, currentValue) async {
                     DateTime? date = await showDatePicker(
                         context: context,
                         firstDate: DateTime(1900),
                         initialDate: currentValue ?? DateTime.now(),
                         lastDate: DateTime(2100));
-                    widget.taskValues.date = date;
-                    return widget.taskValues.date;
+
+                    return date;
                   },
                 ),
               ),
             ],
           ),
         ),
-        if (widget.taskValues.date != null)
+        if (canInpuTime || widget.taskValues.time != null)
           Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.only(top: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -78,16 +99,16 @@ class _CustomDateTimePickerState extends State<CustomDateTimePicker> {
                           widget.taskValues.time = time;
                         });
                       },
-                      format: DateFormat("HH:mm"),
+                      initialValue: widget.taskValues.time,
+                      format: DateFormat("h:mma"),
                       onShowPicker: (context, currentValue) async {
                         TimeOfDay? timePicker = await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.fromDateTime(
                               currentValue ?? DateTime.now()),
                         );
-                        widget.taskValues.time =
-                            DateTimeField.convert(timePicker);
-                        return widget.taskValues.time;
+
+                        return DateTimeField.convert(timePicker);
                       },
                     )),
               ],
