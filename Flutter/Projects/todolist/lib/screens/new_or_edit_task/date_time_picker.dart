@@ -75,7 +75,7 @@ class _CustomDateTimePickerState extends State<CustomDateTimePicker> {
             ],
           ),
         ),
-        if (canInpuTime || widget.taskValues.time != null)
+        if (canInpuTime)
           Padding(
             padding: const EdgeInsets.only(top: 30),
             child: Column(
@@ -107,7 +107,6 @@ class _CustomDateTimePickerState extends State<CustomDateTimePicker> {
                           initialTime: TimeOfDay.fromDateTime(
                               currentValue ?? DateTime.now()),
                         );
-
                         return DateTimeField.convert(timePicker);
                       },
                     )),

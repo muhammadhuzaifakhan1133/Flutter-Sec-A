@@ -18,7 +18,7 @@ ListView listListView(
               context,
               MaterialPageRoute(
                   builder: (context) => ListMainScreen(
-                      listId: document.id, listName: data["name"])));
+                      listID: document.id, listName: data["name"])));
         },
       );
     }).toList(),

@@ -53,7 +53,8 @@ class _HomeState extends State<Home> {
                   email: user.email),
             ),
             ListTile(
-                leading: const Icon(Icons.check_circle, color: Colors.blue),
+                leading:
+                    const Icon(Icons.check_circle_outline, color: Colors.green),
                 title: const Text("Completed Tasks"),
                 onTap: () {
                   Navigator.push(

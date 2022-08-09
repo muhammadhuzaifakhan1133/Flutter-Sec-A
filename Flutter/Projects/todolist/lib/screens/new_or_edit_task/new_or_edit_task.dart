@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:todolist/functions/close_dialog.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/list_main_screen/back_button.dart';
 import 'package:todolist/screens/new_or_edit_task/complete_checker.dart';
 import 'package:todolist/screens/new_or_edit_task/date_time_picker.dart';
+import 'package:todolist/screens/new_or_edit_task/delete_task.dart';
 import 'package:todolist/screens/new_or_edit_task/important_checker.dart';
 import 'package:todolist/screens/new_or_edit_task/task_name.dart';
 import 'package:todolist/screens/new_or_edit_task/task_values.dart';
 import 'package:todolist/widgets/button.dart';
+import 'package:todolist/widgets/loading_widget.dart';
 
 class NewOrEditTask extends StatefulWidget {
   NewOrEditTask(
@@ -39,15 +42,21 @@ class NewOrEditTask extends StatefulWidget {
 
 class _NewOrEditTaskState extends State<NewOrEditTask> {
   String? nameError;
+  late TaskValues taskValues;
+
   @override
-  Widget build(BuildContext context) {
-    TaskValues taskValues = TaskValues(
+  void initState() {
+    super.initState();
+    taskValues = TaskValues(
         name: widget.name,
         complete: widget.complete,
         important: widget.important,
         date: widget.date,
         time: widget.time);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +64,9 @@ class _NewOrEditTaskState extends State<NewOrEditTask> {
         leading: backButton(context, Colors.black),
         title: Text(widget.appBarText,
             style: const TextStyle(color: Colors.black)),
+        actions: widget.taskID != null
+            ? [deleteTaskIcon(context, widget.taskID!)]
+            : null,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -78,7 +90,9 @@ class _NewOrEditTaskState extends State<NewOrEditTask> {
                     });
                     return;
                   }
+                  circleProgressDialog(context);
                   if (!(await InternetConnectionChecker().hasConnection)) {
+                    closeDialog(context);
                     Fluttertoast.showToast(msg: "No Internet Connection");
                     return;
                   }
@@ -89,6 +103,7 @@ class _NewOrEditTaskState extends State<NewOrEditTask> {
                     await updateTask(
                         taskID: widget.taskID!, taskValues: taskValues);
                   }
+                  closeDialog(context);
                   Navigator.pop(context);
                 })
           ],

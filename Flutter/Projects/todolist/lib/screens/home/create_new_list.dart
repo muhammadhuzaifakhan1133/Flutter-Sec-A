@@ -21,6 +21,7 @@ createNewList({
       onPressedFinalButton: () async {
         circleProgressDialog(context);
         if (!(await InternetConnectionChecker().hasConnection)) {
+          closeDialog(context);
           Fluttertoast.showToast(msg: "No Internet Connection");
           return;
         }
@@ -39,11 +40,11 @@ createNewList({
         // ignore: use_build_context_synchronously
         closeDialog(context);
         // ignore: use_build_context_synchronously
-        Navigator.push(
+        await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ListMainScreen(
-                    listId: newListId, listName: controller.text)));
-        controller.text = "";
+                    listID: newListId, listName: controller.text)));
+        controller.clear();
       });
 }

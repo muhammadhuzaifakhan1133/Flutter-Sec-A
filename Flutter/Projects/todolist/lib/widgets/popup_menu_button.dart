@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/screens/list_main_screen/rename_list_dialog.dart';
+import 'package:todolist/widgets/sort_menu_item.dart';
 
 popupMenuButton(
     {required setState,
     required TextEditingController renameController,
-    required widget}) {
+    required widget,
+    Color? color = Colors.white}) {
   return PopupMenuButton(
+      icon: Icon(Icons.more_vert, color: color),
       itemBuilder: (context) => [
             PopupMenuItem(
               child: Row(
@@ -42,9 +46,10 @@ popupMenuButton(
                   Fluttertoast.showToast(msg: "No Internet Connection");
                   return;
                 }
-                await deleteList(listID: widget.listId);
+                await deleteList(listID: widget.listID);
                 Navigator.pop(context);
               },
-            )
+            ),
+            sortMenuItem(context, widget, setState)
           ]);
 }

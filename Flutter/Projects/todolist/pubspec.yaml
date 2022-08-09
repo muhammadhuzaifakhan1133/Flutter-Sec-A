@@ -45,6 +45,7 @@ dependencies:
   fluttertoast: ^8.0.9
   connectivity_plus: ^2.3.5
   datetime_picker_formfield: ^2.0.1
+  modal_bottom_sheet: ^2.1.0
 
 dev_dependencies:
   flutter_test:

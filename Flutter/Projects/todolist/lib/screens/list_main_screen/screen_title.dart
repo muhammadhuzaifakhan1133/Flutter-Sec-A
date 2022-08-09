@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/screens/list_main_screen/rename_list_dialog.dart';
 
-listScreenTitle({context, renameController, widget, setState}) {
+listScreenTitle(
+    {context, renameController, widget, setState, color = Colors.white}) {
   return InkWell(
     onTap: () {
       renameListDialog(
@@ -13,8 +14,8 @@ listScreenTitle({context, renameController, widget, setState}) {
     child: Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Text(widget.listName,
-          style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)),
+          style: TextStyle(
+              color: color, fontWeight: FontWeight.bold, fontSize: 24)),
     ),
   );
 }
