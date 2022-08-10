@@ -86,10 +86,8 @@ class _HomeState extends State<Home> {
                 ),
                 title: const Text("Planned Tasks"),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PlannedTasks()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PlannedTasks()));
                 }),
             ListTile(
                 leading: const Icon(Icons.pending, color: Colors.red),

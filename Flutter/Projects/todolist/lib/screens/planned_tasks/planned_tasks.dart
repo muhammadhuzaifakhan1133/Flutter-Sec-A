@@ -1,65 +1,119 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:todolist/screens/filter_tasks/stream_builder_for_filter_task.dart';
+import 'package:todolist/screens/list_main_screen/back_button.dart';
+import 'package:todolist/screens/planned_tasks/menu_for_group_by.dart';
 import 'package:todolist/screens/planned_tasks/separate_date_and_fields.dart';
+import 'package:todolist/widgets/sort_menu_item.dart';
 
-class PlannedTasks extends StatelessWidget {
-  const PlannedTasks({Key? key}) : super(key: key);
+class PlannedTasks extends StatefulWidget {
+  PlannedTasks({this.groupBy = "date", Key? key}) : super(key: key);
+  String groupBy;
+  @override
+  State<PlannedTasks> createState() => _PlannedTasksState();
+}
+
+class _PlannedTasksState extends State<PlannedTasks> {
+  Color? getBgColor() {
+    return Colors.orange[100];
+  }
+
+  Color? getThemeColor() {
+    return Colors.orange[700];
+  }
 
   @override
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-        appBar: AppBar(title: const Text("Planned Tasks")),
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("lists")
-              .where("email", isEqualTo: user?.email)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return const Center(child: Text("Something went wrong"));
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            List<String> listIDs = [];
-            List<String> listNames = [];
-            listIDs.addAll(
-                snapshot.data!.docs.map((QueryDocumentSnapshot doc) => doc.id));
-            List<QueryDocumentSnapshot> listSnapshots = snapshot.data!.docs;
-            listNames
-                .addAll(listSnapshots.map((QueryDocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
-              return data["name"];
-            }));
-            return StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("tasks")
-                  .where("listID", whereIn: listIDs)
-                  .where("date", isNull: false)
-                  .orderBy("date")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> taskSnapshot) {
-                if (taskSnapshot.hasError) {
-                  return const Center(child: Text("Something went wrong"));
-                }
-                if (taskSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+        appBar: AppBar(
+          elevation: 0,
+          leading: backButton(context, getThemeColor()),
+          backgroundColor: getBgColor(),
+          actions: [menuForGroupBy(setState, widget, getThemeColor())],
+        ),
+        backgroundColor: getBgColor(),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Text("Planned Tasks",
+                  style: TextStyle(
+                      color: getThemeColor(),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24)),
+            ),
+            SizedBox(height: 8),
+            Expanded(
+              child: widget.groupBy == "date"
+                  ? StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection("lists")
+                          .where("email", isEqualTo: user?.email)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return const Center(
+                              child: Text("Something went wrong"));
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        List<String> listIDs = [];
+                        List<String> listNames = [];
+                        listIDs.addAll(snapshot.data!.docs
+                            .map((QueryDocumentSnapshot doc) => doc.id));
+                        List<QueryDocumentSnapshot> listSnapshots =
+                            snapshot.data!.docs;
+                        listNames.addAll(
+                            listSnapshots.map((QueryDocumentSnapshot document) {
+                          Map<String, dynamic> data =
+                              document.data() as Map<String, dynamic>;
+                          return data["name"];
+                        }));
+                        return StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("tasks")
+                              .where("listID", whereIn: listIDs)
+                              .where("date", isNull: false)
+                              .orderBy("date")
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> taskSnapshot) {
+                            if (taskSnapshot.hasError) {
+                              return const Center(
+                                  child: Text("Something went wrong"));
+                            }
+                            if (taskSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
 
-                return ListView(
-                    children: separateDateAndFields(
-                        snapshot: taskSnapshot,
-                        context: context,
-                        listIDs: listIDs,
-                        listNames: listNames));
-              },
-            );
-          },
+                            return ListView(
+                                children: separateDateAndFields(
+                                    snapshot: taskSnapshot,
+                                    context: context,
+                                    listIDs: listIDs,
+                                    listNames: listNames));
+                          },
+                        );
+                      },
+                    )
+                  : streamBuilderForFilterTask(
+                      email: (user?.email)!,
+                      descending: false,
+                      filterKey: "date",
+                      screen: "planned",
+                      sortBy: "normal"),
+            ),
+          ],
         ));
   }
 }
