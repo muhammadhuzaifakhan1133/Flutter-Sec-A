@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:todolist/screens/filter_tasks/choose_query.dart';
 import 'package:todolist/screens/list_main_screen/task_list_view.dart';
+import 'package:todolist/widgets/filter_tasks/choose_query.dart';
 
 StreamBuilder streamBuilderForFilterTask(
     {required String email,

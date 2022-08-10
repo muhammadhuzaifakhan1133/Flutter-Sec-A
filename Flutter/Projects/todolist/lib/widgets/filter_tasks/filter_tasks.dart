@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todolist/screens/filter_tasks/stream_builder_for_filter_task.dart';
 import 'package:todolist/screens/list_main_screen/back_button.dart';
+import 'package:todolist/widgets/filter_tasks/stream_builder_for_filter_task.dart';
 import 'package:todolist/widgets/sort_menu_item.dart';
 import 'package:todolist/widgets/sort_status_row.dart';
 

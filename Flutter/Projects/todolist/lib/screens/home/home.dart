@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:todolist/screens/filter_tasks/filter_tasks.dart';
+import 'package:todolist/screens/completed_tasks/completed_tasks.dart';
 import 'package:todolist/screens/home/bottom_app_bar.dart';
 import 'package:todolist/screens/home/create_new_list.dart';
 import 'package:todolist/screens/home/list_list_view.dart';
 import 'package:todolist/screens/home/profile_tile.dart';
+import 'package:todolist/screens/important_tasks/important_tasks.dart';
 import 'package:todolist/screens/planned_tasks/planned_tasks.dart';
 import 'package:todolist/screens/profile.dart/profile.dart';
+import 'package:todolist/screens/unplanned_tasks/unplanned_tasks.dart';
 
 // ignore: must_be_immutable
 class Home extends StatefulWidget {
@@ -60,10 +61,7 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FilterTask(
-                                filterKey: "complete",
-                                appBarTitle: "Completed Tasks",
-                              )));
+                          builder: (context) => CompletedTasks()));
                 }),
             ListTile(
                 leading: const Icon(
@@ -75,9 +73,7 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FilterTask(
-                              filterKey: "important",
-                              appBarTitle: "Important Tasks")));
+                          builder: (context) => ImportantTasks()));
                 }),
             ListTile(
                 leading: const Icon(
@@ -96,11 +92,7 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FilterTask(
-                                appBarTitle: "Unplanned Tasks",
-                                filterKey: "date",
-                                screen: "unplanned",
-                              )));
+                          builder: (context) => UnplannedTasks()));
                 }),
             Expanded(
               child: Center(

@@ -7,7 +7,7 @@ Stream<QuerySnapshot> chooseQuery(
     required String filterKey,
     required bool descending}) {
   late Stream<QuerySnapshot> query;
-  if (screen == "importantOrComplete") {
+  if (screen == "complete" || screen == "important") {
     if (sortBy == "normal") {
       query = FirebaseFirestore.instance
           .collection("tasks")
@@ -30,6 +30,7 @@ Stream<QuerySnapshot> chooseQuery(
           .where(filterKey, isNull: screen == "unplanned" ? true : false)
           .snapshots();
     } else {
+      // because we can only sort in unplanned screen not planned screen
       query = FirebaseFirestore.instance
           .collection("tasks")
           .where("listID", isEqualTo: listID)
