@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:helloapi/model/user_model.dart';
+import 'package:helloapi/screens/create_record/create_record.dart';
 import 'package:helloapi/screens/users_info/render_slides.dart';
 import 'package:helloapi/screens/users_info/user_info.dart';
 import 'package:helloapi/services/services.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,10 +23,11 @@ class _HomePageState extends State<HomePage> {
           ),
           onPressed: () {
             Future.delayed(const Duration(seconds: 0), () {
-              showModalBottomSheet(
+              showMaterialModalBottomSheet(
                 context: context,
+                expand: true,
                 builder: (ctx) {
-                  return Column();
+                  return CreateRecord();
                 },
               );
             });
