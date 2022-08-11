@@ -1,13 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helloapi/screens/create_record/field_controllers.dart';
-import 'package:helloapi/screens/create_record/field_errors.dart';
 import 'package:helloapi/widgets/text_field.dart';
 
-class CreateRecord extends StatelessWidget {
-  CreateRecord({Key? key}) : super(key: key);
-  CreateRecordFieldControllers controllers = CreateRecordFieldControllers();
-  CreateRecordFieldErrors errors = CreateRecordFieldErrors();
+class CreateRecord extends StatefulWidget {
+  CreateRecord({this.updateData = true, Key? key}) : super(key: key);
+  bool updateData;
+  @override
+  State<CreateRecord> createState() => _CreateRecordState();
+}
+
+class _CreateRecordState extends State<CreateRecord> {
+  CreateRecordFields fields = CreateRecordFields();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -34,31 +39,31 @@ class CreateRecord extends StatelessWidget {
                 children: [
                   textFieldWidget(
                       size: size,
-                      controller: controllers.name,
-                      errorText: errors.name,
+                      controller: fields.name.controller,
+                      errorText: fields.name.error,
                       hintText: "Enter name",
                       keyboardtype: TextInputType.name),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.email,
-                      errorText: errors.email,
+                      controller: fields.email.controller,
+                      errorText: fields.email.error,
                       hintText: "Enter email",
                       keyboardtype: TextInputType.emailAddress),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.username,
-                      errorText: errors.username,
+                      controller: fields.username.controller,
+                      errorText: fields.username.error,
                       hintText: "Enter username"),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.phone,
-                      errorText: errors.phone,
+                      controller: fields.phone.controller,
+                      errorText: fields.phone.error,
                       hintText: "Enter phone",
                       keyboardtype: TextInputType.number),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.website,
-                      errorText: errors.website,
+                      controller: fields.website.controller,
+                      errorText: fields.website.error,
                       hintText: "Enter website",
                       keyboardtype: TextInputType.url),
                 ],
@@ -79,36 +84,36 @@ class CreateRecord extends StatelessWidget {
                 children: [
                   textFieldWidget(
                       size: size,
-                      controller: controllers.addressSuit,
-                      errorText: errors.addressSuit,
+                      controller: fields.addressSuit.controller,
+                      errorText: fields.addressSuit.error,
                       hintText: "Enter suit"),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.addressStreet,
-                      errorText: errors.addressStreet,
+                      controller: fields.addressStreet.controller,
+                      errorText: fields.addressStreet.error,
                       hintText: "Enter street",
                       keyboardtype: TextInputType.streetAddress),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.addressCity,
-                      errorText: errors.addressCity,
+                      controller: fields.addressCity.controller,
+                      errorText: fields.addressCity.error,
                       hintText: "Enter city"),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.addressZipcode,
-                      errorText: errors.addressZipcode,
+                      controller: fields.addressZipcode.controller,
+                      errorText: fields.addressZipcode.error,
                       hintText: "Enter zipcode",
                       keyboardtype: TextInputType.number),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.addressLang,
-                      errorText: errors.addressLang,
+                      controller: fields.addressLang.controller,
+                      errorText: fields.addressLang.error,
                       hintText: "langitude",
                       keyboardtype: const TextInputType.numberWithOptions()),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.addressLati,
-                      errorText: errors.addressLati,
+                      controller: fields.addressLati.controller,
+                      errorText: fields.addressLati.error,
                       hintText: "latitude",
                       keyboardtype: const TextInputType.numberWithOptions()),
                 ],
@@ -129,20 +134,20 @@ class CreateRecord extends StatelessWidget {
                 children: [
                   textFieldWidget(
                       size: size,
-                      controller: controllers.companyName,
-                      errorText: errors.companyName,
+                      controller: fields.companyName.controller,
+                      errorText: fields.companyName.error,
                       hintText: "Enter name",
                       keyboardtype: TextInputType.name),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.companyPhrase,
-                      errorText: errors.companyPhrase,
+                      controller: fields.companyPhrase.controller,
+                      errorText: fields.companyPhrase.error,
                       hintText: "Enter catch phrase",
                       keyboardtype: TextInputType.name),
                   textFieldWidget(
                       size: size,
-                      controller: controllers.companyBs,
-                      errorText: errors.companyBs,
+                      controller: fields.companyBs.controller,
+                      errorText: fields.companyBs.error,
                       hintText: "Enter bs",
                       keyboardtype: TextInputType.name),
                 ],
@@ -151,7 +156,15 @@ class CreateRecord extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              fields.clearErrors();
+              if (fields.ifAnyMantadotryFieldTextisEmpty()) {
+                setState(() {
+                  fields.setEmptyErrorForMandatoryField();
+                });
+                Fluttertoast.showToast(msg: "Please fill all required fields");
+              }
+            },
             style: ElevatedButton.styleFrom(
                 primary: Colors.blueGrey, elevation: 10),
             child: const Text("CREATE"),
