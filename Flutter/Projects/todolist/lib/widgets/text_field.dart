@@ -11,6 +11,8 @@ Widget textFieldWidget(
     String? errorText,
     String? hintText,
     bool? enabled,
+    double widthPercent = 0.8,
+    double heightPercent = 0.1,
     TextInputAction textInputAction = TextInputAction.next,
     Color cursorColor = Colors.black,
     Color borderColor = Colors.black,
@@ -21,7 +23,8 @@ Widget textFieldWidget(
   return Padding(
     padding: const EdgeInsets.only(top: 8.0),
     child: SizedBox(
-      width: size.width * 0.8,
+      width: size.width * widthPercent,
+      height: size.height * heightPercent,
       child: TextFormField(
         validator: validator,
         enabled: enabled,

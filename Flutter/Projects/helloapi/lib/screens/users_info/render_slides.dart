@@ -11,7 +11,7 @@ Future<void> _launchUrl(BuildContext context, String url) async {
 }
 
 List<Widget> renderSlides(
-    {required List<User> users, required BuildContext context}) {
+    {required List<Data> users, required BuildContext context}) {
   List<Widget> slides = [];
   double spaceBetween = 10;
   TextStyle keyStyle =
@@ -39,6 +39,13 @@ List<Widget> renderSlides(
                 children: [
                   Text("Name         : ", style: keyStyle),
                   Text("${users[i].name}", style: valueStyle),
+                ],
+              ),
+              SizedBox(height: spaceBetween),
+              Row(
+                children: [
+                  Text("Email          : ", style: keyStyle),
+                  Text("${users[i].email}", style: valueStyle),
                 ],
               ),
               SizedBox(height: spaceBetween),

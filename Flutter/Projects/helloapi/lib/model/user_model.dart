@@ -1,59 +1,107 @@
-class User {
+class UserModel {
+  bool? success;
+  List<Data>? data;
+
+  UserModel({this.success, this.data});
+
+  UserModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(Data.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['success'] = success;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Data {
   int? id;
   String? name;
-  String? username;
   String? email;
-  Address? address;
-  String? phone;
-  String? website;
+  String? username;
+  Null? phone;
+  Null? website;
   Company? company;
+  Address? address;
 
-  User(
+  Data(
       {this.id,
       this.name,
-      this.username,
       this.email,
-      this.address,
+      this.username,
       this.phone,
       this.website,
-      this.company});
+      this.company,
+      this.address});
 
-  User.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    username = json['username'];
     email = json['email'];
-    address =
-        json['address'] != null ? Address.fromJson(json['address']) : null;
+    username = json['username'];
     phone = json['phone'];
     website = json['website'];
     company =
         json['company'] != null ? Company.fromJson(json['company']) : null;
+    address =
+        json['address'] != null ? Address.fromJson(json['address']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
-    data['username'] = username;
     data['email'] = email;
-    if (address != null) {
-      data['address'] = address!.toJson();
-    }
+    data['username'] = username;
     data['phone'] = phone;
     data['website'] = website;
     if (company != null) {
       data['company'] = company!.toJson();
     }
+    if (address != null) {
+      data['address'] = address!.toJson();
+    }
+    return data;
+  }
+}
+
+class Company {
+  Null? name;
+  Null? catchPhrase;
+  Null? bs;
+
+  Company({this.name, this.catchPhrase, this.bs});
+
+  Company.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    catchPhrase = json['catchPhrase'];
+    bs = json['bs'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['catchPhrase'] = catchPhrase;
+    data['bs'] = bs;
     return data;
   }
 }
 
 class Address {
-  String? street;
-  String? suite;
-  String? city;
-  String? zipcode;
+  Null? street;
+  Null? suite;
+  Null? city;
+  Null? zipcode;
   Geo? geo;
 
   Address({this.street, this.suite, this.city, this.zipcode, this.geo});
@@ -80,8 +128,8 @@ class Address {
 }
 
 class Geo {
-  String? lat;
-  String? lng;
+  Null? lat;
+  Null? lng;
 
   Geo({this.lat, this.lng});
 
@@ -94,28 +142,6 @@ class Geo {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['lat'] = lat;
     data['lng'] = lng;
-    return data;
-  }
-}
-
-class Company {
-  String? name;
-  String? catchPhrase;
-  String? bs;
-
-  Company({this.name, this.catchPhrase, this.bs});
-
-  Company.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    catchPhrase = json['catchPhrase'];
-    bs = json['bs'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['name'] = name;
-    data['catchPhrase'] = catchPhrase;
-    data['bs'] = bs;
     return data;
   }
 }

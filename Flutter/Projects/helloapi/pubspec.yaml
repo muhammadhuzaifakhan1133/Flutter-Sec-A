@@ -37,6 +37,7 @@ dependencies:
   http: ^0.13.4
   intro_slider: ^3.0.9
   url_launcher: ^6.1.5
+  modal_bottom_sheet: ^2.1.0
 
 dev_dependencies:
   flutter_test:
