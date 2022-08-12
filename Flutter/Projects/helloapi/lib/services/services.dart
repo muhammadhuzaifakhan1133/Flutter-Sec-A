@@ -22,8 +22,6 @@ Future<void> postData(Map<String, dynamic> data) async {
 Future<void> updateData(
     {required Map<String, dynamic> data, required int id}) async {
   url += "/${id}";
-  print(url);
-  return;
   http.Response response = await http.put(Uri.parse(url),
       headers: {
         "Content-type": "application/json",
