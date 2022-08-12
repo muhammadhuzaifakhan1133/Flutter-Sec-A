@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:helloapi/screens/create_record/field_controllers.dart';
+import 'package:helloapi/model/user_model.dart';
+import 'package:helloapi/screens/create_record/create_record_fields.dart';
+import 'package:helloapi/services/services.dart';
+import 'package:helloapi/widgets/close_dialog.dart';
+import 'package:helloapi/widgets/loading_widget.dart';
 import 'package:helloapi/widgets/text_field.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-class CreateRecord extends StatefulWidget {
-  CreateRecord({this.updateData = true, Key? key}) : super(key: key);
+class CreateOrUpdateRecord extends StatefulWidget {
+  CreateOrUpdateRecord(
+      {this.updateData = false,
+      this.data,
+      required this.sheetContext,
+      Key? key})
+      : super(key: key);
   bool updateData;
+  Data? data;
+  BuildContext sheetContext;
   @override
-  State<CreateRecord> createState() => _CreateRecordState();
+  State<CreateOrUpdateRecord> createState() => _CreateOrUpdateRecordState();
 }
 
-class _CreateRecordState extends State<CreateRecord> {
+class _CreateOrUpdateRecordState extends State<CreateOrUpdateRecord> {
   CreateRecordFields fields = CreateRecordFields();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.updateData) {
+      fields.getDatafromRecord(widget.data!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,18 +176,31 @@ class _CreateRecordState extends State<CreateRecord> {
           ),
           const SizedBox(height: 30),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               fields.clearErrors();
               if (fields.ifAnyMantadotryFieldTextisEmpty()) {
                 setState(() {
                   fields.setEmptyErrorForMandatoryField();
                 });
                 Fluttertoast.showToast(msg: "Please fill all required fields");
+                return;
               }
+              if (!(await InternetConnectionChecker().hasConnection)) {
+                Fluttertoast.showToast(msg: "No Internet Connection");
+                return;
+              }
+              circleProgressDialog(context);
+              if (widget.updateData) {
+                await updateData(data: fields.tojson(), id: widget.data!.id!);
+              } else {
+                await postData(fields.tojson());
+              }
+              closeDialog(context);
+              Navigator.pop(widget.sheetContext);
             },
             style: ElevatedButton.styleFrom(
                 primary: Colors.blueGrey, elevation: 10),
-            child: const Text("CREATE"),
+            child: Text(widget.updateData ? "SAVE" : "CREATE"),
           ),
           const SizedBox(height: 30),
         ],
