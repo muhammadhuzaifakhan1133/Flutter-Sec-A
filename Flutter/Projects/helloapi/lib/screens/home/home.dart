@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:helloapi/model/user_model.dart';
 import 'package:helloapi/screens/create_record/create_record.dart';
 import 'package:helloapi/screens/home/floating_button.dart';
-import 'package:helloapi/screens/home/update_or_delete.dart';
 import 'package:helloapi/screens/users_info/render_slides.dart';
 import 'package:helloapi/screens/users_info/user_info.dart';
 import 'package:helloapi/services/services.dart';
@@ -35,13 +34,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton:
-            floatingButtonForCreateRecord(context, refreshData),
+        floatingActionButton: floatingButtonForCreateRecord(context, setState),
         body: FutureBuilder(
             future: getUsers(),
-            builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.data != null) {
-                List<Data> data = snapshot.data!.data!;
+                List data = snapshot.data.data;
                 List<Widget> slides =
                     renderSlides(users: data, context: context);
                 return ListView.builder(
@@ -50,8 +48,39 @@ class _HomePageState extends State<HomePage> {
                     return ListTile(
                       title: Text("${data[index].name}"),
                       subtitle: Text("${data[index].email}"),
-                      trailing:
-                          updateOrDelete(context, data, index, refreshData),
+                      trailing: Wrap(
+                        children: [
+                          IconButton(
+                              onPressed: () async {
+                                await Future.delayed(const Duration(seconds: 0),
+                                    () async {
+                                  showMaterialModalBottomSheet(
+                                      context: context,
+                                      expand: true,
+                                      builder: (ctx) => CreateOrUpdateRecord(
+                                            updateData: true,
+                                            sheetContext: ctx,
+                                            data: data[index],
+                                            finalFunction: () {
+                                              setState(() {
+                                                updateData(
+                                                    data: data[index],
+                                                    id: data[index].id);
+                                              });
+                                            },
+                                          ));
+                                });
+                              },
+                              icon: Icon(Icons.edit)),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  deleteData(id: data[index].id);
+                                });
+                              },
+                              icon: Icon(Icons.delete)),
+                        ],
+                      ),
                       onTap: () {
                         Navigator.push(
                             context,

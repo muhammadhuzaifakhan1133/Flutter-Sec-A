@@ -41,8 +41,7 @@ class CreateRecordFields {
     return text;
   }
 
-  Map<String, dynamic> tojson() {
-    Data data = Data();
+  void fieldValuesToDataModel(Data data) {
     data.name = name.controller.text;
     data.email = email.controller.text;
     data.username = username.controller.text;
@@ -57,7 +56,6 @@ class CreateRecordFields {
     data.company?.name = getValue(companyName.controller.text);
     data.company?.catchPhrase = getValue(companyPhrase.controller.text);
     data.company?.bs = getValue(companyBs.controller.text);
-    return data.toJson();
   }
 
   List<customField> getMandatoryFields() {

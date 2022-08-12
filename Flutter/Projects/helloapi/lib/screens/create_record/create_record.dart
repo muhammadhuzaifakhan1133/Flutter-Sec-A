@@ -11,13 +11,15 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 class CreateOrUpdateRecord extends StatefulWidget {
   CreateOrUpdateRecord(
       {this.updateData = false,
-      this.data,
+      required this.data,
       required this.sheetContext,
+      required this.finalFunction,
       Key? key})
       : super(key: key);
   bool updateData;
-  Data? data;
+  Data data;
   BuildContext sheetContext;
+  Function finalFunction;
   @override
   State<CreateOrUpdateRecord> createState() => _CreateOrUpdateRecordState();
 }
@@ -29,7 +31,7 @@ class _CreateOrUpdateRecordState extends State<CreateOrUpdateRecord> {
   void initState() {
     super.initState();
     if (widget.updateData) {
-      fields.getDatafromRecord(widget.data!);
+      fields.getDatafromRecord(widget.data);
     }
   }
 
@@ -189,12 +191,9 @@ class _CreateOrUpdateRecordState extends State<CreateOrUpdateRecord> {
                 Fluttertoast.showToast(msg: "No Internet Connection");
                 return;
               }
+              fields.fieldValuesToDataModel(widget.data);
               circleProgressDialog(context);
-              if (widget.updateData) {
-                await updateData(data: fields.tojson(), id: widget.data!.id!);
-              } else {
-                await postData(fields.tojson());
-              }
+              widget.finalFunction();
               closeDialog(context);
               Navigator.pop(widget.sheetContext);
             },

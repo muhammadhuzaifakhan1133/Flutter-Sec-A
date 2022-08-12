@@ -11,7 +11,7 @@ Future<void> _launchUrl(BuildContext context, String url) async {
 }
 
 List<Widget> renderSlides(
-    {required List<Data> users, required BuildContext context}) {
+    {required List users, required BuildContext context}) {
   List<Widget> slides = [];
   double spaceBetween = 10;
   TextStyle keyStyle =
