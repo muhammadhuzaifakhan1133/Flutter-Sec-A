@@ -42,9 +42,9 @@ class _CreateOrUpdateRecordState extends State<CreateOrUpdateRecord> {
       child: Column(
         children: [
           const SizedBox(height: 40),
-          const Text(
-            "NEW RECORD",
-            style: TextStyle(
+          Text(
+            widget.updateData ? "EDIT RECORD" : "NEW RECORD",
+            style: const TextStyle(
                 color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 40),
@@ -177,29 +177,34 @@ class _CreateOrUpdateRecordState extends State<CreateOrUpdateRecord> {
             ),
           ),
           const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: () async {
-              fields.clearErrors();
-              if (fields.ifAnyMantadotryFieldTextisEmpty()) {
-                setState(() {
-                  fields.setEmptyErrorForMandatoryField();
-                });
-                Fluttertoast.showToast(msg: "Please fill all required fields");
-                return;
-              }
-              if (!(await InternetConnectionChecker().hasConnection)) {
-                Fluttertoast.showToast(msg: "No Internet Connection");
-                return;
-              }
-              fields.fieldValuesToDataModel(widget.data);
-              circleProgressDialog(context);
-              await widget.finalFunction();
-              closeDialog(context);
-              Navigator.pop(widget.sheetContext);
-            },
-            style: ElevatedButton.styleFrom(
-                primary: Colors.blueGrey, elevation: 10),
-            child: Text(widget.updateData ? "SAVE" : "CREATE"),
+          SizedBox(
+            height: size.height * 0.05,
+            width: size.width * 0.4,
+            child: ElevatedButton(
+              onPressed: () async {
+                fields.clearErrors();
+                if (fields.ifAnyMantadotryFieldTextisEmpty()) {
+                  setState(() {
+                    fields.setEmptyErrorForMandatoryField();
+                  });
+                  Fluttertoast.showToast(
+                      msg: "Please fill all required fields");
+                  return;
+                }
+                if (!(await InternetConnectionChecker().hasConnection)) {
+                  Fluttertoast.showToast(msg: "No Internet Connection");
+                  return;
+                }
+                fields.fieldValuesToDataModel(widget.data);
+                circleProgressDialog(context);
+                await widget.finalFunction();
+                closeDialog(context);
+                Navigator.pop(widget.sheetContext);
+              },
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.deepOrange, elevation: 10),
+              child: Text(widget.updateData ? "SAVE" : "CREATE"),
+            ),
           ),
           const SizedBox(height: 30),
         ],

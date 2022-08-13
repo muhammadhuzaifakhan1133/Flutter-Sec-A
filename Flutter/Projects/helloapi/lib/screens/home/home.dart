@@ -16,8 +16,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.indigo,
           title: const Text("API INTEGRATION - CRUD"),
         ),
         floatingActionButton: FloatingActionButton(
@@ -59,51 +62,58 @@ class _HomePageState extends State<HomePage> {
               return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text("${data[index].name}"),
-                    subtitle: Text("${data[index].email}"),
-                    trailing: Wrap(
-                      children: [
-                        IconButton(
-                            onPressed: () async {
-                              await Future.delayed(const Duration(seconds: 0),
-                                  () async {
-                                showMaterialModalBottomSheet(
-                                    context: context,
-                                    expand: true,
-                                    builder: (ctx) => CreateOrUpdateRecord(
-                                          updateData: true,
-                                          sheetContext: ctx,
-                                          data: data[index],
-                                          finalFunction: () async {
-                                            await updateData(
-                                                data: data[index],
-                                                id: data[index].id!);
-                                            setState(() {});
-                                          },
-                                        ));
-                              });
-                            },
-                            icon: Icon(Icons.edit)),
-                        IconButton(
-                            onPressed: () async {
-                              circleProgressDialog(context);
-                              await deleteData(id: data[index].id!);
-                              closeDialog(context);
-                              setState(() {});
-                            },
-                            icon: Icon(Icons.delete)),
-                      ],
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    elevation: 5,
+                    child: ListTile(
+                      title: Text("${data[index].name}",
+                          overflow: TextOverflow.ellipsis),
+                      subtitle: Text("${data[index].email}",
+                          overflow: TextOverflow.ellipsis),
+                      trailing: Wrap(
+                        children: [
+                          IconButton(
+                              onPressed: () async {
+                                await Future.delayed(const Duration(seconds: 0),
+                                    () async {
+                                  showMaterialModalBottomSheet(
+                                      context: context,
+                                      expand: true,
+                                      builder: (ctx) => CreateOrUpdateRecord(
+                                            updateData: true,
+                                            sheetContext: ctx,
+                                            data: data[index],
+                                            finalFunction: () async {
+                                              await updateData(
+                                                  data: data[index],
+                                                  id: data[index].id!);
+                                              setState(() {});
+                                            },
+                                          ));
+                                });
+                              },
+                              icon: Icon(Icons.edit)),
+                          IconButton(
+                              onPressed: () async {
+                                circleProgressDialog(context);
+                                await deleteData(id: data[index].id!);
+                                closeDialog(context);
+                                setState(() {});
+                              },
+                              icon: Icon(Icons.delete)),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserInfo(
+                                      slides: slides,
+                                      index: index,
+                                    )));
+                      },
                     ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserInfo(
-                                    slides: slides,
-                                    index: index,
-                                  )));
-                    },
                   );
                 },
               );
