@@ -5,7 +5,12 @@ import 'package:http/http.dart' as http;
 String url = "https://maaz-api.tga-edu.com/api/users";
 
 Future<UserModel> getUsers() async {
-  http.Response response = await http.get(Uri.parse(url));
+  http.Response response;
+  try {
+    response = await http.get(Uri.parse(url));
+  } catch (e) {
+    throw "Internet Problem";
+  }
   var data = jsonDecode(response.body);
   return UserModel.fromJson(data);
 }

@@ -23,7 +23,10 @@ class UserInfo extends StatelessWidget {
         showDoneBtn: false,
         showSkipBtn: false,
         autoScroll: false,
-        showDotIndicator: false,
+        showDotIndicator: true,
+        colorActiveDot: Colors.black,
+        colorDot: Colors.blue,
+        typeDotAnimation: DotSliderAnimation.SIZE_TRANSITION,
         prevButtonStyle: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
         nextButtonStyle: ButtonStyle(

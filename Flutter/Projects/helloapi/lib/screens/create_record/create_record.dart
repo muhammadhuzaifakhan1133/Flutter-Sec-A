@@ -193,7 +193,7 @@ class _CreateOrUpdateRecordState extends State<CreateOrUpdateRecord> {
               }
               fields.fieldValuesToDataModel(widget.data);
               circleProgressDialog(context);
-              widget.finalFunction();
+              await widget.finalFunction();
               closeDialog(context);
               Navigator.pop(widget.sheetContext);
             },
