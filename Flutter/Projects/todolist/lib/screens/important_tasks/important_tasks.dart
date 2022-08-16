@@ -67,7 +67,10 @@ class _ImportantTasksState extends State<ImportantTasks> {
                   screen: "important",
                   filterKey: "important",
                   sortBy: widget.sortBy,
-                  descending: widget.descending)),
+                  descending: widget.descending,
+                  iconWhenNoData: Icons.star,
+                  textWhenNoData: "Your important task show up here",
+                  iconColor: Colors.white)),
         ],
       ),
     );

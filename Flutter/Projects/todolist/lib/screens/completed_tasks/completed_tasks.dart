@@ -63,11 +63,15 @@ class _CompletedTasksState extends State<CompletedTasks> {
             sortStatusRow(widget, setState, color: getThemeColor()),
           Expanded(
               child: streamBuilderForFilterTask(
-                  email: (user?.email)!,
-                  screen: "complete",
-                  filterKey: "complete",
-                  sortBy: widget.sortBy,
-                  descending: widget.descending)),
+            email: (user?.email)!,
+            screen: "complete",
+            filterKey: "complete",
+            sortBy: widget.sortBy,
+            descending: widget.descending,
+            textWhenNoData: "Your Completed tasks will show up here",
+            iconWhenNoData: Icons.check_circle,
+            iconColor: Colors.white,
+          )),
         ],
       ),
     );

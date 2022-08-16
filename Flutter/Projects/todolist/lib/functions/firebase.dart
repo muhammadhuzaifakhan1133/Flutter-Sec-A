@@ -182,7 +182,14 @@ Future<void> renameList(
 
 Future<void> deleteList({required String listID}) async {
   CollectionReference lists = FirebaseFirestore.instance.collection("lists");
-  lists.doc(listID).delete();
+  await lists.doc(listID).delete();
+  QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance
+      .collection("tasks")
+      .where("listID", isEqualTo: listID)
+      .get();
+  for (QueryDocumentSnapshot taskDoc in query.docs) {
+    await deleteTask(taskID: taskDoc.id);
+  }
 }
 
 Future<void> deleteTask({required String taskID}) async {

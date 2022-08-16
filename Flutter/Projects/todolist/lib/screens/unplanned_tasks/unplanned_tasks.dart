@@ -67,7 +67,10 @@ class _UnplannedTasksState extends State<UnplannedTasks> {
                   screen: "unplanned",
                   filterKey: "date",
                   sortBy: widget.sortBy,
-                  descending: widget.descending)),
+                  descending: widget.descending,
+                  textWhenNoData: "Your unplanned tasks will show up here",
+                  iconWhenNoData: Icons.calendar_today_sharp,
+                  iconColor: Colors.white)),
         ],
       ),
     );

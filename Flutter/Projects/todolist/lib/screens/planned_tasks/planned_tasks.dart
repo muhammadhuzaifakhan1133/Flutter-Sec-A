@@ -5,6 +5,7 @@ import 'package:todolist/screens/list_main_screen/back_button.dart';
 import 'package:todolist/screens/planned_tasks/menu_for_group_by.dart';
 import 'package:todolist/screens/planned_tasks/separate_date_and_fields.dart';
 import 'package:todolist/widgets/filter_tasks/stream_builder_for_filter_task.dart';
+import 'package:todolist/widgets/widget_when_no_data.dart';
 
 class PlannedTasks extends StatefulWidget {
   PlannedTasks({this.groupBy = "date", Key? key}) : super(key: key);
@@ -20,6 +21,13 @@ class _PlannedTasksState extends State<PlannedTasks> {
 
   Color? getThemeColor() {
     return Colors.orange[700];
+  }
+
+  Widget widgetWhenNoPlanned() {
+    return widgetWhenNoData(
+        icon: Icons.calendar_month_outlined,
+        text: "Your Planned task show up here",
+        color: Colors.black);
   }
 
   @override
@@ -67,6 +75,9 @@ class _PlannedTasksState extends State<PlannedTasks> {
                         List<String> listNames = [];
                         listIDs.addAll(snapshot.data!.docs
                             .map((QueryDocumentSnapshot doc) => doc.id));
+                        if (listIDs.isEmpty) {
+                          return widgetWhenNoPlanned();
+                        }
                         List<QueryDocumentSnapshot> listSnapshots =
                             snapshot.data!.docs;
                         listNames.addAll(
@@ -94,6 +105,10 @@ class _PlannedTasksState extends State<PlannedTasks> {
                                   child: CircularProgressIndicator());
                             }
 
+                            if (taskSnapshot.data!.docs.isEmpty) {
+                              return widgetWhenNoPlanned();
+                            }
+
                             return ListView(
                                 children: separateDateAndFields(
                                     snapshot: taskSnapshot,
@@ -109,7 +124,10 @@ class _PlannedTasksState extends State<PlannedTasks> {
                       descending: false,
                       filterKey: "date",
                       screen: "planned",
-                      sortBy: "normal"),
+                      sortBy: "normal",
+                      iconWhenNoData: Icons.calendar_month_outlined,
+                      textWhenNoData: "Your Planned task show up here",
+                      iconColor: Colors.black),
             ),
           ],
         ));
