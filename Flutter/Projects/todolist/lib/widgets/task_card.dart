@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/functions/firebase.dart';
 import 'package:todolist/functions/format_date.dart';
 import 'package:todolist/functions/format_time.dart';
+import 'package:todolist/functions/date_time_color.dart';
 import 'package:todolist/screens/new_or_edit_task/new_or_edit_task.dart';
 import 'package:todolist/screens/new_or_edit_task/task_values.dart';
 
@@ -53,9 +54,15 @@ Widget taskCard(
           subtitle: planScreen
               ? Text(listName!)
               : Row(children: [
-                  Text(formatTime(taskValues.time)),
+                  Text(formatTime(taskValues.time),
+                      style: TextStyle(
+                          color:
+                              getDateColor(taskValues.date, taskValues.time))),
                   const SizedBox(width: 5),
-                  Text(formatDate(taskValues.date))
+                  Text(formatDate(taskValues.date),
+                      style: TextStyle(
+                          color:
+                              getDateColor(taskValues.date, taskValues.time)))
                 ]),
           trailing: IconButton(
               onPressed: () {

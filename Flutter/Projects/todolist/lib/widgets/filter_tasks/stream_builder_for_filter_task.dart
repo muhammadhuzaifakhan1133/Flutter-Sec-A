@@ -4,15 +4,16 @@ import 'package:todolist/screens/list_main_screen/task_list_view.dart';
 import 'package:todolist/widgets/filter_tasks/choose_query.dart';
 import 'package:todolist/widgets/widget_when_no_data.dart';
 
-StreamBuilder streamBuilderForFilterTask(
-    {required String email,
-    required bool descending,
-    required String filterKey,
-    required String screen,
-    required String sortBy,
-    required String textWhenNoData,
-    required IconData iconWhenNoData,
-    required Color iconColor}) {
+StreamBuilder streamBuilderForFilterTask({
+  required String email,
+  required bool descending,
+  required String filterKey,
+  required String screen,
+  required String sortBy,
+  required String textWhenNoData,
+  required IconData iconWhenNoData,
+  required Color iconColor,
+}) {
   return StreamBuilder<QuerySnapshot>(
     stream: FirebaseFirestore.instance
         .collection("lists")
@@ -29,7 +30,10 @@ StreamBuilder streamBuilderForFilterTask(
       if (listDocs.isEmpty) {
         return Center(
             child: widgetWhenNoData(
-                icon: iconWhenNoData, color: iconColor, text: textWhenNoData));
+          icon: iconWhenNoData,
+          color: iconColor,
+          text: textWhenNoData,
+        ));
       }
       List<StreamBuilder> expansionTiles =
           listDocs.map((QueryDocumentSnapshot doc) {
@@ -55,7 +59,8 @@ StreamBuilder streamBuilderForFilterTask(
                   child: widgetWhenNoData(
                       icon: iconWhenNoData,
                       color: iconColor,
-                      text: textWhenNoData));
+                      text: textWhenNoData,
+                      topPadding: 200));
             }
             List<Widget> tasksOfList = taskListView(
               snapshot: snapshot2,

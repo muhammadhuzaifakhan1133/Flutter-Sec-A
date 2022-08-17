@@ -25,9 +25,10 @@ class _PlannedTasksState extends State<PlannedTasks> {
 
   Widget widgetWhenNoPlanned() {
     return widgetWhenNoData(
-        icon: Icons.calendar_month_outlined,
-        text: "Your Planned task show up here",
-        color: Colors.black);
+      icon: Icons.calendar_month_outlined,
+      text: "Your Planned task show up here",
+      color: Colors.white,
+    );
   }
 
   @override
@@ -127,7 +128,8 @@ class _PlannedTasksState extends State<PlannedTasks> {
                       sortBy: "normal",
                       iconWhenNoData: Icons.calendar_month_outlined,
                       textWhenNoData: "Your Planned task show up here",
-                      iconColor: Colors.black),
+                      iconColor: Colors.white,
+                    ),
             ),
           ],
         ));

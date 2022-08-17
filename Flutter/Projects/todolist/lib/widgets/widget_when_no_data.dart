@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
 Widget widgetWhenNoData(
-    {required IconData icon, required String text, required Color color}) {
+    {required IconData icon,
+    required String text,
+    required Color color,
+    double size = 100,
+    double topPadding = 0}) {
   return Padding(
-    padding: const EdgeInsets.only(top: 200.0),
+    padding: EdgeInsets.only(top: topPadding),
     child: Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
