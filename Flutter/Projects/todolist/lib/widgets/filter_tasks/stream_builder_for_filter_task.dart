@@ -65,6 +65,7 @@ StreamBuilder streamBuilderForFilterTask({
             List<Widget> tasksOfList = taskListView(
               snapshot: snapshot2,
               context: context,
+              filterScreen: true,
             );
             if (tasksOfList.isNotEmpty) {
               return ExpansionTile(

@@ -6,7 +6,7 @@ import 'package:todolist/functions/date_time_color.dart';
 import 'package:todolist/screens/new_or_edit_task/new_or_edit_task.dart';
 import 'package:todolist/screens/new_or_edit_task/task_values.dart';
 
-Widget taskCard(
+Widget getTaskCard(
     {required BuildContext context,
     String? listID,
     required TaskValues taskValues,
@@ -31,6 +31,7 @@ Widget taskCard(
                   )));
     },
     child: Card(
+      elevation: 10,
       child: ListTile(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

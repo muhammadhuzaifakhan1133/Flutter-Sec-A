@@ -42,8 +42,9 @@ class _ImportantTasksState extends State<ImportantTasks> {
                 Icons.more_vert,
                 color: getThemeColor(),
               ),
-              itemBuilder: (context) =>
-                  [sortMenuItem(context, widget, setState, complete: false)])
+              itemBuilder: (context) => [
+                    sortMenuItem(context, widget, setState, completeSort: false)
+                  ])
         ],
       ),
       backgroundColor: getBgColor(),

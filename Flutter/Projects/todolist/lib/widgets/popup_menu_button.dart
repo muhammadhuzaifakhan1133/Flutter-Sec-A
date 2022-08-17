@@ -50,6 +50,6 @@ popupMenuButton(
                 Navigator.pop(context);
               },
             ),
-            sortMenuItem(context, widget, setState)
+            sortMenuItem(context, widget, setState, completeSort: false)
           ]);
 }

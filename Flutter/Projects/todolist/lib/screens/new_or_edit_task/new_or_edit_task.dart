@@ -96,13 +96,12 @@ class _NewOrEditTaskState extends State<NewOrEditTask> {
                     Fluttertoast.showToast(msg: "No Internet Connection");
                     return;
                   }
-                  if (widget.buttonText == "CREATE") {
-                    await addTask(
-                        listID: widget.listID!, taskValues: taskValues);
-                  } else {
-                    await updateTask(
-                        taskID: widget.taskID!, taskValues: taskValues);
-                  }
+                  await addOrUpdateTask(
+                      listID: widget.listID!,
+                      taskValues: taskValues,
+                      taskID: widget.taskID!,
+                      update: widget.buttonText != "CREATE");
+
                   closeDialog(context);
                   Navigator.pop(context);
                 })

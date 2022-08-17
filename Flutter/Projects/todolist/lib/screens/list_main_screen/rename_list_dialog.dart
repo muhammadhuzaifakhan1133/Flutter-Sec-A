@@ -23,7 +23,7 @@ renameListDialog({context, renameController, widget, setState}) {
           }
 
           await renameList(
-              listID: widget.listId, newName: renameController.text);
+              listID: widget.listID, newName: renameController.text);
           closeDialog(context);
           setState(() {
             widget.listName = renameController.text;

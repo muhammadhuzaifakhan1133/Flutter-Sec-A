@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 PopupMenuItem<dynamic> sortMenuItem(BuildContext context, widget, setState,
-    {important = true, complete = true}) {
+    {importantSort = true, completeSort = true}) {
   return PopupMenuItem(
     child: Row(
       children: const [
@@ -20,7 +20,7 @@ PopupMenuItem<dynamic> sortMenuItem(BuildContext context, widget, setState,
                   topLeft: Radius.circular(15.0),
                   topRight: Radius.circular(15.0))),
           builder: (ctx) => Container(
-            height: (!(complete && important)) ? 230 : 280,
+            height: (!(completeSort && importantSort)) ? 230 : 280,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -30,7 +30,7 @@ PopupMenuItem<dynamic> sortMenuItem(BuildContext context, widget, setState,
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ),
-                if (important)
+                if (importantSort)
                   ListTile(
                     leading: const Icon(Icons.star_border),
                     title: const Text("Importance"),
@@ -43,7 +43,7 @@ PopupMenuItem<dynamic> sortMenuItem(BuildContext context, widget, setState,
                       });
                     },
                   ),
-                if (complete)
+                if (completeSort)
                   ListTile(
                     leading: const Icon(Icons.check_circle_outline),
                     title: const Text("Completion"),

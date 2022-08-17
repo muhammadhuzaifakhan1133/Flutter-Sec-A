@@ -45,21 +45,26 @@ Future<void> changeTaskCompletency(
   tasks.doc(taskID).update({"complete": value});
 }
 
-Future<void> addTask({
-  required String listID,
+Future<void> addOrUpdateTask({
   required TaskValues taskValues,
+  String? listID,
+  String? taskID,
+  bool update = false,
 }) async {
   CollectionReference tasks = FirebaseFirestore.instance.collection("tasks");
-  tasks.add({
+  Map<String, dynamic> data = {
     "listID": listID,
     "name": taskValues.name!.text,
     "complete": taskValues.complete,
     "important": taskValues.important,
-    "date": taskValues.date != null
-        ? taskValues.date.toString().split(" ")[0]
-        : null,
-    "time": taskValues.time
-  });
+    "date": taskValues.date,
+    "time": taskValues.time,
+  };
+  if (update) {
+    tasks.doc(taskID).update(data);
+  } else {
+    tasks.add(data);
+  }
 }
 
 Future<void> updateTask({
@@ -71,9 +76,7 @@ Future<void> updateTask({
     "name": taskValues.name!.text,
     "complete": taskValues.complete,
     "important": taskValues.important,
-    "date": taskValues.date != null
-        ? taskValues.date.toString().split(" ")[0]
-        : null,
-    "time": taskValues.time
+    "date": taskValues.date,
+    "time": taskValues.time,
   });
 }

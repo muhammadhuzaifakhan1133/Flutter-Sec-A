@@ -9,11 +9,13 @@ Stream<QuerySnapshot> chooseQueryForListMainScreen(
     query = FirebaseFirestore.instance
         .collection("tasks")
         .where("listID", isEqualTo: listID)
+        .orderBy("complete")
         .snapshots();
   } else {
     query = FirebaseFirestore.instance
         .collection("tasks")
         .where("listID", isEqualTo: listID)
+        .orderBy("complete")
         .orderBy(sortBy, descending: descending)
         .snapshots();
   }

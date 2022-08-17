@@ -24,7 +24,7 @@ List<ExpansionTile> separateDateAndFields({
         name: TextEditingController(text: data["name"]),
         complete: data["complete"],
         important: data["important"],
-        date: data["date"] != null ? DateTime.parse(data["date"]) : null,
+        date: data["date"]?.toDate(),
         time: data["time"]?.toDate());
     String listName = listNames[listIDs.indexOf(data["listID"])];
     date = formatDate(taskValues.date);
@@ -32,7 +32,7 @@ List<ExpansionTile> separateDateAndFields({
       previousDate = formatDate(taskValues.date);
     }
     if (date == previousDate) {
-      subChildrens.add(taskCard(
+      subChildrens.add(getTaskCard(
           context: context,
           taskValues: taskValues,
           taskID: taskDocList[i],
@@ -46,7 +46,7 @@ List<ExpansionTile> separateDateAndFields({
       ));
       previousDate = date;
       subChildrens = [];
-      subChildrens.add(taskCard(
+      subChildrens.add(getTaskCard(
         context: context,
         taskValues: taskValues,
         taskID: taskDocList[i],

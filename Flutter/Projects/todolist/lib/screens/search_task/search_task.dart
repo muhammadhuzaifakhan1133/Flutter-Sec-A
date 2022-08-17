@@ -32,7 +32,7 @@ class _SearchTaskState extends State<SearchTask> {
           name: TextEditingController(text: data["name"]),
           complete: data["complete"],
           important: data["important"],
-          date: data["date"] != null ? DateTime.parse(data["date"]) : null,
+          date: data["date"]?.toDate(),
           time: data["time"]?.toDate());
       tasksValues.add(taskValues);
       listIDs.add(data["listID"]);
@@ -97,7 +97,7 @@ class _SearchTaskState extends State<SearchTask> {
                       child: ListView.builder(
                         itemCount: trueIndex.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return taskCard(
+                          return getTaskCard(
                               context: context,
                               taskValues: tasksValues[trueIndex[index]],
                               taskID: taskIDs[trueIndex[index]],
