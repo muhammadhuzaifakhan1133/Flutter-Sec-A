@@ -37,7 +37,7 @@ List<ExpansionTile> separateDateAndFields({
           taskValues: taskValues,
           taskID: taskDocList[i],
           listName: listName,
-          planScreen: true));
+          showListNameAsSubtitle: true));
     } else {
       childrens.add(ExpansionTile(
         title: Text(previousDate),
@@ -51,7 +51,7 @@ List<ExpansionTile> separateDateAndFields({
         taskValues: taskValues,
         taskID: taskDocList[i],
         listName: listName,
-        planScreen: true,
+        showListNameAsSubtitle: true,
       ));
     }
     if (i == taskDocList.length - 1) {

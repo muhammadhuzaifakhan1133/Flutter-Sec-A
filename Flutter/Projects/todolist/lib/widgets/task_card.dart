@@ -11,7 +11,7 @@ Widget taskCard(
     String? listID,
     required TaskValues taskValues,
     String? listName,
-    bool planScreen = false,
+    bool showListNameAsSubtitle = false,
     required String taskID}) {
   return InkWell(
     onTap: () {
@@ -51,7 +51,7 @@ Widget taskCard(
                   decoration: (taskValues.complete!)
                       ? TextDecoration.lineThrough
                       : TextDecoration.none)),
-          subtitle: planScreen
+          subtitle: showListNameAsSubtitle
               ? Text(listName!)
               : Row(children: [
                   Text(formatTime(taskValues.time),
