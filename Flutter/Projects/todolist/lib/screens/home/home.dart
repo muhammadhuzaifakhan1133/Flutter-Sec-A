@@ -49,6 +49,7 @@ class _HomeState extends State<Home> {
                         builder: (context) => Profile(name: widget.name)));
               },
               child: profileTile(
+                  context: context,
                   photoUrl: user!.photoURL,
                   name: widget.name,
                   email: user.email),
