@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/close_dialog.dart';
-import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/firebase/user.dart';
 import 'package:todolist/functions/is_right_provider.dart';
 import 'package:todolist/functions/push_and_remove_until.dart';
 import 'package:todolist/functions/save_user_as_active.dart';

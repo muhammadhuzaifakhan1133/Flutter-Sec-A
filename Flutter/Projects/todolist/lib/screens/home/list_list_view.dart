@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:todolist/screens/list_main_screen/list_main_screen.dart';
 
 ListView listListView(
-    AsyncSnapshot<QuerySnapshot<Object?>> snapshot, BuildContext context) {
+    {required AsyncSnapshot<QuerySnapshot<Object?>> snapshot,
+    required BuildContext context,
+    bool shrinkWrap = false,
+    bool scrolling = true}) {
   return ListView(
+    shrinkWrap: shrinkWrap,
+    primary: scrolling,
     children: snapshot.data!.docs.map((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       return ListTile(

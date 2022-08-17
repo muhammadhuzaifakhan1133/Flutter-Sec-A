@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/firebase/list_and_task.dart';
 import 'package:todolist/screens/list_main_screen/rename_list_dialog.dart';
 import 'package:todolist/widgets/sort_menu_item.dart';
 

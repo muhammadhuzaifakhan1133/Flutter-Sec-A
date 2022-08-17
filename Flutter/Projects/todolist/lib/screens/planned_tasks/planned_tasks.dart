@@ -87,37 +87,44 @@ class _PlannedTasksState extends State<PlannedTasks> {
                               document.data() as Map<String, dynamic>;
                           return data["name"];
                         }));
-                        return StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection("tasks")
-                              .where("listID", whereIn: listIDs)
-                              .where("date", isNull: false)
-                              .orderBy("date")
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> taskSnapshot) {
-                            if (taskSnapshot.hasError) {
-                              return const Center(
-                                  child: Text("Something went wrong"));
-                            }
-                            if (taskSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
+                        int n = listIDs.length ~/ 10;
+                        n += listIDs.length % 10 == 0 ? 0 : 1;
+                        for (var i = 0; i < n; i++) {
+                          List<String> subList =
+                              listIDs.sublist(i * 10, (i * 10) + 10);
+                          return StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("tasks")
+                                .where("listID", whereIn: subList)
+                                .where("date", isNull: false)
+                                .orderBy("date")
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> taskSnapshot) {
+                              if (taskSnapshot.hasError) {
+                                return const Center(
+                                    child: Text("Something went wrong"));
+                              }
+                              if (taskSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
 
-                            if (taskSnapshot.data!.docs.isEmpty) {
-                              return widgetWhenNoPlanned();
-                            }
+                              if (taskSnapshot.data!.docs.isEmpty) {
+                                return widgetWhenNoPlanned();
+                              }
 
-                            return ListView(
-                                children: separateDateAndFields(
-                                    snapshot: taskSnapshot,
-                                    context: context,
-                                    listIDs: listIDs,
-                                    listNames: listNames));
-                          },
-                        );
+                              return ListView(
+                                  children: separateDateAndFields(
+                                      snapshot: taskSnapshot,
+                                      context: context,
+                                      listIDs: listIDs,
+                                      listNames: listNames));
+                            },
+                          );
+                        }
+                        return SizedBox();
                       },
                     )
                   : streamBuilderForFilterTask(

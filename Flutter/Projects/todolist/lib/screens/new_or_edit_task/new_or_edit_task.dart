@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/close_dialog.dart';
-import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/firebase/list_and_task.dart';
 import 'package:todolist/screens/list_main_screen/back_button.dart';
 import 'package:todolist/screens/new_or_edit_task/complete_checker.dart';
 import 'package:todolist/screens/new_or_edit_task/date_time_picker.dart';

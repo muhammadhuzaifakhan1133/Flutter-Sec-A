@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/firebase/user.dart';
 import 'package:todolist/screens/email_verify/email_verify.dart';
 import 'package:todolist/screens/home/home.dart';
 import 'package:todolist/screens/no_internet_screen/no_internet_screen.dart';

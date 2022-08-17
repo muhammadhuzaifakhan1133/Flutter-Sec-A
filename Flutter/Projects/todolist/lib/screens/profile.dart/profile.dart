@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/firebase/user.dart';
 import 'package:todolist/screens/profile.dart/avatar_with_cross.dart';
 
 // ignore: must_be_immutable

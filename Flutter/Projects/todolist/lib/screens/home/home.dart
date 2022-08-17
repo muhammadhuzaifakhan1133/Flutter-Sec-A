@@ -54,66 +54,82 @@ class _HomeState extends State<Home> {
                   name: widget.name,
                   email: user.email),
             ),
-            ListTile(
-                leading:
-                    const Icon(Icons.check_circle_outline, color: Colors.green),
-                title: const Text("Completed Tasks"),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CompletedTasks()));
-                }),
-            ListTile(
-                leading: const Icon(
-                  Icons.star_border,
-                  color: Colors.pink,
-                ),
-                title: const Text("Important Tasks"),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ImportantTasks()));
-                }),
-            ListTile(
-                leading: const Icon(
-                  Icons.calendar_month,
-                  color: Colors.blue,
-                ),
-                title: const Text("Planned Tasks"),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PlannedTasks()));
-                }),
-            ListTile(
-                leading: const Icon(Icons.pending, color: Colors.red),
-                title: const Text("Unplanned Tasks"),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UnplannedTasks()));
-                }),
             Expanded(
-              child: Center(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection("lists")
-                      .where("email", isEqualTo: user.email)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Center(
-                          child: Text("Something went wrong",
-                              style: TextStyle(fontSize: 23)));
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListTile(
+                        leading: const Icon(Icons.check_circle_outline,
+                            color: Colors.green),
+                        title: const Text("Completed Tasks"),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CompletedTasks()));
+                        }),
+                    ListTile(
+                        leading: const Icon(
+                          Icons.star_border,
+                          color: Colors.pink,
+                        ),
+                        title: const Text("Important Tasks"),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ImportantTasks()));
+                        }),
+                    ListTile(
+                        leading: const Icon(
+                          Icons.calendar_month,
+                          color: Colors.blue,
+                        ),
+                        title: const Text("Planned Tasks"),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PlannedTasks()));
+                        }),
+                    ListTile(
+                        leading: const Icon(Icons.pending, color: Colors.red),
+                        title: const Text("Unplanned Tasks"),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UnplannedTasks()));
+                        }),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Divider(thickness: 2),
+                    ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("lists")
+                          .where("email", isEqualTo: user.email)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return const Center(
+                              child: Text("Something went wrong",
+                                  style: TextStyle(fontSize: 23)));
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
 
-                    return listListView(snapshot, context);
-                  },
+                        return listListView(
+                            snapshot: snapshot,
+                            context: context,
+                            shrinkWrap: true,
+                            scrolling: false);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),

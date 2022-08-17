@@ -52,16 +52,16 @@ StreamBuilder streamBuilderForFilterTask({
               return const Center(child: Text("Something went wrong"));
             }
             if (snapshot2.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: SizedBox());
             }
-            if (snapshot2.data!.docs.isEmpty) {
-              return Center(
-                  child: widgetWhenNoData(
-                      icon: iconWhenNoData,
-                      color: iconColor,
-                      text: textWhenNoData,
-                      topPadding: 200));
-            }
+            // if (snapshot2.data!.docs.isEmpty) {
+            //   return Center(
+            //       child: widgetWhenNoData(
+            //           icon: iconWhenNoData,
+            //           color: iconColor,
+            //           text: textWhenNoData,
+            //           topPadding: 200));
+            // }
             List<Widget> tasksOfList = taskListView(
               snapshot: snapshot2,
               context: context,

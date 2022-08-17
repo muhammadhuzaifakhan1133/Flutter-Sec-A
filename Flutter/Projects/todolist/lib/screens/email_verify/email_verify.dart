@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:todolist/functions/close_dialog.dart';
-import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/firebase/user.dart';
 import 'package:todolist/functions/push_and_remove_until.dart';
 import 'package:todolist/screens/email_verify/text_for_change_email.dart';
 import 'package:todolist/screens/home/home.dart';

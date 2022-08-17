@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/functions/close_dialog.dart';
-import 'package:todolist/functions/firebase.dart';
+import 'package:todolist/functions/firebase/user.dart';
 
 isRightProvider(
     {required BuildContext context,

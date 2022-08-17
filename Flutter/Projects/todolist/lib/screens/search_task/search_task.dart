@@ -14,11 +14,14 @@ class SearchTask extends StatefulWidget {
 }
 
 class _SearchTaskState extends State<SearchTask> {
-  List<String> suggestions = [];
-  List<String> taskIDs = [];
-  List<TaskValues> tasksValues = [];
+  List<int> trueIndex = [];
+  List<String> taskIDs = []; // Done
+  List<String> listIDs = []; // Done
+  List<String> listNames = [];
+  List<TaskValues> tasksValues = []; // Done
+  bool initialValuesProcessing = true;
 
-  _getTaskNames() async {
+  getInitialValues() async {
     CollectionReference collection =
         FirebaseFirestore.instance.collection("tasks");
     QuerySnapshot docs = await collection.get();
@@ -31,16 +34,28 @@ class _SearchTaskState extends State<SearchTask> {
           important: data["important"],
           date: data["date"] != null ? DateTime.parse(data["date"]) : null,
           time: data["time"]?.toDate());
+      tasksValues.add(taskValues);
+      listIDs.add(data["listID"]);
+      taskIDs.add(docSnapshot.id);
+      listNames.add(await getListName(data["listID"]));
     }
   }
 
-  Future<String> getListName() async {}
+  Future<String> getListName(String listID) async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection("lists").doc(listID).get();
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return data["name"];
+  }
 
   @override
   void initState() {
     super.initState();
     (() async {
-      await _getTaskNames();
+      await getInitialValues();
+      setState(() {
+        initialValuesProcessing = false;
+      });
     })();
   }
 
@@ -48,49 +63,54 @@ class _SearchTaskState extends State<SearchTask> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: Center(
-          child: Column(
-            children: [
-              textFieldWidget(
-                  size: size,
-                  radius: 15,
-                  widthPercent: 0.98,
-                  prefixIcon: Icons.search,
-                  hintText: "Search your tasks",
-                  onChanged: (String value) {
-                    if (value.isNotEmpty) {
-                      setState(() {
-                        suggestions = taskNames
-                            .where((element) => element.contains(value))
-                            .toList();
-                      });
-                    } else {
-                      setState(() {
-                        suggestions = [];
-                      });
-                    }
-                  }),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: suggestions.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    taskCard(
-                        context: context,
-                        taskValues: taskValues,
-                        taskID: taskID,
-                        showListNameAsSubtitle: true);
-                    return ListTile(
-                      title: Text(suggestions[index]),
-                    );
-                  },
+      body: initialValuesProcessing
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Center(
+                child: Column(
+                  children: [
+                    textFieldWidget(
+                        size: size,
+                        radius: 15,
+                        widthPercent: 0.98,
+                        prefixIcon: Icons.search,
+                        hintText: "Search your tasks",
+                        onChanged: (String value) {
+                          List<int> indexes = [];
+                          if (value.isNotEmpty) {
+                            for (var i = 0; i < tasksValues.length; i++) {
+                              if (tasksValues[i].name!.text.contains(value)) {
+                                indexes.add(i);
+                              }
+                            }
+                            setState(() {
+                              trueIndex = indexes;
+                            });
+                          } else {
+                            setState(() {
+                              trueIndex = [];
+                            });
+                          }
+                        }),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: trueIndex.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return taskCard(
+                              context: context,
+                              taskValues: tasksValues[trueIndex[index]],
+                              taskID: taskIDs[trueIndex[index]],
+                              listID: listIDs[trueIndex[index]],
+                              showListNameAsSubtitle: true,
+                              listName: listNames[trueIndex[index]]);
+                        },
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 }
