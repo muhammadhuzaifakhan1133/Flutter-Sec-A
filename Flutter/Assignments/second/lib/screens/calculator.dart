@@ -44,13 +44,10 @@ class _CalculatorState extends State<Calculator> {
 
   numberPressed(String number) {
     setState(() {
-      if (expression.length == 0 && number == ".") {
+      if (expression.isEmpty && number == ".") {
         expression += "0.";
       } else if ((expression.length == 1) && (expression[0] == "0")) {
         expression = number;
-      } else if ((expression.length != 0) &&
-          (expression[expression.length - 1] == "%")) {
-        expression += "*" + number;
       } else {
         expression += number;
       }
@@ -71,7 +68,7 @@ class _CalculatorState extends State<Calculator> {
 
   arthimeticOperatorPressed(String operator) {
     setState(() {
-      if (expression.length != 0) {
+      if (expression.isNotEmpty) {
         if (!(arthimeticOperators
             .contains(expression.substring(expression.length - 1)))) {
           expression += operator;
@@ -91,7 +88,7 @@ class _CalculatorState extends State<Calculator> {
 
   operatorPressed(String operator) {
     setState(() {
-      if ((operator == "D") && (expression.length != 0)) {
+      if ((operator == "D") && (expression.isNotEmpty)) {
         expression = expression.substring(0, expression.length - 1);
 
         if (containOperator(expression, arthimeticOperators) &&
@@ -160,7 +157,7 @@ class _CalculatorState extends State<Calculator> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double buttonAreaWidth = screenWidth * 1;
-    double buttonAreaHeight = screenHeight * 0.6;
+    double buttonAreaHeight = screenHeight * 0.5;
     double buttonWidth = buttonAreaWidth / 4;
     double buttonHeight = buttonAreaHeight / 5;
     return Scaffold(
@@ -171,7 +168,7 @@ class _CalculatorState extends State<Calculator> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => CurrencyConverter()));
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.currency_exchange,
               color: Colors.green,
               size: 30,
@@ -180,12 +177,8 @@ class _CalculatorState extends State<Calculator> {
             onPressed: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => History()));
-              // setState(() {
-              //   history_inputs = [];
-              //   history_ans = [];
-              // });
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.history,
               color: Colors.green,
               size: 30,
@@ -194,28 +187,33 @@ class _CalculatorState extends State<Calculator> {
       ]),
       body: Column(
         children: [
-          Container(
-            height: screenHeight * 0.27,
-            width: screenWidth * 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  expression,
-                  style: TextStyle(fontSize: 30),
+          Expanded(
+            child: Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: Container(
+                height: screenHeight * 0.27,
+                width: screenWidth * 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      expression,
+                      style: TextStyle(fontSize: 30),
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Text(
+                      (expression.length == 0) ? "" : ANS.toString(),
+                      style: TextStyle(fontSize: 23),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 40,
-                ),
-                Text(
-                  (expression.length == 0) ? "" : ANS.toString(),
-                  style: TextStyle(fontSize: 23),
-                ),
-                SizedBox(
-                  height: 30,
-                )
-              ],
+              ),
             ),
           ),
           Container(
@@ -286,7 +284,7 @@ class _CalculatorState extends State<Calculator> {
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );
