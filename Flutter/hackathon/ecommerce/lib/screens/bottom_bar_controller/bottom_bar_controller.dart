@@ -49,7 +49,12 @@ class _BottomBarControllerState extends State<BottomBarController> {
             });
           },
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.black,
+                ),
+                label: "Home"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.card_travel), label: "bag"),
             BottomNavigationBarItem(
