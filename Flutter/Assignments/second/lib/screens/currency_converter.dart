@@ -16,9 +16,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   String? toCountry = "PKR";
   double? rate;
   List<String>? currencies = [];
-  Map<String, Map<String, double>> rates = {};
-  String? answer;
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  String answer = "";
+  bool isProcessingComplete = false;
 
   @override
   void initState() {
@@ -60,9 +59,14 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
 
   getResult() async {
     rate = await client.getRate(fromCountry, toCountry);
-    setState(() {
-      answer = (rate! * double.parse(controller.text)).toStringAsFixed(3);
-    });
+    if (controller.text.isNotEmpty) {
+      setState(() {
+        answer = (rate! * double.parse(controller.text)).toStringAsFixed(3);
+        isProcessingComplete = true;
+      });
+    } else {
+      answer = "0.00";
+    }
   }
 
   @override
@@ -79,107 +83,116 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Container(
-                width: 200,
-                height: 200,
-                child: Column(
-                  children: [
-                    Text(
-                      "Exchange Rates",
-                      style: TextStyle(color: Colors.grey, fontSize: 20),
+      body: (isProcessingComplete)
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      child: Column(
+                        children: [
+                          const Text(
+                            "Exchange Rates",
+                            style: TextStyle(color: Colors.grey, fontSize: 20),
+                          ),
+                          const SizedBox(
+                            height: 35,
+                          ),
+                          (answer.isNotEmpty)
+                              ? Text(
+                                  answer,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator()),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 35,
+                  ),
+                  Container(
+                    width: 350,
+                    child: TextField(
+                      onChanged: (String val) {
+                        setState(() {
+                          answer = "";
+                          getResult();
+                        });
+                      },
+                      controller: controller,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: "Enter an amount to convert",
+                          labelText: "Amount",
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                              borderRadius: BorderRadius.circular(10))),
                     ),
-                    Text(
-                      '$answer',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "From",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          customDropDown(currencies!, (val) {
+                            setState(() {
+                              fromCountry = val;
+                              answer = "";
+                              getResult();
+                            });
+                          }, currentValue: fromCountry)
+                        ],
+                      ),
+                      FloatingActionButton(
+                          onPressed: () {
+                            String? temp = fromCountry;
+                            setState(() {
+                              fromCountry = toCountry;
+                              toCountry = temp;
+                              answer = "";
+                            });
+                            getResult();
+                          },
+                          child: Icon(Icons.swap_horiz)),
+                      Column(
+                        children: [
+                          Text(
+                            "To",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          customDropDown(currencies!, (val) {
+                            setState(() {
+                              toCountry = val;
+                              answer = "";
+                              getResult();
+                            });
+                          }, currentValue: toCountry)
+                        ],
+                      )
+                    ],
+                  )
+                ],
               ),
-            ),
-            Container(
-              width: 350,
-              child: TextField(
-                onSubmitted: (String val) {
-                  setState(() {
-                    getResult();
-                  });
-                },
-                controller: controller,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    hintText: "Enter an amount to convert",
-                    labelText: "Amount",
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(),
-                        borderRadius: BorderRadius.circular(10))),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      "From",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    customDropDown(currencies!, (val) {
-                      setState(() {
-                        fromCountry = val;
-                        getResult();
-                      });
-                    }, val: fromCountry)
-                  ],
-                ),
-                FloatingActionButton(
-                    onPressed: () {
-                      String? temp = fromCountry;
-                      setState(() {
-                        fromCountry = toCountry;
-                        toCountry = temp;
-                      });
-                      getResult();
-                    },
-                    child: Icon(Icons.swap_horiz)),
-                Column(
-                  children: [
-                    Text(
-                      "To",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    customDropDown(currencies!, (val) {
-                      setState(() {
-                        toCountry = val;
-                        getResult();
-                      });
-                    }, val: toCountry)
-                  ],
-                )
-              ],
             )
-          ],
-        ),
-      ),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

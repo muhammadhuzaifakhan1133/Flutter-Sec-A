@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget customDropDown(List<String> items, void onChange(val), {val}) {
+Widget customDropDown(List<String> items, void onChange(val), {currentValue}) {
   return Container(
       padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 18.0),
       decoration: BoxDecoration(
@@ -8,7 +8,7 @@ Widget customDropDown(List<String> items, void onChange(val), {val}) {
           border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.circular(8)),
       child: DropdownButton<String>(
-        value: val,
+        value: currentValue,
         onChanged: (String? val) {
           onChange(val);
         },
