@@ -3,7 +3,7 @@ import 'package:first/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 
 recentTransactionSection(context) {
-  double radius = 32;
+  double radius = 29;
   double gap = 10;
   List<Widget> recentTransactionProfiles = [];
   for (var i = 0; i < 5; i++) {

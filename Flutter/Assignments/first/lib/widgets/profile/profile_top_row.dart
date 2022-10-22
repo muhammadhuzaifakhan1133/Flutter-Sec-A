@@ -34,7 +34,7 @@ profileTopRow() {
                   ),
                   Image(image: AssetImage("assets/images/profile_badge.png")),
                   SizedBox(
-                    width: 85,
+                    width: 55,
                   ),
                   Image(
                     image: AssetImage("assets/images/receive_money_cross.png"),

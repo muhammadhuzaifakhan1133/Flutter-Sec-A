@@ -7,7 +7,7 @@ rectangleBoxWidget({left_color, icon, right_color, text}) {
     //     color: Colors.red,
     //     border: Border.all(color: Colors.black),
     //     borderRadius: BorderRadius.all(Radius.circular(15))),
-    width: 175,
+    width: 164,
     height: 50,
     child: Row(
       children: [

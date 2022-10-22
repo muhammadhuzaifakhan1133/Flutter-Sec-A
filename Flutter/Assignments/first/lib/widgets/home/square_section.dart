@@ -16,7 +16,7 @@ squareSectionWidget(
       // height: 50,
       child: Column(
         children: [
-          square(width: 59.0, height: 60.0, child: Icon(icons[i])),
+          square(width: 53.0, height: 60.0, child: Icon(icons[i])),
           Text(
             labels[i],
             style: TextStyle(color: Color.fromRGBO(170, 170, 170, 1)),
