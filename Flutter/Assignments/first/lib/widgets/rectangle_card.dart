@@ -31,7 +31,7 @@ rectangleCardWidget(
         all_text.add(textWidget(title: text_param[i], size: 15.0 - i));
       } else {
         all_text.add(SizedBox(
-          width: 250,
+          width: 219,
           child: textWidget(title: text_param[i], size: 12.0),
         ));
       }
@@ -63,8 +63,6 @@ rectangleCardWidget(
   }
   return Container(
     margin: EdgeInsets.only(bottom: 5),
-    width: width,
-    height: height,
     child: Card(
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.all(Radius.circular(12)),

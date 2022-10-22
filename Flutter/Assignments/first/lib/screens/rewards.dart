@@ -57,7 +57,7 @@ class _RewardsState extends State<Rewards> {
                 context: context,
                 image: "assets/images/rewards_img1.png",
                 title: "Flat 50 off On food Delivery",
-                subtitle1: "On orders above 99 on Swaggy, Somato",
+                subtitle1: "On orders above 99 on Swaggy",
                 height: 111.0,
                 color: Color.fromRGBO(36, 32, 66, 1),
                 enableCollectbtn: true),

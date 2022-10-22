@@ -15,7 +15,7 @@ roundedCardWidget(
       elevation: 15,
       color: color,
       child: Container(
-        width: 140,
+        width: 126,
         height: 98,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -11,11 +11,11 @@ profileSecondRow() {
             children: [
               Text(
                 "1,208",
-                style: TextStyle(color: Color(0xff4D5DFA), fontSize: 22),
+                style: TextStyle(color: Color(0xff4D5DFA), fontSize: 19),
               ),
               Text(
                 "Transaction",
-                style: TextStyle(color: Color(0xff939FA4), fontSize: 15),
+                style: TextStyle(color: Color(0xff939FA4), fontSize: 12),
               ),
             ],
           ),
@@ -29,11 +29,11 @@ profileSecondRow() {
             children: [
               Text(
                 "726",
-                style: TextStyle(color: Color(0xff4D5DFA), fontSize: 22),
+                style: TextStyle(color: Color(0xff4D5DFA), fontSize: 19),
               ),
               Text(
                 "Points",
-                style: TextStyle(color: Color(0xff939FA4), fontSize: 15),
+                style: TextStyle(color: Color(0xff939FA4), fontSize: 12),
               ),
             ],
           ),
@@ -47,11 +47,11 @@ profileSecondRow() {
             children: [
               Text(
                 "8",
-                style: TextStyle(color: Color(0xff4D5DFA), fontSize: 22),
+                style: TextStyle(color: Color(0xff4D5DFA), fontSize: 19),
               ),
               Text(
                 "Rank",
-                style: TextStyle(color: Color(0xff939FA4), fontSize: 15),
+                style: TextStyle(color: Color(0xff939FA4), fontSize: 12),
               ),
             ],
           ),

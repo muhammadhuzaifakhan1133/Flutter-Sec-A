@@ -24,7 +24,7 @@ class _NotificationsState extends State<Notifications> {
           elevation: 10,
           child: Container(
             padding: EdgeInsets.only(top: 15, left: 15, right: 7),
-            height: 450,
+            height: 480,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

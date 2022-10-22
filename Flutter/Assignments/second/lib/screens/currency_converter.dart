@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second/services/api_client.dart';
-import 'package:second/widgets/drop_down.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'dart:convert';
 
 class CurrencyConverter extends StatefulWidget {
   @override
@@ -16,6 +14,9 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   String? toCountry = "PKR";
   double? rate;
   List<String>? currencies = [];
+  List<String>? countries = [];
+  List<String> dialogCurrencies = [];
+  List<String> dialogCountries = [];
   String answer = "";
   bool isProcessingComplete = false;
 
@@ -23,39 +24,14 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   void initState() {
     super.initState();
     (() async {
-      List<String> list = await client.getCurrencies();
+      Map<String, List<String>> list = await client.getCurrenciesAndCountries();
       setState(() {
-        currencies = list;
-        currencies?.sort();
+        currencies = list["currencies"];
+        countries = list["countries"];
       });
     })();
     getResult();
   }
-
-  // Future<void> storeCountriesAndRatesLocally() async {
-  //   List<String> currencies = await client.getCurrencies();
-  //   currencies.sort();
-  //   Map<String, Map<String, double>> rates = {};
-  //   for (var leftCurrency in currencies) {
-  //     Map<String, double> leftCurrencyConversiontForAll = {};
-  //     for (var rightCurrency in currencies) {
-  //       double rate = await client.getRate(leftCurrency, rightCurrency);
-  //       leftCurrencyConversiontForAll[rightCurrency] = rate;
-  //     }
-  //     rates[leftCurrency] = leftCurrencyConversiontForAll;
-  //   }
-  //   final SharedPreferences prefs = await _prefs;
-  //   await prefs.setStringList('currencies', currencies);
-  //   String conversion = json.encode(rates);
-  //   await prefs.setString('rates', conversion);
-  // }
-
-  // Future<void> getCountriesAndRatesLocally() async {
-  //   final SharedPreferences prefs = await _prefs;
-  //   currencies = prefs.getStringList('currencies');
-  //   String? stringMapRates = prefs.getString('rates');
-  //   rates = json.decode(stringMapRates!);
-  // }
 
   getResult() async {
     rate = await client.getRate(fromCountry, toCountry);
@@ -119,10 +95,12 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                     width: 350,
                     child: TextField(
                       onChanged: (String val) {
-                        setState(() {
-                          answer = "";
-                          getResult();
-                        });
+                        if (val.isNotEmpty) {
+                          setState(() {
+                            answer = "";
+                            getResult();
+                          });
+                        }
                       },
                       controller: controller,
                       keyboardType: TextInputType.number,
@@ -149,13 +127,125 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                           SizedBox(
                             height: 10,
                           ),
-                          customDropDown(currencies!, (val) {
-                            setState(() {
-                              fromCountry = val;
-                              answer = "";
-                              getResult();
-                            });
-                          }, currentValue: fromCountry)
+                          InkWell(
+                            onTap: () {
+                              dialogCurrencies = currencies!;
+                              dialogCountries = countries!;
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext c) {
+                                    return StatefulBuilder(
+                                        builder: (ctx, setState1) {
+                                      return AlertDialog(
+                                        title: Center(
+                                            child: Text("Select Country")),
+                                        content: Container(
+                                          width: 400,
+                                          child: Column(
+                                            children: [
+                                              TextField(
+                                                onChanged: (String val) {
+                                                  if (val.isEmpty) {
+                                                    setState1(() {
+                                                      dialogCurrencies =
+                                                          currencies!;
+                                                      dialogCountries =
+                                                          countries!;
+                                                    });
+                                                  } else {
+                                                    List<String>
+                                                        tempFilterCountries =
+                                                        List.of(dialogCountries.where(
+                                                            (element) => element
+                                                                .toLowerCase()
+                                                                .contains(val
+                                                                    .toLowerCase())));
+                                                    List<String>
+                                                        tempFilterCurrencies =
+                                                        [];
+                                                    for (var country
+                                                        in tempFilterCountries) {
+                                                      tempFilterCurrencies.add(
+                                                          dialogCurrencies[
+                                                              dialogCountries
+                                                                  .indexOf(
+                                                                      country)]);
+                                                    }
+                                                    setState1(() {
+                                                      dialogCountries =
+                                                          tempFilterCountries;
+                                                      dialogCurrencies =
+                                                          tempFilterCurrencies;
+                                                    });
+                                                    print(dialogCurrencies);
+                                                  }
+                                                },
+                                                decoration: InputDecoration(
+                                                    hintText: "Search",
+                                                    prefixIcon:
+                                                        Icon(Icons.search),
+                                                    border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15))),
+                                              ),
+                                              Expanded(
+                                                child: ListView.builder(
+                                                    itemCount:
+                                                        dialogCurrencies.length,
+                                                    itemBuilder:
+                                                        (BuildContext ctx,
+                                                            int index) {
+                                                      return ListTile(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            fromCountry =
+                                                                dialogCurrencies[
+                                                                    index];
+                                                            answer = "";
+                                                            getResult();
+                                                          });
+                                                          Navigator.pop(
+                                                              context,
+                                                              dialogCountries[
+                                                                  index]);
+                                                        },
+                                                        leading: Text(
+                                                            dialogCurrencies[
+                                                                index]),
+                                                        title: Text(
+                                                            dialogCountries[
+                                                                index]),
+                                                      );
+                                                    }),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                                  });
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${fromCountry}",
+                                    style: TextStyle(fontSize: 17),
+                                  ),
+                                  Icon(Icons.arrow_drop_down)
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       FloatingActionButton(
@@ -178,13 +268,125 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                           SizedBox(
                             height: 10,
                           ),
-                          customDropDown(currencies!, (val) {
-                            setState(() {
-                              toCountry = val;
-                              answer = "";
-                              getResult();
-                            });
-                          }, currentValue: toCountry)
+                          InkWell(
+                            onTap: () {
+                              dialogCurrencies = currencies!;
+                              dialogCountries = countries!;
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext c) {
+                                    return StatefulBuilder(
+                                        builder: (ctx, setState1) {
+                                      return AlertDialog(
+                                        title: Center(
+                                            child: Text("Select Country")),
+                                        content: Container(
+                                          width: 400,
+                                          child: Column(
+                                            children: [
+                                              TextField(
+                                                onChanged: (String val) {
+                                                  if (val.isEmpty) {
+                                                    setState1(() {
+                                                      dialogCurrencies =
+                                                          currencies!;
+                                                      dialogCountries =
+                                                          countries!;
+                                                    });
+                                                  } else {
+                                                    List<String>
+                                                        tempFilterCountries =
+                                                        List.of(dialogCountries.where(
+                                                            (element) => element
+                                                                .toLowerCase()
+                                                                .contains(val
+                                                                    .toLowerCase())));
+                                                    List<String>
+                                                        tempFilterCurrencies =
+                                                        [];
+                                                    for (var country
+                                                        in tempFilterCountries) {
+                                                      tempFilterCurrencies.add(
+                                                          dialogCurrencies[
+                                                              dialogCountries
+                                                                  .indexOf(
+                                                                      country)]);
+                                                    }
+                                                    setState1(() {
+                                                      dialogCountries =
+                                                          tempFilterCountries;
+                                                      dialogCurrencies =
+                                                          tempFilterCurrencies;
+                                                    });
+                                                    print(dialogCurrencies);
+                                                  }
+                                                },
+                                                decoration: InputDecoration(
+                                                    hintText: "Search",
+                                                    prefixIcon:
+                                                        Icon(Icons.search),
+                                                    border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15))),
+                                              ),
+                                              Expanded(
+                                                child: ListView.builder(
+                                                    itemCount:
+                                                        dialogCurrencies.length,
+                                                    itemBuilder:
+                                                        (BuildContext ctx,
+                                                            int index) {
+                                                      return ListTile(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            toCountry =
+                                                                dialogCurrencies[
+                                                                    index];
+                                                            answer = "";
+                                                            getResult();
+                                                          });
+                                                          Navigator.pop(
+                                                              context,
+                                                              dialogCountries[
+                                                                  index]);
+                                                        },
+                                                        leading: Text(
+                                                            dialogCurrencies[
+                                                                index]),
+                                                        title: Text(
+                                                            dialogCountries[
+                                                                index]),
+                                                      );
+                                                    }),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                                  });
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${toCountry}",
+                                    style: TextStyle(fontSize: 17),
+                                  ),
+                                  Icon(Icons.arrow_drop_down)
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       )
                     ],
