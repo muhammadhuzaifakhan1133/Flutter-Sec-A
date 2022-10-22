@@ -22,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
       Keywords = await getProductKeywords();
       setState(() {
         keywords = Keywords;
+        suggestions = keywords;
       });
     })();
   }
@@ -65,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   });
                 } else {
                   setState(() {
-                    suggestions = [];
+                    suggestions = keywords;
                   });
                 }
               },

@@ -90,8 +90,10 @@ class _PlannedTasksState extends State<PlannedTasks> {
                         int n = listIDs.length ~/ 10;
                         n += listIDs.length % 10 == 0 ? 0 : 1;
                         for (var i = 0; i < n; i++) {
-                          List<String> subList =
-                              listIDs.sublist(i * 10, (i * 10) + 10);
+                          List<String> subList = listIDs.sublist(
+                              i * 10,
+                              (i * 10) +
+                                  (n - 1 == i ? listIDs.length % 10 : 10));
                           return StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection("tasks")

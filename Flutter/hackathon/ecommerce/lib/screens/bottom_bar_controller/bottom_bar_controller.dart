@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class BottomBarController extends StatefulWidget {
   BottomBarController({this.query = "", Key? key}) : super(key: key);
-  String query;
+  final String query;
 
   @override
   State<BottomBarController> createState() => _BottomBarControllerState();
