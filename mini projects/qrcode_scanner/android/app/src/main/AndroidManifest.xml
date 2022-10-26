@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.qrcode_scanner">
    <application
-        android:label="qrcode_scanner"
+        android:label="QR and Barcode Detector"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,14 +1,10 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/_http/_html/_file_decoder_html.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrcode_scanner/controller/create_code_controller.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
 
 class CreateCodeView extends StatelessWidget {
   CreateCodeView({super.key});
@@ -18,7 +14,7 @@ class CreateCodeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("QR Code Generator")),
+      appBar: AppBar(title: const Center(child: Text("QR Code Generator"))),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -44,7 +40,7 @@ class CreateCodeView extends StatelessWidget {
                           : Container())),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Container(
                   width: Get.width * 0.8,
                   child: TextField(
@@ -53,49 +49,36 @@ class CreateCodeView extends StatelessWidget {
                         hintText: "Enter text to generate code",
                         border: OutlineInputBorder(
                             borderSide:
-                                BorderSide(width: 3, color: Colors.blue),
+                                const BorderSide(width: 3, color: Colors.blue),
                             borderRadius: BorderRadius.circular(15))),
                     maxLines: 5,
                   )),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      if (textEditingController.text.isEmpty) {
-                        Fluttertoast.cancel();
-                        Fluttertoast.showToast(msg: "No Text Found");
-                        return;
-                      }
-                      controller.data.value = textEditingController.text;
+                      controller.generateQrCode(textEditingController.text);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[900]),
                     child: const Text("Generate"),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (controller.data.value.isEmpty) {
-                        Fluttertoast.cancel();
-                        Fluttertoast.showToast(msg: "No QR Code Found");
-                        return;
-                      }
-                      Uint8List? image = await screenshotController.capture();
-                      final Directory directory =
-                          (await getApplicationDocumentsDirectory());
-                      DateTime date = DateTime.now();
-                      final String filename =
-                          "${date.toString().split(" ")[0]}-${date.hour}-${date.minute}-${date.second}-${date.microsecond}.png";
-                      final File imagePath =
-                          await File("${directory.path}/${filename}").create();
-                      await imagePath.writeAsBytes(fileToBytes(image));
-                      await Share.shareFiles([imagePath.path]);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[900]),
-                    child: const Text("Download Image"),
-                  ),
+                  Obx(() => controller.data.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await controller
+                                  .shareQrCode(screenshotController);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[900]),
+                            child: const Text("Share QR Code"),
+                          ),
+                        )
+                      : Container()),
                 ],
               )
             ],
