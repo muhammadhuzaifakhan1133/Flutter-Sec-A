@@ -13,7 +13,8 @@ class CreateCodeController extends GetxController {
 
   void generateQrCode(String text) {
     if (text.isEmpty) {
-      showToast("No Text Found");
+      showToast("No Text Found",
+          message: "Please enter text to generate QR code");
       return;
     }
     data.value = text;

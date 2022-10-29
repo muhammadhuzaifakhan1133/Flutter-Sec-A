@@ -3,18 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qrcode_scanner/constants/colors.dart';
 import 'package:qrcode_scanner/controller/create_code_controller.dart';
 import 'package:screenshot/screenshot.dart';
 
 class CreateCodeView extends StatelessWidget {
   CreateCodeView({super.key});
+
   TextEditingController textEditingController = TextEditingController();
   ScreenshotController screenshotController = ScreenshotController();
   CreateCodeController controller = CreateCodeController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Center(child: Text("QR Code Generator"))),
+      appBar: AppBar(
+        title: const Center(child: Text("QR Code Generator")),
+        backgroundColor: appBarColor,
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -61,9 +66,10 @@ class CreateCodeView extends StatelessWidget {
                     onPressed: () {
                       controller.generateQrCode(textEditingController.text);
                     },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[900]),
-                    child: const Text("Generate"),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: buttonColor),
+                    child: Text("Generate",
+                        style: TextStyle(color: buttonTextColor)),
                   ),
                   Obx(() => controller.data.isNotEmpty
                       ? Padding(
@@ -74,8 +80,9 @@ class CreateCodeView extends StatelessWidget {
                                   .shareQrCode(screenshotController);
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue[900]),
-                            child: const Text("Share QR Code"),
+                                backgroundColor: buttonColor),
+                            child: Text("Share QR Code",
+                                style: TextStyle(color: buttonTextColor)),
                           ),
                         )
                       : Container()),
