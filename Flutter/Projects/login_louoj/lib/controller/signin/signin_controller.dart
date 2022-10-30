@@ -13,4 +13,15 @@ class SigninController extends GetxController {
     FactoryCard(),
     StylistCard()
   ];
+  String getCurrentCategoryText() {
+    if (card_no.value == 0) {
+      return "Fabric";
+    } else if (card_no.value == 1) {
+      return "Designer";
+    } else if (card_no.value == 2) {
+      return "Factory";
+    } else {
+      return "Stylist";
+    }
+  }
 }

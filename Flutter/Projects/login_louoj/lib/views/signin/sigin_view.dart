@@ -13,39 +13,37 @@ class SignInView extends StatelessWidget {
   Widget build(BuildContext context) {
     double w = Get.width;
     double h = Get.height;
-    SigninController controler = Get.put(SigninController(), tag: "signin");
+    SigninController controller = Get.put(SigninController(), tag: "signin");
     return Scaffold(
       body: Stack(
         children: [
           SigninBackground(),
-          Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: h * 0.15,
+          Column(
+            children: [
+              SizedBox(
+                height: h * 0.15,
+              ),
+              Obx(() => title(controller.getCurrentCategoryText())),
+              SizedBox(
+                height: h * 0.04,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(width: 20),
+                  CategoryCircles(),
+                  SizedBox(width: 20),
+                  Obx(() => controller.cards[controller.card_no.value])
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25.0, top: 20.0),
+                child: buttonWidget(
+                  buttonText: "Register Your Business",
+                  color: Colors.blue[700],
                 ),
-                title(),
-                SizedBox(
-                  height: h * 0.04,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 20),
-                    CategoryCircles(),
-                    SizedBox(width: 20),
-                    Obx(() => controler.cards[controler.card_no.value])
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0, top: 20.0),
-                  child: buttonWidget(
-                    buttonText: "Register Your Business",
-                    color: Colors.blue[700],
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           )
         ],
       ),
