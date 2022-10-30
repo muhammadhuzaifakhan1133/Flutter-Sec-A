@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 PopupMenuItem<dynamic> sortMenuItem(BuildContext context, widget, setState,
-    {importantSort = true, completeSort = true}) {
+    {importantSort = true, completeSort = true, unplanned = false}) {
   return PopupMenuItem(
     child: Row(
       children: const [
@@ -20,7 +20,11 @@ PopupMenuItem<dynamic> sortMenuItem(BuildContext context, widget, setState,
                   topLeft: Radius.circular(15.0),
                   topRight: Radius.circular(15.0))),
           builder: (ctx) => Container(
-            height: (!(completeSort && importantSort)) ? 230 : 280,
+            height: (!(completeSort && importantSort) && !(unplanned))
+                ? 230
+                : (unplanned)
+                    ? 170
+                    : 280,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,18 +60,19 @@ PopupMenuItem<dynamic> sortMenuItem(BuildContext context, widget, setState,
                       });
                     },
                   ),
-                ListTile(
-                  leading: const Icon(Icons.calendar_month),
-                  title: const Text("Due Date"),
-                  trailing: widget.sortBy == "date" ? inUseIcon : null,
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    setState(() {
-                      widget.sortBy = "date";
-                      widget.sortKey = "due date";
-                    });
-                  },
-                ),
+                if (unplanned != true)
+                  ListTile(
+                    leading: const Icon(Icons.calendar_month),
+                    title: const Text("Due Date"),
+                    trailing: widget.sortBy == "date" ? inUseIcon : null,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      setState(() {
+                        widget.sortBy = "date";
+                        widget.sortKey = "due date";
+                      });
+                    },
+                  ),
                 ListTile(
                   leading: const Icon(Icons.swap_vert),
                   title: const Text("Alphabetically"),

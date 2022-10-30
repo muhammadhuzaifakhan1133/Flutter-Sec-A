@@ -64,7 +64,7 @@ class ProductBuilder extends StatelessWidget {
                             primary: false,
                             padding: EdgeInsets.all(8),
                             crossAxisCount: query.isEmpty ? 1 : 2,
-                            childAspectRatio: query.isEmpty ? 0.75 : 0.58,
+                            childAspectRatio: query.isEmpty ? 0.66 : 0.56,
                             children: snapshot1.data!.docs
                                 .map((DocumentSnapshot document) {
                               Map<String, dynamic> data =

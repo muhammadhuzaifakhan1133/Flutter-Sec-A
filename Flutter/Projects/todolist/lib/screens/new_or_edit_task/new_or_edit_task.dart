@@ -99,7 +99,7 @@ class _NewOrEditTaskState extends State<NewOrEditTask> {
                   await addOrUpdateTask(
                       listID: widget.listID!,
                       taskValues: taskValues,
-                      taskID: widget.taskID!,
+                      taskID: widget.taskID,
                       update: widget.buttonText != "CREATE");
 
                   closeDialog(context);

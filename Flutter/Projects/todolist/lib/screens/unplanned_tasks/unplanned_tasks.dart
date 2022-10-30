@@ -43,7 +43,8 @@ class _UnplannedTasksState extends State<UnplannedTasks> {
                 color: getThemeColor(),
               ),
               itemBuilder: (context) => [
-                    sortMenuItem(context, widget, setState, completeSort: false)
+                    sortMenuItem(context, widget, setState,
+                        completeSort: false, unplanned: true)
                   ])
         ],
       ),
